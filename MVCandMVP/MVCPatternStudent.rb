@@ -1,76 +1,68 @@
-class Student {
-    String name;
-    int id;
+class Student
+    attr_accessor :name, :id
 
-    public Student(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
-}
+    def initialize(name, id)
+        @name = name
+        @id = id
+    end
+end
 
-class Model {
-    private Student student;
+class Model
+    attr_reader :student
 
-    public Model() {
-        this.student = new Student("Harry", 1);
-    }
+    def initialize
+        @student = Student.new('Harry', 1)
+    end
 
-    public void setData(String name, int id) {
-        System.out.println("Model: Set data : " + name + " " + id);
-        student.name = name;
-        student.id = id;
-    }
+    def set_data(name, id)
+        puts "Model: Set data : #{name} #{id}"
+        @student.name = name
+        @student.id = id
+    end
 
-    public Student getData() {
-        System.out.println("Model: Get data.");
-        return student;
-    }
-}
+    def get_data
+        puts 'Model: Get data.'
+        @student
+    end
+end
 
-class View {
-    private Model model;
+class View
+    def initialize(model)
+        @model = model
+    end
 
-    public View(Model model) {
-        this.model = model;
-    }
+    def update
+        student = @model.get_data
+        puts "View: Student Info, Name: #{student.name} Id: #{student.id}"
+    end
+end
 
-    public void update() {
-        Student student = model.getData();
-        System.out.println("View: Student Info, Name: " + student.name + " Id: " + student.id);
-    }
-}
+class Controller
+    def initialize
+        @model = Model.new
+        @view = View.new(@model)
+    end
 
-class Controller {
-    private Model model;
-    private View view;
+    def set_data(name, id)
+        puts 'Controller: Receive data from client.'
+        @model.set_data(name, id)
+    end
 
-    public Controller() {
-        this.model = new Model();
-        this.view = new View(model);
-    }
+    def update_view
+        puts 'Controller: Receive update view from client.'
+        @view.update
+    end
+end
 
-    public void setData(String name, int id) {
-        System.out.println("Controller: Receive data from client.");
-        model.setData(name, id);
-    }
+# Client code
+controller = Controller.new
+controller.update_view
 
-    public void updateView() {
-        System.out.println("Controller: Receive update view from client.");
-        view.update();
-    }
-}
+controller.set_data('Jack', 2)
+controller.update_view
 
-public class MVCPatternStudent {
-    public static void main(String[] args) {
-        Controller controller = new Controller();
-        controller.updateView();
 
-        controller.setData("Jack", 2);
-        controller.updateView();
-    }
-}
-
-/*
+=begin 
 Controller: Receive update view from client.
 Model: Get data.
 View: Student Info, Name: Harry Id: 1
@@ -79,4 +71,4 @@ Model: Set data : Jack 2
 Controller: Receive update view from client.
 Model: Get data.
 View: Student Info, Name: Jack Id: 2
-*/
+=end

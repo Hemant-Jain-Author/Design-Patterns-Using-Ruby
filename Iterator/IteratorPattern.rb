@@ -1,71 +1,66 @@
-import java.util.ArrayList;
-import java.util.List;
+# Iterator interface
+class Iterator
+    def next
+        raise NotImplementedError, 'Subclasses must implement the next method'
+    end
 
-interface Iterator {
-    int next();
-    boolean hasNext();
-}
+    def has_next
+        raise NotImplementedError, 'Subclasses must implement the has_next method'
+    end
+end
 
-interface Aggregate {
-    Iterator getIterator();
-}
+# Aggregate interface
+class Aggregate
+    def get_iterator
+        raise NotImplementedError, 'Subclasses must implement the get_iterator method'
+    end
+end
 
-class ConcreteIterator implements Iterator {
-    private ConcreteAggregate aggregate;
-    private int index;
+# Concrete Iterator
+class ConcreteIterator < Iterator
+    def initialize(aggregate)
+        @aggregate = aggregate
+        @index = 0
+    end
 
-    public ConcreteIterator(ConcreteAggregate aggregate) {
-        this.aggregate = aggregate;
-        this.index = 0;
-    }
+    def next
+        raise IndexError if @index >= @aggregate.data.size
+        value = @aggregate.data[@index]
+        @index += 1
+        value
+    end
 
-    @Override
-    public int next() {
-        if (index >= aggregate.getData().size()) {
-            throw new IndexOutOfBoundsException();
-        }
-        int value = aggregate.getData().get(index);
-        index++;
-        return value;
-    }
+    def has_next
+        @index < @aggregate.data.size
+    end
+end
 
-    @Override
-    public boolean hasNext() {
-        return index < aggregate.getData().size();
-    }
-}
+# Concrete Aggregate
+class ConcreteAggregate < Aggregate
+    attr_reader :data
 
-class ConcreteAggregate implements Aggregate {
-    private List<Integer> data;
+    def initialize
+        @data = []
+    end
 
-    public ConcreteAggregate() {
-        this.data = new ArrayList<>();
-    }
+    def add_data(val)
+        @data.push(val)
+    end
 
-    public void addData(int val) {
-        data.add(val);
-    }
+    def get_iterator
+        ConcreteIterator.new(self)
+    end
+end
 
-    @Override
-    public Iterator getIterator() {
-        return new ConcreteIterator(this);
-    }
+# Client code
+aggregate = ConcreteAggregate.new
+(0..4).each { |i| aggregate.add_data(i) }
 
-    public List<Integer> getData() {
-        return data;
-    }
-}
+iterator = aggregate.get_iterator
+while iterator.has_next
+    print "#{iterator.next} "
+end
 
-public class IteratorPattern {
-    public static void main(String[] args) {
-        ConcreteAggregate aggregate = new ConcreteAggregate();
-        for (int i = 0; i < 5; i++) {
-            aggregate.addData(i);
-        }
-
-        Iterator iterator = aggregate.getIterator();
-        while (iterator.hasNext()) {
-            System.out.print(iterator.next() + " ");
-        }
-    }
-}
+=begin 
+0 1 2 3 4 
+=end

@@ -1,130 +1,92 @@
-import java.util.ArrayList;
-import java.util.List;
+class Shape
+def accept(visitor)
+    raise NotImplementedError, 'Subclasses must implement the accept method'
+end
+end
 
-abstract class Shape {
-    abstract void accept(Visitor visitor);
-}
+class Circle < Shape
+attr_reader :x, :y, :radius
 
-class Circle extends Shape {
-    private int x, y, radius;
+def initialize(x, y, radius)
+    @x = x
+    @y = y
+    @radius = radius
+end
 
-    public Circle(int x, int y, int radius) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-    }
+def accept(visitor)
+    visitor.visit_circle(self)
+end
+end
 
-    @Override
-    void accept(Visitor visitor) {
-        visitor.visitCircle(this);
-    }
+class Rectangle < Shape
+attr_reader :x, :y, :width, :height
 
-    public int getX() {
-        return x;
-    }
+def initialize(x, y, width, height)
+    @x = x
+    @y = y
+    @width = width
+    @height = height
+end
 
-    public int getY() {
-        return y;
-    }
+def accept(visitor)
+    visitor.visit_rectangle(self)
+end
+end
 
-    public int getRadius() {
-        return radius;
-    }
-}
+class Visitor
+def visit_circle(circle)
+    raise NotImplementedError, 'Subclasses must implement the visit_circle method'
+end
 
-class Rectangle extends Shape {
-    private int x, y, width, height;
+def visit_rectangle(rectangle)
+    raise NotImplementedError, 'Subclasses must implement the visit_rectangle method'
+end
+end
 
-    public Rectangle(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
+class XMLVisitor < Visitor
+def visit_circle(circle)
+    puts "<circle>\n  <x>#{circle.x}</x>\n  <y>#{circle.y}</y>\n  <radius>#{circle.radius}</radius>\n</circle>"
+end
 
-    @Override
-    void accept(Visitor visitor) {
-        visitor.visitRectangle(this);
-    }
+def visit_rectangle(rectangle)
+    puts "<rectangle>\n  <x>#{rectangle.x}</x>\n  <y>#{rectangle.y}</y>\n  <width>#{rectangle.width}</width>\n  <height>#{rectangle.height}</height>\n</rectangle>"
+end
+end
 
-    public int getX() {
-        return x;
-    }
+class TextVisitor < Visitor
+def visit_circle(circle)
+    puts "Circle ( (x : #{circle.x}, y : #{circle.y}), radius : #{circle.radius}) "
+end
 
-    public int getY() {
-        return y;
-    }
+def visit_rectangle(rectangle)
+    puts "Rectangle ( (x : #{rectangle.x}, y : #{rectangle.y}), width : #{rectangle.width}, height : #{rectangle.height}) "
+end
+end
 
-    public int getWidth() {
-        return width;
-    }
+class ObjectsStructure
+attr_accessor :shapes, :visitor
 
-    public int getHeight() {
-        return height;
-    }
-}
+def initialize
+    @shapes = []
+    @visitor = nil
+end
 
-abstract class Visitor {
-    abstract void visitCircle(Circle circle);
-    abstract void visitRectangle(Rectangle rectangle);
-}
+def add_shape(shape)
+    shapes << shape
+end
 
-class XMLVisitor extends Visitor {
-    @Override
-    void visitCircle(Circle circle) {
-        System.out.printf("<circle>\n  <x>%d</x>\n  <y>%d</y>\n  <radius>%d</radius>\n</circle>%n",
-                          circle.getX(), circle.getY(), circle.getRadius());
-    }
+def accept
+    shapes.each { |shape| shape.accept(visitor) }
+end
+end
 
-    @Override
-    void visitRectangle(Rectangle rectangle) {
-        System.out.printf("<rectangle>\n  <x>%d</x>\n  <y>%d</y>\n  <width>%d</width>\n  <height>%d</height>\n</rectangle>%n",
-                          rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
-    }
-}
+# Client code
+os = ObjectsStructure.new
+os.add_shape(Rectangle.new(6, 7, 8, 9))
+os.add_shape(Circle.new(6, 7, 8))
 
-class TextVisitor extends Visitor {
-    @Override
-    void visitCircle(Circle circle) {
-        System.out.printf("Circle ( (x : %d, y : %d), radius : %d) %n", circle.getX(), circle.getY(), circle.getRadius());
-    }
+os.visitor = XMLVisitor.new
+os.accept
 
-    @Override
-    void visitRectangle(Rectangle rectangle) {
-        System.out.printf("Rectangle ( (x : %d, y : %d), width : %d, height : %d) %n",
-                          rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
-    }
-}
-
-class ObjectsStructure {
-    private List<Shape> shapes = new ArrayList<>();
-    private Visitor visitor;
-
-    public void addShape(Shape shape) {
-        shapes.add(shape);
-    }
-
-    public void setVisitor(Visitor visitor) {
-        this.visitor = visitor;
-    }
-
-    public void accept() {
-        for (Shape shape : shapes) {
-            shape.accept(visitor);
-        }
-    }
-}
-
-public class VisitorPatternShape {
-    public static void main(String[] args) {
-        ObjectsStructure os = new ObjectsStructure();
-        os.addShape(new Rectangle(6, 7, 8, 9));
-        os.addShape(new Circle(6, 7, 8));
-
-        os.setVisitor(new XMLVisitor());
-        os.accept();
-
-        os.setVisitor(new TextVisitor());
-        os.accept();
-    }
-}
+os.visitor = TextVisitor.new
+os.accept

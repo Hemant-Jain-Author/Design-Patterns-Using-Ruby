@@ -1,75 +1,72 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+# Shape interface
+class Shape
+  def draw(x1, y1, x2, y2)
+    raise NotImplementedError, 'Subclasses must implement the draw method'
+  end
+end
 
-// Shape interface
-interface Shape {
-    void draw(int x1, int y1, int x2, int y2);
-}
+# Rectangle class implementing Shape with Intrinsic State
+class RectangleIntrinsic < Shape
+  attr_reader :color
 
-// Rectangle class implementing Shape with Intrinsic State
-class RectangleIntrinsic implements Shape {
-    private String color;
+  def initialize(color)
+    @color = color
+  end
 
-    public RectangleIntrinsic(String color) {
-        this.color = color;
-    }
+  def draw(x1, y1, x2, y2)
+    puts "Draw rectangle color: #{@color} topleft: (#{x1},#{y1}) rightBottom: (#{x2},#{y2})"
+  end
+end
 
-    @Override
-    public void draw(int x1, int y1, int x2, int y2) {
-        System.out.printf("Draw rectangle color: %s topleft: (%s,%s) rightBottom: (%s,%s)%n",
-                this.color, x1, y1, x2, y2);
-    }
-}
+# RectangleFactory class for managing Flyweight objects
+class RectangleFactory
+  def initialize
+    @shapes = {}
+  end
 
-// RectangleFactory class for managing Flyweight objects
-class RectangleFactory {
-    private Map<String, Shape> shapes = new HashMap<>();
+  def get_rectangle(color)
+    @shapes[color] ||= RectangleIntrinsic.new(color)
+  end
+end
 
-    public Shape getRectangle(String color) {
-        if (!shapes.containsKey(color)) {
-            shapes.put(color, new RectangleIntrinsic(color));
-        }
-        return shapes.get(color);
-    }
-}
+# Rectangle class without Flyweight
+class RectangleWithoutFlyweight
+  attr_reader :color
 
-// Rectangle class without Flyweight
-class RectangleWithoutFlyweight {
-    private String color;
+  def initialize(color)
+    @color = color
+  end
 
-    public RectangleWithoutFlyweight(String color) {
-        this.color = color;
-    }
+  def draw(x1, y1, x2, y2)
+    puts "Draw rectangle color: #{@color} topleft: (#{x1},#{y1}) rightBottom: (#{x2},#{y2})"
+  end
+end
 
-    public void draw(int x1, int y1, int x2, int y2) {
-        System.out.printf("Draw rectangle color: %s topleft: (%s,%s) rightBottom: (%s,%s)%n",
-                this.color, x1, y1, x2, y2);
-    }
-}
+# Client code
+factory = RectangleFactory.new
+random = Random.new
 
-// Client code
-public class FlyweightPatternRectangle2 {
-    public static void main(String[] args) {
-        RectangleFactory factory = new RectangleFactory();
-        Random random = new Random();
+start_time = Time.now.to_f * 1000
 
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
-            Shape rectangle = factory.getRectangle(Integer.toString(random.nextInt(10)));
-            rectangle.draw(random.nextInt(100), random.nextInt(100), random.nextInt(100), random.nextInt(100));
-        }
-        long endTime = System.currentTimeMillis();
+100.times do
+  rectangle = factory.get_rectangle(random.rand(10).to_s)
+end
 
-        System.out.println("Flyweight Time: " + (endTime - startTime) + " ms");
+end_time = Time.now.to_f * 1000
 
-        startTime = System.currentTimeMillis();
-        for (int i = 0; i < 10000; i++) {
-            RectangleWithoutFlyweight rectangle = new RectangleWithoutFlyweight(Integer.toString(random.nextInt(10)));
-            rectangle.draw(random.nextInt(100), random.nextInt(100), random.nextInt(100), random.nextInt(100));
-        }
-        endTime = System.currentTimeMillis();
+puts "Flyweight Time: #{end_time - start_time} ms"
 
-        System.out.println("Without Flyweight Time: " + (endTime - startTime) + " ms");
-    }
-}
+start_time = Time.now.to_f * 1000
+
+10000.times do
+  rectangle = RectangleWithoutFlyweight.new(random.rand(10).to_s)
+end
+
+end_time = Time.now.to_f * 1000
+
+puts "Without Flyweight Time: #{end_time - start_time} ms"
+
+=begin 
+Flyweight Time: 0.036865234375 ms
+Without Flyweight Time: 4.562744140625 ms 
+=end

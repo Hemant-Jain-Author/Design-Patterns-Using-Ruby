@@ -1,58 +1,48 @@
-// Desired Interface
-interface Shape {
-    void draw();
-}
+# Desired Interface
+module Shape
+    def draw
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
 
-// Circle class
-class Circle implements Shape {
-    private int x, y, radius;
+# Circle class
+class Circle include Shape
+    def initialize(x, y, radius)
+        @x = x
+        @y = y
+        @radius = radius
+    end
 
-    public Circle(int x, int y, int r) {
-        this.x = x;
-        this.y = y;
-        this.radius = r;
-    }
+    def draw
+        puts 'Draw the Circle.'
+    end
+end
 
-    @Override
-    public void draw() {
-        System.out.println("Draw the Circle.");
-    }
-}
+# Rectangle class (Adaptee)
+class Rectangle
+    def initialize(x, y, length, width)
+        @x = x
+        @y = y
+        @length = length
+        @width = width
+    end
 
-// Rectangle class (Adaptee)
-class Rectangle {
-    private int x, y, length, width;
+    def old_draw
+        puts 'Drawing Rectangle.'
+    end
+end
 
-    public Rectangle(int x, int y, int l, int w) {
-        this.x = x;
-        this.y = y;
-        this.length = l;
-        this.width = w;
-    }
+# RectangleAdapter class
+class RectangleAdapter include Shape
+    def initialize(x, y, length, width)
+        @adaptee = Rectangle.new(x, y, length, width)
+    end
 
-    public void oldDraw() {
-        System.out.println("Drawing Rectangle.");
-    }
-}
-
-// RectangleAdapter class
-class RectangleAdapter implements Shape {
-    private Rectangle adaptee;
-
-    public RectangleAdapter(int x, int y, int l, int w) {
-        this.adaptee = new Rectangle(x, y, l, w);
-    }
-
-    @Override
-    public void draw() {
-        adaptee.oldDraw();
-    }
-}
-
-// Client Code
-public class AdapterPatternRectangle {
-    public static void main(String[] args) {
-        Shape adapter = new RectangleAdapter(1, 2, 3, 4);
-        adapter.draw();
-    }
-}
+    def draw
+        @adaptee.old_draw
+    end
+end
+  
+# Client Code
+adapter = RectangleAdapter.new(1, 2, 3, 4)
+adapter.draw

@@ -1,53 +1,45 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+# Shape interface
+class Shape
+    def draw(x1, y1, x2, y2)
+        raise NotImplementedError, 'Subclasses must implement the draw method'
+    end
+end
 
-// Shape interface
-interface Shape {
-    void draw(int x1, int y1, int x2, int y2);
-}
+# Rectangle class implementing Shape
+class Rectangle < Shape
+    attr_reader :colour
 
-// Rectangle class implementing Shape
-class Rectangle implements Shape {
-    private String colour;
+    def initialize(colour)
+        @colour = colour
+    end
 
-    public Rectangle(String colour) {
-        this.colour = colour;
-    }
+    def draw(x1, y1, x2, y2)
+        puts "Draw rectangle colour: #{@colour} topleft: (#{x1},#{y1}) rightBottom: (#{x2},#{y2})"
+    end
+end
 
-    @Override
-    public void draw(int x1, int y1, int x2, int y2) {
-        System.out.printf("Draw rectangle colour: %s topleft: (%s,%s) rightBottom: (%s,%s)%n", 
-            this.colour, x1, y1, x2, y2);
-    }
-}
+# RectangleFactory class
+class RectangleFactory
+    def initialize
+        @shapes = {}
+    end
 
-// RectangleFactory class
-class RectangleFactory {
-    private Map<String, Shape> shapes = new HashMap<>();
+    def get_rectangle(colour)
+        @shapes[colour] ||= Rectangle.new(colour)
+    end
 
-    public Shape getRectangle(String colour) {
-        if (!shapes.containsKey(colour)) {
-            shapes.put(colour, new Rectangle(colour));
-        }
-        return shapes.get(colour);
-    }
+    def count
+        @shapes.size
+    end
+end
 
-    public int getCount() {
-        return shapes.size();
-    }
-}
+# Client code
+factory = RectangleFactory.new
+random = Random.new
 
-// Client code
-public class FlyweightPatternRectangle {
-    public static void main(String[] args) {
-        RectangleFactory factory = new RectangleFactory();
-        Random random = new Random();
+1000.times do
+    rectangle = factory.get_rectangle(random.rand(1000).to_s)
+end
 
-        for (int i = 0; i < 100; i++) {
-            Shape rectangle = factory.getRectangle(Integer.toString(random.nextInt(1000)));
-            rectangle.draw(random.nextInt(100), random.nextInt(100), random.nextInt(100), random.nextInt(100));
-        }
-        System.out.println(factory.getCount());
-    }
-}
+puts factory.count
+

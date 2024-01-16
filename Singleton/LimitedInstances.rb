@@ -1,37 +1,33 @@
-import java.util.ArrayList;
-import java.util.List;
+class LimitedInstances
+  @@instances = []
+  LIMIT = 4
 
-public class LimitedInstances {
-    private static List<LimitedInstances> instances = new ArrayList<>();
-    private static final int limit = 4;
+  private_class_method :new
 
-    private LimitedInstances() {
-    }
+  def self.get_instance
+    if @@instances.length < LIMIT
+      instance = new
+      @@instances.push(instance)
+      puts 'Instance created.'
+      instance
+    else
+      raise 'Instance Limit reached.'
+    end
+  end
+end
 
-    public static LimitedInstances getInstance() {
-        if (instances.size() < limit) {
-            LimitedInstances instance = new LimitedInstances();
-            instances.add(instance);
-            return instance;
-        } else {
-            throw new RuntimeException("Instance Limit reached");
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            LimitedInstances.getInstance();
-            LimitedInstances.getInstance();
-            LimitedInstances.getInstance();
-            LimitedInstances.getInstance();
-            LimitedInstances.getInstance();
-            LimitedInstances.getInstance();
-            LimitedInstances.getInstance();
-            LimitedInstances.getInstance();
-            LimitedInstances.getInstance();
-            LimitedInstances.getInstance();
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-}
+# Client code
+begin
+  LimitedInstances.get_instance
+  LimitedInstances.get_instance
+  LimitedInstances.get_instance
+  LimitedInstances.get_instance
+  LimitedInstances.get_instance
+  LimitedInstances.get_instance
+  LimitedInstances.get_instance
+  LimitedInstances.get_instance
+  LimitedInstances.get_instance
+  LimitedInstances.get_instance
+rescue StandardError => e
+  puts e.message
+end

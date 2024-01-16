@@ -1,129 +1,112 @@
-import java.util.ArrayList;
-import java.util.List;
+# Memento
+class Memento
+    attr_reader :state
 
-// Memento
-class Memento {
-    private String state;
+    def initialize(state)
+        @state = state
+    end
+end
 
-    public Memento(String state) {
-        this.state = state;
-    }
+# CareTaker
+class CareTaker
+    attr_reader :history, :top, :max
 
-    public String getState() {
-        return state;
-    }
-}
+    def initialize
+        @history = []
+        @top = -1
+        @max = -1
+    end
 
-// CareTaker
-class CareTaker {
-    private List<Memento> history;
-    private int top;
-    private int max;
+    def add_memento(memento)
+        @top += 1
+        @max = @top
 
-    public CareTaker() {
-        this.history = new ArrayList<>();
-        this.top = -1;
-        this.max = -1;
-    }
+        if @top <= @history.size - 1
+            @history[@top] = memento
+        else
+            @history << memento
+        end
+    end
 
-    public void addMemento(Memento m) {
-        top += 1;
-        max = top;
-        if (top <= history.size() - 1) {
-            history.set(top, m);
-        } else {
-            history.add(m);
-        }
-    }
+    def get_memento(index)
+        @history[index]
+    end
 
-    public Memento getMemento(int index) {
-        return history.get(index);
-    }
+    def undo
+        puts 'Undoing state.'
+        if @top <= 0
+            @top = 0
+            return get_memento(0)
+        end
 
-    public Memento undo() {
-        System.out.println("Undoing state.");
-        if (top <= 0) {
-            top = 0;
-            return getMemento(0);
-        }
+        @top -= 1
+        get_memento(@top)
+    end
 
-        top -= 1;
-        return getMemento(top);
-    }
+    def redo
+        puts 'Redoing state.'
+        if @top >= (@history.size - 1) || @top >= @max
+            return get_memento(@top)
+        end
 
-    public Memento redo() {
-        System.out.println("Redoing state.");
-        if (top >= (history.size() - 1) || top >= max) {
-            return getMemento(top);
-        }
+        @top += 1
+        get_memento(@top)
+    end
 
-        top += 1;
-        return getMemento(top);
-    }
+    def states_count
+        @history.size
+    end
+end
 
-    public int getStatesCount() {
-        return history.size();
-    }
-}
+# Originator
+class Originator
+    attr_accessor :state
 
-// Originator
-class Originator {
-    private String state;
-    private CareTaker careTaker;
+    def initialize
+        @care_taker = CareTaker.new
+    end
 
-    public Originator() {
-        this.careTaker = new CareTaker();
-    }
+    def set_state(state)
+        @state = state
+        @care_taker.add_memento(create_memento)
+    end
 
-    public void setState(String state) {
-        this.state = state;
-        careTaker.addMemento(createMemento());
-    }
+    def undo
+        set_memento(@care_taker.undo)
+    end
 
-    public String getState() {
-        return state;
-    }
+    def redo
+        set_memento(@care_taker.redo)
+    end
 
-    public Memento createMemento() {
-        return new Memento(state);
-    }
+    def create_memento
+        Memento.new(state)
+    end
 
-    public void setMemento(Memento m) {
-        state = m.getState();
-    }
+    def set_memento(memento)
+        @state = memento.state
+    end
+end
 
-    public void undo() {
-        setMemento(careTaker.undo());
-    }
+# Client code
+originator = Originator.new
+originator.set_state('State 1')
+puts originator.state
 
-    public void redo() {
-        setMemento(careTaker.redo());
-    }
-}
+originator.set_state('State 2')
+puts originator.state
 
-// Client code
-public class MomentoPatternCopy {
-    public static void main(String[] args) {
-        Originator originator = new Originator();
-        originator.setState("State 1");
-        System.out.println(originator.getState());
+originator.set_state('State 3')
+puts originator.state
 
-        originator.setState("State 2");
-        System.out.println(originator.getState());
+originator.undo
+puts originator.state
 
-        originator.setState("State 3");
-        System.out.println(originator.getState());
+originator.undo
+puts originator.state
 
-        originator.undo();
-        System.out.println(originator.getState());
+originator.redo
+puts originator.state
 
-        originator.undo();
-        System.out.println(originator.getState());
-
-        originator.redo();
-        System.out.println(originator.getState());
-
-        originator.redo();
-        System.out.println(originator.getState());
-    }
-}
+originator.redo
+puts originator.state

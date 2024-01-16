@@ -1,52 +1,54 @@
-abstract class AddDataTemplate {
-    final void addData() {
-        open();
-        add();
-        close();
-    }
+# Define AddDataTemplate
+class AddDataTemplate
+  def add_data
+    open
+    add
+    close
+  end
 
-    abstract void open();
-    abstract void add();
-    abstract void close();
-}
+  def open
+    raise NotImplementedError, 'Subclasses must implement the open method'
+  end
 
-class AddDataToFile extends AddDataTemplate {
-    @Override
-    void open() {
-        System.out.println("Open file.");
-    }
+  def add
+    raise NotImplementedError, 'Subclasses must implement the add method'
+  end
 
-    @Override
-    void add() {
-        System.out.println("Add data to file.");
-    }
+  def close
+    raise NotImplementedError, 'Subclasses must implement the close method'
+  end
+end
 
-    @Override
-    void close() {
-        System.out.println("Close file");
-    }
-}
+# Define AddDataToFile extending AddDataTemplate
+class AddDataToFile < AddDataTemplate
+  def open
+    puts 'Open file.'
+  end
 
-class AddDataToDB extends AddDataTemplate {
-    @Override
-    void open() {
-        System.out.println("Open Database.");
-    }
+  def add
+    puts 'Add data to file.'
+  end
 
-    @Override
-    void add() {
-        System.out.println("Add data to Database.");
-    }
+  def close
+    puts 'Close file.'
+  end
+end
 
-    @Override
-    void close() {
-        System.out.println("Close Database.");
-    }
-}
+# Define AddDataToDB extending AddDataTemplate
+class AddDataToDB < AddDataTemplate
+  def open
+    puts 'Open Database.'
+  end
 
-public class TemplatePatternData {
-    public static void main(String[] args) {
-        AddDataTemplate addDataToDB = new AddDataToDB();
-        addDataToDB.addData();
-    }
-}
+  def add
+    puts 'Add data to Database.'
+  end
+
+  def close
+    puts 'Close Database.'
+  end
+end
+
+# Client code
+add_data_to_db = AddDataToDB.new
+add_data_to_db.add_data

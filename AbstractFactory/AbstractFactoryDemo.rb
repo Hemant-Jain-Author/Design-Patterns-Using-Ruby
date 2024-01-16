@@ -1,86 +1,84 @@
-// Menu interface
-interface Menu {
-    void desc();
-}
+# Menu interface
+module Menu
+    def desc
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
 
-// WinMenu class
-class WinMenu implements Menu {
-    @Override
-    public void desc() {
-        System.out.println("Win Menu!!");
-    }
-}
+# WinMenu class
+class WinMenu include Menu
+    def desc
+        puts 'Win Menu!!'
+    end
+end
 
-// MacMenu class
-class MacMenu implements Menu {
-    @Override
-    public void desc() {
-        System.out.println("Mac Menu!!");
-    }
-}
+# MacMenu class
+class MacMenu include Menu
+    def desc
+        puts 'Mac Menu!!'
+    end
+end
 
-// Button interface
-interface Button {
-    void desc();
-}
+# Button interface
+module Button
+    def desc
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
 
-// WinButton class
-class WinButton implements Button {
-    @Override
-    public void desc() {
-        System.out.println("Win Button!!");
-    }
-}
+# WinButton class
+class WinButton include Button
+    def desc
+        puts 'Win Button!!'
+    end
+end
 
-// MacButton class
-class MacButton implements Button {
-    @Override
-    public void desc() {
-        System.out.println("Mac Button!!");
-    }
-}
+# MacButton class
+class MacButton include Button
+    def desc
+        puts 'Mac Button!!'
+    end
+end
 
-// Abstract Factory interface
-interface AbstractFactory {
-    Menu getMenu();
-    Button getButton();
-}
+# Abstract Factory interface
+module AbstractFactory
+    def get_menu
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
 
-// WinFactory class
-class WinFactory implements AbstractFactory {
-    @Override
-    public Menu getMenu() {
-        return new WinMenu();
-    }
+    def get_button
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
 
-    @Override
-    public Button getButton() {
-        return new WinButton();
-    }
-}
+# WinFactory class
+class WinFactory include AbstractFactory
+    def get_menu
+        WinMenu.new
+    end
 
-// MacFactory class
-class MacFactory implements AbstractFactory {
-    @Override
-    public Menu getMenu() {
-        return new MacMenu();
-    }
+    def get_button
+        WinButton.new
+    end
+end
 
-    @Override
-    public Button getButton() {
-        return new MacButton();
-    }
-}
+# MacFactory class
+class MacFactory include AbstractFactory
+    def get_menu
+        MacMenu.new
+    end
 
-// Client code
-public class AbstractFactoryDemo {
-    public static void main(String[] args) {
-        AbstractFactory macFactory = new MacFactory();
-        macFactory.getMenu().desc();
-        macFactory.getButton().desc();
+    def get_button
+        MacButton.new
+    end
+end
+  
+# Client code
+mac_factory = MacFactory.new
+mac_factory.get_menu.desc
+mac_factory.get_button.desc
 
-        AbstractFactory winFactory = new WinFactory();
-        winFactory.getButton().desc();
-        winFactory.getMenu().desc();
-    }
-}
+win_factory = WinFactory.new
+win_factory.get_button.desc
+win_factory.get_menu.desc
+  

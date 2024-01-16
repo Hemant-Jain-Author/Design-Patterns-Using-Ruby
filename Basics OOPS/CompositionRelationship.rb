@@ -1,38 +1,24 @@
-import java.util.ArrayList;
-import java.util.List;
+class Tyre
+    attr_reader :type
 
-class Tyre {
-    private String type;
+    def initialize(type)
+        @type = type
+    end
+end
 
-    public Tyre(String type) {
-        this.type = type;
-    }
+class Car
+    attr_reader :model, :tyres
 
-    public String getType() {
-        return type;
-    }
-}
+    def initialize(model)
+        @model = model
+        @tyres = Array.new(4) { Tyre.new("MRF") }
+    end
 
-class Car {
-    private String model;
-    private List<Tyre> tyres;
+    def display
+        puts "Car: #{@model}, Tyre: #{tyres[0].type}"
+    end
+end
 
-    public Car(String model) {
-        this.model = model;
-        this.tyres = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            this.tyres.add(new Tyre("MRF"));
-        }
-    }
-
-    public void display() {
-        System.out.println("Car: " + model + ", Tyre: " + tyres.get(0).getType());
-    }
-}
-
-public class CompositionRelationship {
-    public static void main(String[] args) {
-        Car car = new Car("BMW");
-        car.display();
-    }
-}
+# Client code
+car = Car.new("BMW")
+car.display

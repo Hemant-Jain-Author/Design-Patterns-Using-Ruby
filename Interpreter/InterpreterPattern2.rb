@@ -1,71 +1,66 @@
-import java.util.HashMap;
-import java.util.Map;
+# Abstract Expression
+class Expression
+    def interpret
+        raise NotImplementedError, 'Subclasses must implement the interpret method'
+    end
+end
 
-// Abstract Expression
-interface Expression {
-    int interpret();
-}
+# Terminal Expression
+class NumberExpression < Expression
+    def initialize(number)
+        @number = number
+    end
 
-// Terminal Expression
-class NumberExpression implements Expression {
-    private int number;
+    def interpret
+        @number
+    end
+end
 
-    public NumberExpression(int number) {
-        this.number = number;
-    }
+# Non-terminal Expression
+class AddExpression < Expression
+    def initialize(left_expression, right_expression)
+        @left_expression = left_expression
+        @right_expression = right_expression
+    end
 
-    @Override
-    public int interpret() {
-        return number;
-    }
-}
+    def interpret
+        @left_expression.interpret + @right_expression.interpret
+    end
+end
 
-// Non-terminal Expression
-class AddExpression implements Expression {
-    private Expression leftExpression;
-    private Expression rightExpression;
+# Context
+class Context
+    def initialize
+        @variables = {}
+    end
 
-    public AddExpression(Expression leftExpression, Expression rightExpression) {
-        this.leftExpression = leftExpression;
-        this.rightExpression = rightExpression;
-    }
+    def set_variable(variable, value)
+        @variables[variable] = value
+    end
 
-    @Override
-    public int interpret() {
-        return leftExpression.interpret() + rightExpression.interpret();
-    }
-}
+    def get_variable(variable)
+        @variables[variable] || 0
+    end
+end
 
-// Context
-class Context {
-    private Map<String, Integer> variables = new HashMap<>();
+# Client code
+context = Context.new
+context.set_variable('x', 10)
+context.set_variable('y', 5)
 
-    public void setVariable(String variable, int value) {
-        variables.put(variable, value);
-    }
+# Create the expression tree: x + (y + 2)
+expression = AddExpression.new(
+    NumberExpression.new(context.get_variable('x')),
+    AddExpression.new(
+    NumberExpression.new(context.get_variable('y')),
+    NumberExpression.new(2)
+    )
+)
 
-    public int getVariable(String variable) {
-        return variables.getOrDefault(variable, 0);
-    }
-}
+# Client code
+result = expression.interpret
+puts "Result: #{result}" 
 
-// Client code
-public class InterpreterPattern2 {
-    public static void main(String[] args) {
-        Context context = new Context();
-        context.setVariable("x", 10);
-        context.setVariable("y", 5);
-
-        // Create the expression tree: x + (y + 2)
-        Expression expression = new AddExpression(
-                new NumberExpression(context.getVariable("x")),
-                new AddExpression(
-                        new NumberExpression(context.getVariable("y")),
-                        new NumberExpression(2)
-                )
-        );
-
-        int result = expression.interpret();
-        System.out.println("Result: " + result);  // Output: Result: 17
-    }
-}
+=begin 
+Result: 17
+=end

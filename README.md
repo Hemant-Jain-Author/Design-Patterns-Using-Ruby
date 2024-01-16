@@ -1,1 +1,1 @@
-# Design-Patterns-Using-Java
+# Design-Patterns-Using-Ruby

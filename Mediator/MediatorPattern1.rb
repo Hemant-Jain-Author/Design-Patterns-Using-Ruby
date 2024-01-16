@@ -1,86 +1,65 @@
-import java.util.HashMap;
-import java.util.Map;
+class Mediator
+    def add_colleague(colleague)
+    end
 
-interface Mediator {
-    void addColleague(Colleague colleague);
-    void sendMessage(String message, String colleagueId);
-}
+    def send_message(message, colleague_id)
+    end
+end 
+    
+class ConcreteMediator < Mediator
+    def initialize
+      @colleagues = {}
+    end
+    
+    def add_colleague(colleague)
+      @colleagues[colleague.id] = colleague
+    end
+  
+    def send_message(message, colleague_id)
+      puts "Mediator pass Message : #{message}"
+      @colleagues[colleague_id].receive(message)
+    end
+  end
+  
+  class Colleague
+    attr_reader :mediator, :id
+  
+    def initialize(mediator, id)
+      @mediator = mediator
+      @id = id
+    end
+  
+    def send(message, to)
+      puts "#{id} Sent Message : #{message}"
+      mediator.send_message(message, to)
+    end
+  
+    def receive(message)
+      puts "#{id} Received Message #{message}"
+    end
+  end
+  
+  class ConcreteColleague1 < Colleague
+    def initialize(mediator)
+      super(mediator, "First")
+    end
+  end
+  
+  class ConcreteColleague2 < Colleague
+    def initialize(mediator)
+      super(mediator, "Second")
+    end
+  end
+  
+  # Client code
+  mediator = Mediator.new
+  first = ConcreteColleague1.new(mediator)
+  mediator.add_colleague(first)
+  second = ConcreteColleague2.new(mediator)
+  mediator.add_colleague(second)
+  
+  first.send("Hello, World!", "Second")
 
-class ConcreteMediator implements Mediator {
-    private Map<String, Colleague> colleagues = new HashMap<>();
-
-    @Override
-    public void addColleague(Colleague colleague) {
-        colleagues.put(colleague.getId(), colleague);
-    }
-
-    @Override
-    public void sendMessage(String message, String colleagueId) {
-        System.out.println("Mediator pass Message : " + message);
-        colleagues.get(colleagueId).receive(message);
-    }
-}
-
-abstract class Colleague {
-    protected Mediator mediator;
-    protected String id;
-
-    public Colleague(Mediator mediator, String id) {
-        this.mediator = mediator;
-        this.id = id;
-    }
-
-    abstract void send(String message, String to);
-
-    abstract void receive(String message);
-
-    public String getId() {
-        return id;
-    }
-}
-
-class ConcreteColleague1 extends Colleague {
-    public ConcreteColleague1(Mediator mediator) {
-        super(mediator, "First");
-    }
-
-    @Override
-    void send(String message, String to) {
-        System.out.println(id + " Sent Message : " + message);
-        mediator.sendMessage(message, to);
-    }
-
-    @Override
-    void receive(String message) {
-        System.out.println(id + " Received Message " + message);
-    }
-}
-
-class ConcreteColleague2 extends Colleague {
-    public ConcreteColleague2(Mediator mediator) {
-        super(mediator, "Second");
-    }
-
-    @Override
-    void send(String message, String to) {
-        System.out.println(id + " Sent Message : " + message);
-        mediator.sendMessage(message, to);
-    }
-
-    @Override
-    void receive(String message) {
-        System.out.println(id + " Received Message " + message);
-    }
-}
-
-public class MediatorPattern1 {
-    public static void main(String[] args) {
-        ConcreteMediator mediator = new ConcreteMediator();
-        ConcreteColleague1 first = new ConcreteColleague1(mediator);
-        mediator.addColleague(first);
-        ConcreteColleague2 second = new ConcreteColleague2(mediator);
-        mediator.addColleague(second);
-
-        first.send("Hello, World!", "Second");
-    }
-}
+=begin 
+First Sent Message : Hello, World!
+ =end

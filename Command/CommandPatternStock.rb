@@ -1,63 +1,60 @@
-// Agent (Invoker)
-class Agent {
-    public void placeOrder(Order command) {
-        command.execute();
-    }
-}
+# Agent (Invoker)
+class Agent
+    def place_order(command)
+        command.execute
+    end
+end
+  
+# Order (Command)
+class Order
+    def execute
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
+  
+# BuyStockOrder (ConcreteCommand)
+class BuyStockOrder < Order
+    def initialize(stock)
+        @stock = stock
+    end
+  
+    def execute
+        @stock.buy
+    end
+end
+  
+# SellStockOrder (ConcreteCommand)
+class SellStockOrder < Order
+    def initialize(stock)
+        @stock = stock
+    end
+  
+    def execute
+        @stock.sell
+    end
+end
+  
+# Receiver
+class ReceiverStockTrade
+    def buy
+        puts 'Buy stocks'
+    end
+  
+    def sell
+        puts 'Sell stocks'
+    end
+end
+  
+# Client code
+trader = ReceiverStockTrade.new
+buy_stock = BuyStockOrder.new(trader)
+sell_stock = SellStockOrder.new(trader)
 
-// Order (Command)
-abstract class Order {
-    public abstract void execute();
-}
+agent = Agent.new
+agent.place_order(buy_stock)
+agent.place_order(sell_stock)
 
-// BuyStockOrder (ConcreteCommand)
-class BuyStockOrder extends Order {
-    private ReceiverStockTrade stock;
-
-    public BuyStockOrder(ReceiverStockTrade stock) {
-        this.stock = stock;
-    }
-
-    @Override
-    public void execute() {
-        stock.buy();
-    }
-}
-
-// SellStockOrder (ConcreteCommand)
-class SellStockOrder extends Order {
-    private ReceiverStockTrade stock;
-
-    public SellStockOrder(ReceiverStockTrade stock) {
-        this.stock = stock;
-    }
-
-    @Override
-    public void execute() {
-        stock.sell();
-    }
-}
-
-// Receiver
-class ReceiverStockTrade {
-    public void buy() {
-        System.out.println("Buy stocks");
-    }
-
-    public void sell() {
-        System.out.println("Sell stocks");
-    }
-}
-
-// Client code
-public class CommandPatternStock {
-    public static void main(String[] args) {
-        ReceiverStockTrade trader = new ReceiverStockTrade();
-        BuyStockOrder buyStock = new BuyStockOrder(trader);
-        SellStockOrder sellStock = new SellStockOrder(trader);
-
-        Agent agent = new Agent();
-        agent.placeOrder(buyStock);
-        agent.placeOrder(sellStock);
-    }
-}
+=begin 
+Buy stocks
+Sell stocks 
+=end

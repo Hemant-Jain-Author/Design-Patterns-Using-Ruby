@@ -1,76 +1,44 @@
+class Rectangle
+  attr_accessor :height, :width
 
-class Rectangle {
-    private int height;
-    private int width;
+  def initialize(l, w)
+    @height = l
+    @width = w
+  end
 
-    public Rectangle(int l, int w) {
-        this.height = l;
-        this.width = w;
-    }
 
-    public void setWidth(int w) {
-        this.width = w;
-    }
+end
 
-    public void setHeight(int h) {
-        this.height = h;
-    }
+class Square < Rectangle
+  def initialize(l)
+    super(l, l)
+  end
 
-    public int getWidth() {
-        return this.width;
-    }
+  def width=(w)
+      @height = w
+    @width = w
+  end
 
-    public int getHeight() {
-        return this.height;
-    }
-}
+  def height=(h)
+      @height = h
+    @width = h
+  end
+end
 
-class Square extends Rectangle {
-    public Square(int l) {
-        super(l, l);
-    }
+def test_rectangle(rect)
+  rect.height = 10
+  rect.width = 20
+  if 200 == rect.height * rect.width
+    puts 'success'
+  else
+    puts 'failure'
+  end
+end
 
-    @Override
-    public void setWidth(int w) {
-        super.setWidth(w);
-        super.setHeight(w);
-    }
+# Client code
+rectangle = Rectangle.new(10, 20)
+test_rectangle(rectangle)
 
-    @Override
-    public void setHeight(int h) {
-        super.setWidth(h);
-        super.setHeight(h);
-    }
-}
-
-public class LiskovSubstitutionPrinciple {
-    public static void testRectangle() {
-        Rectangle r = new Rectangle(10, 20);
-        testRect(r);
-    }
-
-    public static void testSquare() {
-        Square s = new Square(10);
-        s.setWidth(20);
-        testRect(s);
-    }
-
-    private static void testRect(Rectangle rect) {
-        rect.setHeight(10);
-        rect.setWidth(20);
-        if(200 == rect.getHeight() * rect.getWidth())
-            System.out.println("success");
-        else
-            System.out.println("failure");
-    }
-
-    public static void main(String[] args) {
-        testRectangle();
-        testSquare();
-    }
-}
-
-/*
-success
-failure
-*/
+square = Square.new(10)
+square.width = 20
+test_rectangle(square)

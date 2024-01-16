@@ -1,84 +1,62 @@
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+require 'thread'
 
-// MethodRequest encapsulates a method call along with its arguments
-class MethodRequest {
-    private Runnable method;
+# MethodRequest encapsulates a method call along with its arguments
+class MethodRequest
+    def initialize(&block)
+        @block = block
+    end
 
-    public MethodRequest(Runnable method) {
-        this.method = method;
-    }
+    def execute
+        @block.call
+    end
+end
 
-    public void execute() {
-        method.run();
-    }
-}
+# ActiveObject encapsulates its own thread of control and executes methods asynchronously
+class ActiveObject
+    def initialize
+        @queue = Queue.new
+        @is_running = true
+    end
 
-// ActiveObject encapsulates its own thread of control and executes methods asynchronously
-class ActiveObject extends Thread {
-    private BlockingQueue<MethodRequest> queue;
-    private volatile boolean isRunning;
+    def run
+        until !@is_running && @queue.empty?
+        method_request = @queue.pop
+        method_request.execute
+        end
+    end
 
-    public ActiveObject() {
-        this.queue = new LinkedBlockingQueue<>();
-        this.isRunning = true;
-    }
+    def schedule_method(&block)
+        method_request = MethodRequest.new(&block)
+        @queue.push(method_request)
+    end
 
-    @Override
-    public void run() {
-        while (isRunning || !queue.isEmpty()) {
-            try {
-                MethodRequest methodRequest = queue.take();
-                methodRequest.execute();
-            } catch (InterruptedException e) {
-            }
-        }
-    }
+    def stop_thread
+        @is_running = false
+    end
+end
 
-    public void scheduleMethod(Runnable method) {
-        MethodRequest methodRequest = new MethodRequest(method);
-        queue.add(methodRequest);
-    }
+# Proxy acts as a wrapper around the ActiveObject and forwards method calls to it
+class Proxy
+    def initialize(active_object)
+        @active_object = active_object
+    end
 
-    public void stopThread() {
-        isRunning = false;
-        interrupt();
-    }
-}
+    def invoke_method(&block)
+        @active_object.schedule_method(&block)
+    end
+end
 
-// Proxy acts as a wrapper around the ActiveObject and forwards method calls to it
-class Proxy {
-    private ActiveObject activeObject;
+# Client code
+active_object = ActiveObject.new
+proxy = Proxy.new(active_object)
 
-    public Proxy(ActiveObject activeObject) {
-        this.activeObject = activeObject;
-    }
+# Start the ActiveObject thread
+active_object_thread = Thread.new { active_object.run }
 
-    public void invokeMethod(Runnable method) {
-        activeObject.scheduleMethod(method);
-    }
-}
+# Invoke methods on the Proxy
+proxy.invoke_method { puts 'Hello' }
+proxy.invoke_method { puts 'World' }
 
-// Example usage
-public class ActiveObjectPattern {
-    public static void main(String[] args) {
-        // Create an instance of ActiveObject and Proxy
-        ActiveObject activeObject = new ActiveObject();
-        Proxy proxy = new Proxy(activeObject);
-
-        // Start the ActiveObject thread
-        activeObject.start();
-
-        // Invoke methods on the Proxy
-        proxy.invokeMethod(() -> System.out.println("Hello"));
-        proxy.invokeMethod(() -> System.out.println("World"));
-
-        // Stop the ActiveObject thread
-        activeObject.stopThread();
-    }
-}
-
-/*
-Hello
-World
-*/
+# Stop the ActiveObject thread
+active_object.stop_thread
+active_object_thread.join

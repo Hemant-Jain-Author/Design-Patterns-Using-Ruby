@@ -1,40 +1,41 @@
-abstract class AbstractClass {
-    final void templateMethod() {
-        operation1();
-        operation2();
-    }
+# Define AbstractClass
+class AbstractClass
+  def template_method
+    operation1
+    operation2
+  end
 
-    abstract void operation1();
-    abstract void operation2();
-}
+  def operation1
+    raise NotImplementedError, 'Subclasses must implement the operation1 method'
+  end
 
-class ConcreteClass1 extends AbstractClass {
-    @Override
-    void operation1() {
-        System.out.println("Concrete Class 1 : Operation 1");
-    }
+  def operation2
+    raise NotImplementedError, 'Subclasses must implement the operation2 method'
+  end
+end
 
-    @Override
-    void operation2() {
-        System.out.println("Concrete Class 1 : Operation 2");
-    }
-}
+# Define ConcreteClass1 extending AbstractClass
+class ConcreteClass1 < AbstractClass
+  def operation1
+    puts 'Concrete Class 1 : Operation 1'
+  end
 
-class ConcreteClass2 extends AbstractClass {
-    @Override
-    void operation1() {
-        System.out.println("Concrete Class 2 : Operation 1");
-    }
+  def operation2
+    puts 'Concrete Class 1 : Operation 2'
+  end
+end
 
-    @Override
-    void operation2() {
-        System.out.println("Concrete Class 2 : Operation 2");
-    }
-}
+# Define ConcreteClass2 extending AbstractClass
+class ConcreteClass2 < AbstractClass
+  def operation1
+    puts 'Concrete Class 2 : Operation 1'
+  end
 
-public class TemplatePattern {
-    public static void main(String[] args) {
-        AbstractClass concreteClass = new ConcreteClass1();
-        concreteClass.templateMethod();
-    }
-}
+  def operation2
+    puts 'Concrete Class 2 : Operation 2'
+  end
+end
+
+# Client code
+concrete_class = ConcreteClass1.new
+concrete_class.template_method

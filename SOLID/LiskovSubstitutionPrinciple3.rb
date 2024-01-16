@@ -1,76 +1,66 @@
+class Rectangle
+  attr_accessor :height, :width
 
-class Rectangle {
-    private int height;
-    private int width;
+  def initialize(l, w)
+    @height = l
+    @width = w
+  end
 
-    public Rectangle(int l, int w) {
-        this.height = l;
-        this.width = w;
-    }
+  def set_width(w)
+      @width = w
+    end
+  
+    def set_height(h)
+      @height = h
+    end
 
-    public void setWidth(int w) {
-        this.width = w;
-    }
+    def get_width
+      @width
+    end
+  
+    def get_height
+      @height
+    end
 
-    public void setHeight(int h) {
-        this.height = h;
-    }
+end
 
-    public int getWidth() {
-        return this.width;
-    }
+class Square < Rectangle
+  def initialize(l)
+    super(l, l)
+  end
 
-    public int getHeight() {
-        return this.height;
-    }
-}
+  def set_width(w)
+    @width = w
+    @height = w
+  end
 
-class Square extends Rectangle {
-    public Square(int l) {
-        super(l, l);
-    }
+  def set_height(h)
+    @height = h
+    @width = h
+  end
+end
 
-    @Override
-    public void setWidth(int w) {
-        super.setWidth(w);
-        super.setHeight(w);
-    }
+# Client code
+def test_rectangle
+  r = Rectangle.new(10, 20)
+  test_rect(r)
+end
 
-    @Override
-    public void setHeight(int h) {
-        super.setHeight(h);
-        super.setWidth(h);
-    }
-}
+def test_square
+  s = Square.new(10)
+  s.set_width(20)
+  test_rect(s)
+end
 
-public class LiskovSubstitutionPrinciple3 {
-    public static void testRectangle() {
-        Rectangle r = new Rectangle(10, 20);
-        testRect(r);
-    }
+def test_rect(rect)
+  rect.set_height(10)
+  rect.set_width(20)
+  if 200 == rect.get_height * rect.get_width
+    puts 'success'
+  else
+    puts 'failure'
+  end
+end
 
-    public static void testSquare() {
-        Square s = new Square(10);
-        s.setWidth(20);
-        testRect(s);
-    }
-
-    private static void testRect(Rectangle rect) {
-        rect.setHeight(10);
-        rect.setWidth(20);
-        if(200 == rect.getHeight() * rect.getWidth())
-            System.out.println("success");
-        else
-            System.out.println("failure");
-    }
-
-    public static void main(String[] args) {
-        testRectangle();
-        testSquare();
-    }
-}
-
-/*
-success
-failure
-*/
+test_rectangle
+test_square

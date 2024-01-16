@@ -1,35 +1,34 @@
-// Abstract Expression
-interface AbstractExpression {
-    void interpret();
-}
+# Abstract Expression
+class AbstractExpression
+    def interpret
+        raise NotImplementedError, 'Subclasses must implement the interpret method'
+    end
+end
 
-// Nonterminal Expression
-class NonterminalExpression implements AbstractExpression {
-    private AbstractExpression expression;
+# Nonterminal Expression
+class NonterminalExpression < AbstractExpression
+    def initialize(expression)
+        @expression = expression
+    end
 
-    public NonterminalExpression(AbstractExpression expression) {
-        this.expression = expression;
-    }
+    def interpret
+        puts 'NonTerminalExpression:interpret'
+        @expression.interpret
+    end
+end
 
-    @Override
-    public void interpret() {
-        System.out.println("NonTerminalExpression:interpret");
-        expression.interpret();
-    }
-}
+# Terminal Expression
+class TerminalExpression < AbstractExpression
+    def interpret
+        puts 'TerminalExpression:interpret'
+    end
+end
 
-// Terminal Expression
-class TerminalExpression implements AbstractExpression {
-    @Override
-    public void interpret() {
-        System.out.println("TerminalExpression:interpret");
-    }
-}
+# Client Code
+tree = NonterminalExpression.new(TerminalExpression.new)
+tree.interpret
 
-// Client Code
-public class InterpreterPattern {
-    public static void main(String[] args) {
-        AbstractExpression tree = new NonterminalExpression(new TerminalExpression());
-        tree.interpret();
-    }
-}
+=begin 
+NonTerminalExpression:interpret
+TerminalExpression:interpret
+=end

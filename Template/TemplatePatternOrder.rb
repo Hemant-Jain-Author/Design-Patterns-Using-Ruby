@@ -1,46 +1,43 @@
-import java.io.*;
+# Define OrderPackingTemplate
+class OrderPackingTemplate
+  def pack_product
+    get_product
+    add_product_to_box
+    delivery
+  end
 
-abstract class OrderPackingTemplate {
-    
-    final void packProduct() {
-        getProduct();
-        addProductToBox();
-        delivery();
-    }
+  def get_product
+    puts 'Get the product from the shelf.'
+  end
 
-    void getProduct() {
-        System.out.println("Get the product from the shelf.");
-    }
+  def add_product_to_box
+    puts 'Put the product inside the box.'
+  end
 
-    void addProductToBox() {
-        System.out.println("Put the product inside the box.");
-    }
+  def delivery
+    raise NotImplementedError, 'Subclasses must implement the delivery method'
+  end
+end
 
-    abstract void delivery();
-}
+# Define OnlineOrderPacking extending OrderPackingTemplate
+class OnlineOrderPacking < OrderPackingTemplate
+  def delivery
+    puts 'Add delivery address slip and ship.'
+  end
+end
 
-class OnlineOrderPacking extends OrderPackingTemplate {
-    @Override
-    void delivery() {
-        System.out.println("Add delivery address slip and ship.");
-    }
-}
+# Define StoreOrderPacking extending OrderPackingTemplate
+class StoreOrderPacking < OrderPackingTemplate
+  def delivery
+    puts 'Add thanks message to the box and deliver to the customer.'
+  end
+end
 
-class StoreOrderPacking extends OrderPackingTemplate {
-    @Override
-    void delivery() {
-        System.out.println("Add thanks message to the box and deliver to the customer.");
-    }
-}
+# Client code
+online_order = OnlineOrderPacking.new
+online_order.pack_product
 
-public class TemplatePatternOrder {
-    public static void main(String[] args) {
-        OnlineOrderPacking onlineOrder = new OnlineOrderPacking();
-        onlineOrder.packProduct();
+puts
 
-        System.out.println();
-
-        StoreOrderPacking storeOrder = new StoreOrderPacking();
-        storeOrder.packProduct();
-    }
-}
+store_order = StoreOrderPacking.new
+store_order.pack_product

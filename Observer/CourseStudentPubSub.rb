@@ -1,73 +1,70 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+# Observer interface
+module Observer
+    def notify(subject, message)
+        raise NotImplementedError, 'Subclasses must implement the notify method'
+    end
+end
 
-interface Observer {
-    void notify(String subject, String message);
-}
+# Courses class
+class Courses
+    def initialize
+        @course_students = Hash.new { |hash, key| hash[key] = Set.new }
+    end
 
-class Courses {
-    private Map<String, Set<Observer>> courseStudents = new HashMap<>();
+    def subscribe(subject, student)
+        @course_students[subject] << student
+    end
 
-    public void subscribe(String subject, Observer student) {
-        courseStudents.computeIfAbsent(subject, k -> new HashSet<>()).add(student);
-    }
+    def unsubscribe(subject, student)
+        @course_students[subject].delete(student)
+    end
 
-    public void unsubscribe(String subject, Observer student) {
-        courseStudents.getOrDefault(subject, new HashSet<>()).remove(student);
-    }
+    def publish(subject, message)
+        return puts("No subscribers for subject '#{subject}'.") unless @course_students.key?(subject)
 
-    public void publish(String subject, String message) {
-        if (!courseStudents.containsKey(subject)) {
-            System.out.println("No subscribers for subject '" + subject + "'.");
-            return;
-        }
+        @course_students[subject].each do |student|
+            student.notify(subject, message)
+        end
+    end
+end
 
-        for (Observer student : courseStudents.get(subject)) {
-            student.notify(subject, message);
-        }
-    }
-}
+# Student class
+class Student
+    include Observer
 
-class Student implements Observer {
-    private String name;
+    attr_reader :name
 
-    public Student(String name) {
-        this.name = name;
-    }
+    def initialize(name)
+        @name = name
+    end
 
-    @Override
-    public void notify(String subject, String message) {
-        System.out.println(name + " received message on subject '" + subject + "': " + message);
-    }
-}
+    def notify(subject, message)
+        puts "#{name} received message on subject '#{subject}': #{message}"
+    end
+end
 
-public class CourseStudentPubSub {
-    public static void main(String[] args) {
-        Courses courses = new Courses();
-        Student john = new Student("John");
-        Student eric = new Student("Eric");
-        Student jack = new Student("Jack");
+# Client code
+courses = Courses.new
+john = Student.new('John')
+eric = Student.new('Eric')
+jack = Student.new('Jack')
 
-        courses.subscribe("English", john);
-        courses.subscribe("English", eric);
-        courses.subscribe("Maths", eric);
-        courses.subscribe("Science", jack);
+courses.subscribe('English', john)
+courses.subscribe('English', eric)
+courses.subscribe('Maths', eric)
+courses.subscribe('Science', jack)
 
-        courses.publish("English", "Tomorrow class at 11");
-        courses.publish("Maths", "Tomorrow class at 1");
+courses.publish('English', 'Tomorrow class at 11')
+courses.publish('Maths', 'Tomorrow class at 1')
 
-        // Unsubscribe Eric from English
-        courses.unsubscribe("English", eric);
+# Unsubscribe Eric from English
+courses.unsubscribe('English', eric)
 
-        courses.publish("English", "Updated schedule for English");
-    }
-}
+courses.publish('English', 'Updated schedule for English')
 
-/*
-Eric received message on subject 'English': Tomorrow class at 11
+=begin 
 John received message on subject 'English': Tomorrow class at 11
+Eric received message on subject 'English': Tomorrow class at 11
 Eric received message on subject 'Maths': Tomorrow class at 1
 John received message on subject 'English': Updated schedule for English
-*/
+=end

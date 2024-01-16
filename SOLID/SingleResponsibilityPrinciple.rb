@@ -1,79 +1,54 @@
-class Animal {
-    String name;
+class Animal
+  attr_reader :name
 
-    public Animal(String name) {
-        this.name = name;
-    }
+  def initialize(name)
+    @name = name
+  end
 
-    public void eat() {
-        System.out.println(name + " is eating.");
-    }
+  def eat
+    puts "#{name} is eating."
+  end
 
-    public void sleep() {
-        System.out.println(name + " is sleeping.");
-    }
+  def sleep
+    puts "#{name} is sleeping."
+  end
 
-    public void makeSound() {
-        System.out.println(name + " is making a sound.");
-    }
-}
+  def make_sound
+    puts "#{name} is making a sound."
+  end
+end
 
-class Mammal extends Animal {
-    public Mammal(String name) {
-        super(name);
-    }
+class Mammal < Animal
+  def give_birth
+    puts "#{name} is giving birth to live young."
+  end
+end
 
-    public void giveBirth() {
-        System.out.println(name + " is giving birth to live young.");
-    }
-}
+class Reptile < Animal
+  def lay_eggs
+    puts "#{name} is laying eggs."
+  end
+end
 
-class Reptile extends Animal {
-    public Reptile(String name) {
-        super(name);
-    }
+class Bird < Animal
+  def fly
+    puts "#{name} is flying."
+  end
 
-    public void layEggs() {
-        System.out.println(name + " is laying eggs.");
-    }
-}
+  def lay_eggs
+    puts "#{name} is laying eggs."
+  end
+end
 
-class Bird extends Animal {
-    public Bird(String name) {
-        super(name);
-    }
+# Client code
+animal1 = Mammal.new("Cat")
+animal1.give_birth
+animal1.make_sound
 
-    public void fly() {
-        System.out.println(name + " is flying.");
-    }
+animal2 = Reptile.new("Snake")
+animal2.lay_eggs
+animal2.eat
 
-    public void layEggs() {
-        System.out.println(name + " is laying eggs.");
-    }
-}
-
-// Client code.
-public class SingleResponsibilityPrinciple {
-    public static void main(String[] args) {
-        Mammal animal1 = new Mammal("Cat");
-        animal1.giveBirth();
-        animal1.makeSound();
-
-        Reptile animal2 = new Reptile("Snake");
-        animal2.layEggs();
-        animal2.eat();
-
-        Bird animal3 = new Bird("Eagle");
-        animal3.fly();
-        animal3.layEggs();
-    }
-}
-
-/*
-Cat is giving birth to live young.
-Cat is making a sound.
-Snake is laying eggs.
-Snake is eating.
-Eagle is flying.
-Eagle is laying eggs.
-*/
+animal3 = Bird.new("Eagle")
+animal3.lay_eggs
+animal3.fly

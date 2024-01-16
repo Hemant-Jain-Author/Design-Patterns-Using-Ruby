@@ -1,55 +1,51 @@
-class Rectangle {
-    private double length;
-    private double breadth;
+class Rectangle
+    attr_reader :length, :breadth
+  
+    def initialize(length, breadth)
+      @length = length
+      @breadth = breadth
+    end
+  
+    def area
+      length * breadth
+    end
+  
+    def perimeter
+      2 * (length + breadth)
+    end
+  
+    # Overloading + operator
+    def add(rec)
+      Rectangle.new(self.length + rec.length, self.breadth + rec.breadth)
+    end
+  
+    # Overloading - operator
+    def subtract(rec)
+      Rectangle.new((self.length - rec.length).abs, (self.breadth - rec.breadth).abs)
+    end
+  
+    # Overloading == operator
+    def ==(rec)
+      self.length == rec.length && self.breadth == rec.breadth
+    end
+  
+    # Overriding to_s method
+    def to_s
+      "Rectangle length and width: #{length} #{breadth}"
+    end
+end
+  
+# Client code
+r1 = Rectangle.new(4, 6)
+r2 = Rectangle.new(10, 6)
 
-    public Rectangle(double length, double breadth) {
-        this.length = length;
-        this.breadth = breadth;
-    }
+puts "Is r1 == r2 ? #{r1 == r2}"
 
-    public double area() {
-        return length * breadth;
-    }
+r3 = r1.add(r2)
+r4 = r1.subtract(r2)
 
-    public double perimeter() {
-        return 2 * (length + breadth);
-    }
-
-    // Overloading + operator
-    public Rectangle add(Rectangle rec) {
-        return new Rectangle(this.length + rec.length, this.breadth + rec.breadth);
-    }
-
-    // Overloading - operator
-    public Rectangle subtract(Rectangle rec) {
-        return new Rectangle(Math.abs(this.length - rec.length), Math.abs(this.breadth - rec.breadth));
-    }
-
-    // Overloading == operator
-    public boolean equals(Rectangle rec) {
-        return this.length == rec.length && this.breadth == rec.breadth;
-    }
-
-    // Overriding toString method
-    @Override
-    public String toString() {
-        return "Rectangle length and width: " + length + " " + breadth;
-    }
-}
-
-public class OperatorOverloading {
-    public static void main(String[] args) {
-        Rectangle r1 = new Rectangle(4, 6);
-        Rectangle r2 = new Rectangle(10, 6);
-
-        System.out.println("Is r1 == r2 ? " + r1.equals(r2));
-
-        Rectangle r3 = r1.add(r2);
-        Rectangle r4 = r1.subtract(r2);
-
-        System.out.println(r1);
-        System.out.println(r2);
-        System.out.println(r3);
-        System.out.println(r4);
-    }
-}
+puts r1
+puts r2
+puts r3
+puts r4
+  

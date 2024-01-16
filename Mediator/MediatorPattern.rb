@@ -1,82 +1,62 @@
-import java.util.HashMap;
-import java.util.Map;
+class ChatRoom
+    def initialize
+        @participants = {}
+    end
 
-interface IChatRoom {
-    void addParticipant(IParticipant participant);
-    void broadcast(String message, String origin);
-    void sendMessage(String message, String to);
-}
+    def add_participant(participant)
+        @participants[participant.name] = participant
+    end
 
-class ChatRoom implements IChatRoom {
-    private Map<String, IParticipant> participants = new HashMap<>();
+    def broadcast(message, origin)
+        puts "ChatRoom broadcast Message : #{message}"
+        @participants.values.each do |p|
+            p.receive(message) unless p.name == origin
+        end
+    end
 
-    @Override
-    public void addParticipant(IParticipant participant) {
-        participants.put(participant.getName(), participant);
-    }
+    def send_message(message, to)
+        @participants[to].receive(message)
+    end
+end
 
-    @Override
-    public void broadcast(String message, String origin) {
-        System.out.println("ChatRoom broadcast Message : " + message);
-        participants.values().stream()
-                .filter(p -> !p.getName().equals(origin))
-                .forEach(p -> p.receive(message));
-    }
+class Participant
+    attr_reader :name, :chat_room
 
-    @Override
-    public void sendMessage(String message, String to) {
-        participants.get(to).receive(message);
-    }
-}
+    def initialize(name, chat_room)
+        @name = name
+        @chat_room = chat_room
+        chat_room.add_participant(self)
+    end
 
-interface IParticipant {
-    String getName();
-    void broadcast(String message);
-    void send(String message, String to);
-    void receive(String message);
-}
+    def broadcast(message)
+        puts "#{name} broadcast Message : #{message}"
+        chat_room.broadcast(message, name)
+    end
 
-class Participant implements IParticipant {
-    private String name;
-    private IChatRoom chatRoom;
+    def send_message(message, to)
+        puts "#{name} sent Message : #{message}"
+        chat_room.send_message(message, to)
+    end
 
-    public Participant(String name, IChatRoom chatRoom) {
-        this.name = name;
-        this.chatRoom = chatRoom;
-        chatRoom.addParticipant(this);
-    }
+    def receive(message)
+        puts "#{name} received Message : #{message}"
+    end
+end
 
-    @Override
-    public String getName() {
-        return name;
-    }
+# Client code
+chat_room = ChatRoom.new
+james = Participant.new("James", chat_room)
+michael = Participant.new("Michael", chat_room)
+robert = Participant.new("Robert", chat_room)
 
-    @Override
-    public void broadcast(String message) {
-        System.out.println(name + " broadcast Message : " + message);
-        chatRoom.broadcast(message, name);
-    }
+michael.send_message("Good Morning.", "James")
+james.broadcast("Hello, World!")
 
-    @Override
-    public void send(String message, String to) {
-        System.out.println(name + " sent Message : " + message);
-        chatRoom.sendMessage(message, to);
-    }
-
-    @Override
-    public void receive(String message) {
-        System.out.println(name + " received Message : " + message);
-    }
-}
-
-public class MediatorPattern {
-    public static void main(String[] args) {
-        ChatRoom chatRoom = new ChatRoom();
-        Participant james = new Participant("James", chatRoom);
-        Participant michael = new Participant("Michael", chatRoom);
-        Participant robert = new Participant("Robert", chatRoom);
-
-        michael.send("Good Morning.", "James");
-        james.broadcast("Hello, World!");
-    }
-}
+=begin 
+Michael sent Message : Good Morning.
+James received Message : Good Morning.
+James broadcast Message : Hello, World!
+ChatRoom broadcast Message : Hello, World!
+Michael received Message : Hello, World!
+Robert received Message : Hello, World!
+=end

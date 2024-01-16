@@ -1,47 +1,33 @@
-class Person {
-    protected String name;
-    protected int age;
-    protected String gender;
+class Person
+    attr_reader :name, :age, :gender
 
-    public Person(String name, int age, String gender) {
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-    }
+    def initialize(name, age, gender)
+        @name = name
+        @age = age
+        @gender = gender
+    end
 
-    public String toString() {
-        return String.format("Person: %s is a %s and %s years old.", name, gender, age);
-    }
+    def to_s
+        "Person: #{@name} is a #{@gender} and #{@age} years old."
+    end
+end
 
-    public String getGender() {
-        return gender;
-    }
-}
+class Citizen < Person
+    attr_reader :voter_id
 
-class Citizen extends Person {
-    private int id;
+    def initialize(name, age, voter_id, gender)
+        super(name, age, gender)
+        @voter_id = voter_id
+    end
 
-    public Citizen(String name, int age, int id, String gender) {
-        super(name, age, gender);
-        this.id = id;
-    }
+    def to_s
+        "Citizen: #{@name} is a #{@gender} and #{@age} years old with voter id #{@voter_id}."
+    end
+end
 
-    public int getVoterId() {
-        return id;
-    }
+# Client code
+p = Person.new("John", 32, "Male")
+puts p.to_s
 
-    @Override
-    public String toString() {
-        return String.format("Citizen: %s is a %s and %s years old with voter id %s.", name, gender, age, id);
-    }
-}
-
-public class Inheritance {
-    public static void main(String[] args) {
-        Person p = new Person("John", 32, "Male");
-        System.out.println(p);
-
-        Citizen c = new Citizen("Smith", 31, 1234, "Male");
-        System.out.println(c);
-    }
-}
+c = Citizen.new("Smith", 31, 1234, "Male")
+puts c.to_s

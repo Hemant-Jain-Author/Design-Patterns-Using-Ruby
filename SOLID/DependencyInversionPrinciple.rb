@@ -1,47 +1,40 @@
-import java.util.Objects;
+# Define the abstract IMailSender class
+class IMailSender
+  def send_mail(to_address, from_address, subject, body)
+    raise NotImplementedError, 'Subclasses must implement the send_mail method'
+  end
+end
 
-abstract class IMailSender {
-    abstract void sendMail(String toAddress, String fromAddress, String subject, String body);
-}
+# Implement the SmtpServer class extending IMailSender
+class SmtpServer < IMailSender
+  def send_mail(to_address, from_address, subject, body)
+    puts "Send mail: subject: #{subject} from: #{from_address} to: #{to_address} body: #{body}"
+  end
+end
 
-class SmtpServer extends IMailSender {
-    @Override
-    void sendMail(String toAddress, String fromAddress, String subject, String body) {
-        System.out.printf("Send mail: subject: %s from: %s to: %s body: %s%n", subject, fromAddress, toAddress, body);
-    }
-}
+# Implement the EmailSender class
+class EmailSender
+  def initialize(mail_sender)
+    @mail_sender = mail_sender
+  end
 
-class EmailSender {
-    private final IMailSender mailSender;
+  def send_email(to_address, from_address, subject, body)
+    # Delegate email sending to the mail sender implementation
+    @mail_sender.send_mail(to_address, from_address, subject, body)
+  end
+end
 
-    public EmailSender(IMailSender mailSender) {
-        this.mailSender = Objects.requireNonNull(mailSender);
-    }
+# Client code
+# Create an instance of the SmtpServer class
+smtp_server = SmtpServer.new
 
-    public void sendEmail(String toAddress, String fromAddress, String subject, String body) {
-        // Delegate email sending to the mail sender implementation
-        mailSender.sendMail(toAddress, fromAddress, subject, body);
-    }
-}
+# Create an instance of the EmailSender class and pass in the SmtpServer instance
+email_sender = EmailSender.new(smtp_server)
 
-// Client code.
-public class DependencyInversionPrinciple {
-    public static void main(String[] args) {
-        // Create an instance of the SmtpServer class
-        SmtpServer smtpServer = new SmtpServer();
-
-        // Create an instance of the EmailSender class and pass in the SmtpServer instance
-        EmailSender emailSender = new EmailSender(smtpServer);
-
-        // Send an email using the EmailSender instance
-        emailSender.sendEmail(
-                "recipient@example.com",
-                "sender@example.com",
-                "mail subject.",
-                "This is a test email body.");
-    }
-}
-
-/*
-Send mail: subject: mail subject. from: sender@example.com to: recipient@example.com body: This is a test email body.
-*/
+# Send an email using the EmailSender instance
+email_sender.send_email(
+  'recipient@example.com',
+  'sender@example.com',
+  'mail subject.',
+  'This is a test email body.'
+)

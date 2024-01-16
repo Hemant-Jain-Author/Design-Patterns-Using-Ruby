@@ -1,83 +1,74 @@
-class Student {
-    private String name;
-    private int id;
+# Student class
+class Student
+    attr_reader :name, :id
 
-    public Student(String name, int id) {
-        this.name = name;
-        this.id = id;
-    }
+    def initialize(name, id)
+        @name = name
+        @id = id
+    end
+end
 
-    public String getName() {
-        return name;
-    }
+# Model class
+class Model
+    attr_reader :student
 
-    public int getId() {
-        return id;
-    }
-}
+    def initialize
+        @student = Student.new("Harry", 1)
+    end
 
-class Model {
-    private Student student;
+    def set_data(name, id)
+        puts "Model: Set data: #{name} #{id}"
+        @student = Student.new(name, id)
+    end
 
-    public Model() {
-        this.student = new Student("Harry", 1);
-    }
+    def get_data
+        puts "Model: Get data."
+        @student
+    end
+end
 
-    public void setData(String name, int id) {
-        System.out.println("Model: Set data : " + name + " " + id);
-        this.student = new Student(name, id);
-    }
+# View class
+class View
+    def update(name, id)
+        puts "View: Student Info: #{name} #{id}"
+    end
+end
 
-    public Student getData() {
-        System.out.println("Model: Get data.");
-        return student;
-    }
-}
+# Presenter class
+class Presenter
+    def initialize
+        @model = Model.new
+        @view = View.new
+    end
 
-class View {
-    public void update(String name, int id) {
-        System.out.println("View: Student Info : " + name + " " + id);
-    }
-}
+    def set_data(name, id)
+        puts "Presenter: Receive data from client."
+        @model.set_data(name, id)
+    end
 
-class Presenter {
-    private Model model;
-    private View view;
+    def update_view
+        puts "Presenter: Receive update from client."
+        data = @model.get_data
+        @view.update(data.name, data.id)
+    end
+end
 
-    public Presenter() {
-        this.model = new Model();
-        this.view = new View();
-    }
+# Client code
+puts "Client: Pass trigger to Presenter."
+presenter = Presenter.new
+presenter.update_view
 
-    public void setData(String name, int id) {
-        System.out.println("Presenter: Receive data from client.");
-        model.setData(name, id);
-    }
+presenter.set_data("Jack", 2)
+presenter.update_view
 
-    public void updateView() {
-        System.out.println("Presenter: Receive update from client.");
-        Student data = model.getData();
-        view.update(data.getName(), data.getId());
-    }
-}
-
-public class MVPPatternStudent {
-    public static void main(String[] args) {
-        Presenter presenter = new Presenter();
-        presenter.updateView();
-
-        presenter.setData("jack", 2);
-        presenter.updateView();
-    }
-}
-
-/*
+=begin 
+Client: Pass trigger to Presenter.
 Presenter: Receive update from client.
 Model: Get data.
-View: Student Info : Harry 1
+View: Student Info: Harry 1
 Presenter: Receive data from client.
-Model: Set data : jack 2
+Model: Set data: Jack 2
 Presenter: Receive update from client.
 Model: Get data.
-View: Student Info : jack 2
-*/
+View: Student Info: Jack 2
+=end

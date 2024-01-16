@@ -1,78 +1,72 @@
-// Abstraction
-abstract class Shape {
-    protected DrawingAPI implementation;
+# Abstraction
+class Shape
+    attr_accessor :implementation
+  
+    def initialize(implementation)
+        @implementation = implementation
+    end
+  
+    def draw
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
+  
+  # Concrete Abstraction
+class Square < Shape
+    def draw
+        implementation.draw_square
+    end
+end
+  
+class Circle < Shape
+    def draw
+        implementation.draw_circle
+    end
+end
+  
+  # Implementation
+class DrawingAPI
+    def draw_square
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+  
+    def draw_circle
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
+  
+# Concrete Implementation
+class WindowsAPI < DrawingAPI
+    def draw_square
+        puts 'Drawing a square on Windows.'
+    end
+  
+    def draw_circle
+        puts 'Drawing a circle on Windows.'
+    end
+end
+  
+class MacAPI < DrawingAPI
+    def draw_square
+        puts 'Drawing a square on Mac.'
+    end
+  
+    def draw_circle
+        puts 'Drawing a circle on Mac.'
+    end
+end
+  
+# Client code
+windows_api = WindowsAPI.new
+mac_api = MacAPI.new
 
-    public Shape(DrawingAPI implementation) {
-        this.implementation = implementation;
-    }
+square = Square.new(windows_api)
+square.draw  # Output: Drawing a square on Windows.
 
-    public abstract void draw();
-}
+circle = Circle.new(mac_api)
+circle.draw  # Output: Drawing a circle on Mac.
 
-// Concrete Abstraction
-class Square extends Shape {
-    public Square(DrawingAPI implementation) {
-        super(implementation);
-    }
-
-    @Override
-    public void draw() {
-        implementation.drawSquare();
-    }
-}
-
-class Circle extends Shape {
-    public Circle(DrawingAPI implementation) {
-        super(implementation);
-    }
-
-    @Override
-    public void draw() {
-        implementation.drawCircle();
-    }
-}
-
-// Implementation
-interface DrawingAPI {
-    void drawSquare();
-    void drawCircle();
-}
-
-// Concrete Implementation
-class WindowsAPI implements DrawingAPI {
-    @Override
-    public void drawSquare() {
-        System.out.println("Drawing a square on Windows.");
-    }
-
-    @Override
-    public void drawCircle() {
-        System.out.println("Drawing a circle on Windows.");
-    }
-}
-
-class MacAPI implements DrawingAPI {
-    @Override
-    public void drawSquare() {
-        System.out.println("Drawing a square on Mac.");
-    }
-
-    @Override
-    public void drawCircle() {
-        System.out.println("Drawing a circle on Mac.");
-    }
-}
-
-// Usage
-public class BridgePatternShape2 {
-    public static void main(String[] args) {
-        DrawingAPI windowsAPI = new WindowsAPI();
-        DrawingAPI macAPI = new MacAPI();
-
-        Shape square = new Square(windowsAPI);
-        square.draw();  // Output: Drawing a square on Windows.
-
-        Shape circle = new Circle(macAPI);
-        circle.draw();  // Output: Drawing a circle on Mac.
-    }
-}
+=begin 
+Drawing a square on Windows.
+Drawing a circle on Mac.
+=end

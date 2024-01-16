@@ -1,45 +1,49 @@
-interface State {
-    void handle(Context context);
-}
+# Define State interface
+module State
+  def handle(context)
+    raise NotImplementedError, 'Subclasses must implement the handle method'
+  end
+end
 
-class Context {
-    private State currentState;
+# Define Context class
+class Context
+  attr_accessor :current_state
 
-    Context(State state) {
-        this.currentState = state;
-    }
+  def initialize(state)
+    @current_state = state
+  end
 
-    void changeState(State state) {
-        this.currentState = state;
-    }
+  def change_state(state)
+    @current_state = state
+  end
 
-    void request() {
-        this.currentState.handle(this);
-    }
-}
+  def request
+    @current_state.handle(self)
+  end
+end
 
-class ConcreteState1 implements State {
-    @Override
-    public void handle(Context context) {
-        System.out.println("ConcreteState1 handle");
-        context.changeState(new ConcreteState2());
-    }
-}
+# Define ConcreteState1 class implementing State
+class ConcreteState1
+  include State
 
-class ConcreteState2 implements State {
-    @Override
-    public void handle(Context context) {
-        System.out.println("ConcreteState2 handle");
-        context.changeState(new ConcreteState1());
-    }
-}
+  def handle(context)
+    puts 'ConcreteState1 handle'
+    context.change_state(ConcreteState2.new)
+  end
+end
 
-// Client code.
-public class StatePattern2 {
-    public static void main(String[] args) {
-        State state1 = new ConcreteState1();
-        Context context = new Context(state1);
-        context.request();
-        context.request();
-    }
-}
+# Define ConcreteState2 class implementing State
+class ConcreteState2
+  include State
+
+  def handle(context)
+    puts 'ConcreteState2 handle'
+    context.change_state(ConcreteState1.new)
+  end
+end
+
+# Client code
+state1 = ConcreteState1.new
+context = Context.new(state1)
+context.request
+context.request

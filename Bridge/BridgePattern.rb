@@ -1,48 +1,44 @@
-// Abstraction interface
-interface Abstraction {
-    void operation();
-}
+# Abstraction interface
+class Abstraction
+    def initialize(imp)
+        @imp = imp
+    end
+  
+    def operation
+        @imp.operation
+    end
+end
+  
+  # Implementor interface
+class Implementor
+    def operation
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
+  
+# ConcreteImplementor1 class
+class ConcreteImplementor1 < Implementor
+    def operation
+        puts 'ConcreteImplementor1 operation'
+    end
+end
+  
+# ConcreteImplementor2 class
+class ConcreteImplementor2 < Implementor
+    def operation
+        puts 'ConcreteImplementor2 operation'
+    end
+end
+  
+# ConcreteAbstraction class
+class ConcreteAbstraction < Abstraction
+end
+  
+# Client code
+imp = ConcreteImplementor1.new
+abstraction = ConcreteAbstraction.new(imp)
+abstraction.operation
 
-// Implementor interface
-interface Implementor {
-    void operation();
-}
-
-// ConcreteImplementor1 class
-class ConcreteImplementor1 implements Implementor {
-    @Override
-    public void operation() {
-        System.out.println("ConcreteImplementor1 operation");
-    }
-}
-
-// ConcreteImplementor2 class
-class ConcreteImplementor2 implements Implementor {
-    @Override
-    public void operation() {
-        System.out.println("ConcreteImplementor2 operation");
-    }
-}
-
-// ConcreteAbstraction class
-class ConcreteAbstraction implements Abstraction {
-    private Implementor imp;
-
-    public ConcreteAbstraction(Implementor imp) {
-        this.imp = imp;
-    }
-
-    @Override
-    public void operation() {
-        imp.operation();
-    }
-}
-
-// Client code
-public class BridgePattern {
-    public static void main(String[] args) {
-        Implementor c1 = new ConcreteImplementor1();
-        Abstraction abstraction = new ConcreteAbstraction(c1);
-        abstraction.operation();
-    }
-}
+=begin
+ConcreteImplementor1 operation
+=end

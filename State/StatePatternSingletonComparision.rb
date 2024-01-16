@@ -1,119 +1,85 @@
-import java.time.Duration;
-import java.time.Instant;
+# Define State interface
+module State
+  def handle(context)
+    raise NotImplementedError, 'Subclasses must implement the handle method'
+  end
+end
 
-interface State {
-    void handle(Context context);
-}
+# Define Context class
+class Context
+  attr_accessor :current_state
 
-class Context {
-    private State currentState;
+  def initialize(state)
+    @current_state = state
+  end
 
-    Context(State state) {
-        this.currentState = state;
-    }
+  def change_state(state)
+    @current_state = state
+  end
 
-    void changeState(State state) {
-        this.currentState = state;
-    }
+  def request
+    @current_state.handle(self)
+  end
+end
 
-    void request() {
-        this.currentState.handle(this);
-    }
-}
+# Define Singleton module for managing instances
+module Singleton
+  def instance
+    @instance ||= new
+  end
+end
 
-class ConcreteState1 implements State {
-    private static ConcreteState1 instance;
+# Define ConcreteState1 class implementing State with Singleton pattern
+class ConcreteState1
+  include State
+  extend Singleton
 
-    private ConcreteState1() {
-    }
+  def handle(context)
+    context.change_state(ConcreteState2.instance)
+  end
+end
 
-    static ConcreteState1 getInstance() {
-        if (instance == null) {
-            instance = new ConcreteState1();
-        }
-        return instance;
-    }
+# Define ConcreteState2 class implementing State with Singleton pattern
+class ConcreteState2
+  include State
+  extend Singleton
 
-    @Override
-    public void handle(Context context) {
-        context.changeState(ConcreteState2.getInstance());
-    }
-}
+  def handle(context)
+    context.change_state(ConcreteState3.instance)
+  end
+end
 
-class ConcreteState2 implements State {
-    private static ConcreteState2 instance;
+# Define ConcreteState3 class implementing State with Singleton pattern
+class ConcreteState3
+  include State
+  extend Singleton
 
-    private ConcreteState2() {
-    }
+  def handle(context)
+    context.change_state(ConcreteState4.instance)
+  end
+end
 
-    static ConcreteState2 getInstance() {
-        if (instance == null) {
-            instance = new ConcreteState2();
-        }
-        return instance;
-    }
+# Define ConcreteState4 class implementing State with Singleton pattern
+class ConcreteState4
+  include State
+  extend Singleton
 
-    @Override
-    public void handle(Context context) {
-        context.changeState(ConcreteState3.getInstance());
-    }
-}
+  def handle(context)
+    context.change_state(ConcreteState1.instance)
+  end
+end
 
-class ConcreteState3 implements State {
-    private static ConcreteState3 instance;
+# Client code
+def test(state, count)
+  context = Context.new(state)
+  start = Time.now
+  count.times { context.request }
+  duration = Time.now - start
+  puts duration
+end
 
-    private ConcreteState3() {
-    }
+state1 = ConcreteState1.instance
+test(state1, 10)
 
-    static ConcreteState3 getInstance() {
-        if (instance == null) {
-            instance = new ConcreteState3();
-        }
-        return instance;
-    }
-
-    @Override
-    public void handle(Context context) {
-        context.changeState(ConcreteState4.getInstance());
-    }
-}
-
-class ConcreteState4 implements State {
-    private static ConcreteState4 instance;
-
-    private ConcreteState4() {
-    }
-
-    static ConcreteState4 getInstance() {
-        if (instance == null) {
-            instance = new ConcreteState4();
-        }
-        return instance;
-    }
-
-    @Override
-    public void handle(Context context) {
-        context.changeState(ConcreteState1.getInstance());
-    }
-}
-
-public class StatePatternSingletonComparision {
-    public static void main(String[] args) {
-        ConcreteState1 state1 = ConcreteState1.getInstance();
-        test(state1, 10);
-
-        ConcreteState1 state2 = ConcreteState1.getInstance();
-        test(state2, 10);
-    }
-
-    static void test(State state, int count) {
-        Context context = new Context(state);
-        Instant start = Instant.now();
-        for (int i = 0; i < count; i++) {
-            context.request();
-        }
-        Instant end = Instant.now();
-        Duration duration = Duration.between(start, end);
-        System.out.println(duration.toMillis() / 1000.0);
-    }
-}
+state2 = ConcreteState1.instance
+test(state2, 10)

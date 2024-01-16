@@ -1,33 +1,28 @@
-// Desired Interface
-interface DesiredInterface {
-    void operation();
-}
+# Desired Interface
+module DesiredInterface
+    def operation
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
 
-// Adapter class
-class Adapter implements DesiredInterface {
-    private Adaptee adaptee;
+# Adapter class
+class Adapter include DesiredInterface
+    def initialize
+        @adaptee = Adaptee.new
+    end
 
-    public Adapter() {
-        this.adaptee = new Adaptee();
-    }
+    def operation
+        @adaptee.some_operation
+    end
+end
 
-    @Override
-    public void operation() {
-        adaptee.someOperation();
-    }
-}
+# Adaptee class
+class Adaptee
+    def some_operation
+        puts "Adaptee someOperation() function called."
+    end
+end
 
-// Adaptee class
-class Adaptee {
-    public void someOperation() {
-        System.out.println("Adaptee someOperation() function called.");
-    }
-}
-
-// Client Code
-public class AdapterPattern {
-    public static void main(String[] args) {
-        DesiredInterface adapter = new Adapter();
-        adapter.operation();
-    }
-}
+# Client Code
+adapter = Adapter.new
+adapter.operation

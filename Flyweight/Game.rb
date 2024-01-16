@@ -1,43 +1,67 @@
-from abc import ABC, abstractmethod
+# Flyweight interface
+class Flyweight
+    attr_reader :intrinsic_state
 
-class Flyweight(ABC):
-    def __init__(self, intrinsic_state):
-        self.intrinsic_state = intrinsic_state  # intrinsic state  # repeted state
+    def initialize(intrinsic_state)
+        @intrinsic_state = intrinsic_state  # intrinsic state
+    end
 
-    @abstractmethod
-    def operation(self, extrinsic_state): # extrinsic state
-        pass
+    def operation(extrinsic_state) # extrinsic state
+        raise NotImplementedError, 'Subclasses must implement the operation method'
+    end
+end
 
-class ConcreteFlyweight(Flyweight):
-    def operation(self, extrinsic_state):
-        print("Operation inside concrete flyweight.")
+# Concrete Flyweight class
+class ConcreteFlyweight < Flyweight
+    def operation(extrinsic_state)
+        puts 'Operation inside concrete flyweight.'
+    end
+end
 
+# FlyweightFactory class
+class FlyweightFactory
+    def initialize
+        @flyweights = {}
+    end
 
-class FlyweightFactory:
-    def __init__(self):
-        self._flyweights = {}
+    def get_flyweight(intrinsic_state)
+        @flyweights[intrinsic_state] ||= ConcreteFlyweight.new(intrinsic_state)
+    end
+end
 
-    def getFlyweight(self, intrinsic_state):
-        if intrinsic_state not in self._flyweights:
-            self._flyweights[intrinsic_state] = ConcreteFlyweight(intrinsic_state)
-        return self._flyweights[intrinsic_state]
+# ClientClass
+class ClientClass
+    attr_reader :flyweight, :extrinsic_state
 
-class ClientClass:
-    def __init__(self, factory, intrinsic_state, extrinsic_state):
-        self.flyweitht = factory.getFlyweight(intrinsic_state) 
-        self.extrinsic_state = extrinsic_state
+    def initialize(factory, intrinsic_state, extrinsic_state)
+        @flyweight = factory.get_flyweight(intrinsic_state)
+        @extrinsic_state = extrinsic_state
+    end
 
-    def operation(self):
-        print("Operation inside context.")
-        self.flyweitht.operation(self.extrinsic_state)
+    def operation
+        puts 'Operation inside context.'
+        flyweight.operation(extrinsic_state)
+    end
+end
 
 # Client code
-factory = FlyweightFactory()
-c = ClientClass(factory, "common", "separate1")
-c.operation()
+factory = FlyweightFactory.new
+c = ClientClass.new(factory, 'common', 'separate1')
+c.operation
 
-c2 = ClientClass(factory, "common", "separate2")
-c2.operation()
+c2 = ClientClass.new(factory, 'common', 'separate2')
+c2.operation
 
-print(c, c2)
-print(c.flyweitht, c2.flyweitht)
+puts c, c2
+puts c.flyweight, c2.flyweight
+
+=begin 
+Operation inside context.
+Operation inside concrete flyweight.
+Operation inside context.
+Operation inside concrete flyweight.
+#<ClientClass:0x00007f307440e970>
+#<ClientClass:0x00007f307440d2c8>
+#<ConcreteFlyweight:0x00007f307440df98>
+#<ConcreteFlyweight:0x00007f307440df98>
+=end

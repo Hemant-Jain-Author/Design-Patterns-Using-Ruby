@@ -1,112 +1,91 @@
-// A class representing a house
-class House {
-    private String wall;
-    private String roof;
+# A class representing a house
+class House
+    attr_accessor :wall, :roof
+  
+    def initialize(wall, roof)
+        @wall = wall
+        @roof = roof
+    end
+  
+    def to_s
+        "House of #{@wall} and #{@roof}"
+    end
+end
+  
+# An abstract builder class that specifies the interface for building a house
+class HouseBuilder
+    attr_accessor :house
+  
+    def initialize
+        @house = House.new("", "")
+    end
+  
+    def set_wall
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+  
+    def set_roof
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+  
+    def get_house
+        temp = @house
+        @house = House.new("", "") # assign new house.
+        temp
+    end
+end
+  
+# A builder class that builds a wooden house
+class WoodenHouseBuilder < HouseBuilder
+    def set_wall
+        @house.wall = "Wooden Wall"
+        self
+    end
+  
+    def set_roof
+        @house.roof = "Wooden Roof"
+        self
+    end
+end
+  
+# A builder class that builds a concrete house
+class ConcreteHouseBuilder < HouseBuilder
+    def set_wall
+        @house.wall = "Concrete Wall"
+        self
+    end
+  
+    def set_roof
+        @house.roof = "Concrete Roof"
+        self
+    end
+end
+  
+# A class that directs the building of a house
+class HouseDirector
+    attr_accessor :builder
+  
+    def initialize(builder)
+        @builder = builder
+    end
+  
+    def construct
+        @builder.set_wall.set_roof.get_house
+    end
+end
+  
+# Client code
+builder = ConcreteHouseBuilder.new
+director = HouseDirector.new(builder)
+house = director.construct
+puts house
 
-    public House(String wall, String roof) {
-        this.wall = wall;
-        this.roof = roof;
-    }
+builder = WoodenHouseBuilder.new
+director = HouseDirector.new(builder)
+house2 = director.construct
+puts house2
 
-    public void setWall(String wall){
-        this.wall = wall;
-    }
-
-    public void setRoof(String roof){
-        this.roof = roof;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("House of %s and %s", wall, roof);
-    }
-}
-
-// An abstract builder class that specifies the interface for building a house
-abstract class HouseBuilder {
-    protected House house;
-
-    public HouseBuilder() {
-        this.house = new House("", "");
-    }
-
-    public abstract HouseBuilder setWall();
-
-    public abstract HouseBuilder setRoof();
-
-    public House getHouse() {
-        House temp = this.house;
-        this.house = new House("", ""); // assign new house.
-        return temp;
-    }
-}
-
-// A builder class that builds a wooden house
-class WoodenHouseBuilder extends HouseBuilder {
-    @Override
-    public HouseBuilder setWall() {
-        this.house.setWall("Wooden Wall");
-        return this;
-    }
-
-    @Override
-    public HouseBuilder setRoof() {
-        this.house.setRoof("Wooden Roof");
-        return this;
-    }
-}
-
-// A builder class that builds a concrete house
-class ConcreteHouseBuilder extends HouseBuilder {
-    @Override
-    public HouseBuilder setWall() {
-        this.house.setWall("Concrete Wall");
-        return this;
-    }
-
-    @Override
-    public HouseBuilder setRoof() {
-        this.house.setRoof("Concrete Roof");
-        return this;
-    }
-}
-
-// A class that directs the building of a house
-class HouseDirector {
-    private HouseBuilder builder;
-
-    public HouseDirector(HouseBuilder builder) {
-        this.builder = builder;
-    }
-
-    public House construct() {
-        return this.builder.setWall().setRoof().getHouse();
-    }
-}
-
-// Client code
-public class BuilderPatternHouse {
-    public static void main(String[] args) {
-        HouseBuilder builder = new ConcreteHouseBuilder();
-        HouseDirector director = new HouseDirector(builder);
-        House house = director.construct();
-        System.out.println(house);
-
-        // Building a wooden house using a WoodenHouseBuilder object
-        builder = new WoodenHouseBuilder();
-        director = new HouseDirector(builder);
-        House house2 = director.construct();
-        System.out.println(house2);
-
-        // Displaying both houses
-        System.out.println(house);
-        System.out.println(house2);
-    }
-}
-
-/*
+=begin 
 House of Concrete Wall and Concrete Roof
 House of Wooden Wall and Wooden Roof
-House of Concrete Wall and Concrete Roof
-House of Wooden Wall and Wooden Roof
- */
+=end

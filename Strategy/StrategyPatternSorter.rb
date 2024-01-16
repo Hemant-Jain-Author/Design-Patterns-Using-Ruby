@@ -1,74 +1,71 @@
-import java.util.Arrays;
+# Define Sorting interface
+module Sorting
+  def sort(numbers)
+    raise NotImplementedError, 'Subclasses must implement the sort method'
+  end
+end
 
-interface Sorting {
-    void sort(int[] numbers);
-}
+# Define BubbleSort class implementing Sorting
+class BubbleSort
+  include Sorting
 
-class BubbleSort implements Sorting {
-    @Override
-    public void sort(int[] numbers) {
-        // Bubble Sort Algorithm
-        System.out.println("Bubble Sort Algorithm executed.");
-        int size = numbers.length;
-        for (int i = 0; i < size - 1; i++) {
-            for (int j = 0; j < size - i - 1; j++) {
-                if (numbers[j] > numbers[j + 1]) {
-                    // Swapping
-                    int temp = numbers[j];
-                    numbers[j] = numbers[j + 1];
-                    numbers[j + 1] = temp;
-                }
-            }
-        }
-    }
-}
+  def sort(numbers)
+    # Bubble Sort Algorithm
+    puts 'Bubble Sort Algorithm executed.'
+    size = numbers.length
+    (0...size - 1).each do |i|
+      (0...size - i - 1).each do |j|
+        if numbers[j] > numbers[j + 1]
+          # Swapping
+          numbers[j], numbers[j + 1] = numbers[j + 1], numbers[j]
+        end
+      end
+    end
+  end
+end
 
-class SelectionSort implements Sorting {
-    @Override
-    public void sort(int[] numbers) {
-        // Selection Sort Algorithm
-        System.out.println("Selection Sort Algorithm executed.");
-        int size = numbers.length;
-        for (int i = 0; i < size - 1; i++) {
-            int maxIndex = 0;
-            for (int j = 1; j < size - i; j++) {
-                if (numbers[j] > numbers[maxIndex]) {
-                    maxIndex = j;
-                }
-            }
-            int temp = numbers[size - 1 - i];
-            numbers[size - 1 - i] = numbers[maxIndex];
-            numbers[maxIndex] = temp;
-        }
-    }
-}
+# Define SelectionSort class implementing Sorting
+class SelectionSort
+  include Sorting
 
-class StrategyClass {
-    private Sorting sorter;
+  def sort(numbers)
+    # Selection Sort Algorithm
+    puts 'Selection Sort Algorithm executed.'
+    size = numbers.length
+    (0...size - 1).each do |i|
+      max_index = 0
+      (1...size - i).each do |j|
+        max_index = j if numbers[j] > numbers[max_index]
+      end
+      numbers[size - 1 - i], numbers[max_index] = numbers[max_index], numbers[size - 1 - i]
+    end
+  end
+end
 
-    StrategyClass(Sorting algo) {
-        this.sorter = algo;
-    }
+# Define StrategyClass
+class StrategyClass
+  attr_accessor :sorter
 
-    void setSorter(Sorting algo) {
-        this.sorter = algo;
-    }
+  def initialize(algo)
+    @sorter = algo
+  end
 
-    void sort(int[] a) {
-        this.sorter.sort(a);
-    }
-}
+  def set_sorter(algo)
+    @sorter = algo
+  end
 
-public class StrategyPatternSorter {
-    public static void main(String[] args) {
-        int[] a = {4, 5, 3, 2, 6, 7, 1, 8, 9, 10};
-        StrategyClass s = new StrategyClass(new BubbleSort());
-        s.sort(a);
-        System.out.println(Arrays.toString(a));
+  def sort(a)
+    @sorter.sort(a)
+  end
+end
 
-        int[] b = {4, 5, 3, 2, 6, 7, 1, 8, 9, 10};
-        s.setSorter(new SelectionSort());
-        s.sort(b);
-        System.out.println(Arrays.toString(b));
-    }
-}
+# Client code
+a = [4, 5, 3, 2, 6, 7, 1, 8, 9, 10]
+s = StrategyClass.new(BubbleSort.new)
+s.sort(a)
+puts a.to_s
+
+b = [4, 5, 3, 2, 6, 7, 1, 8, 9, 10]
+s.set_sorter(SelectionSort.new)
+s.sort(b)
+puts b.to_s

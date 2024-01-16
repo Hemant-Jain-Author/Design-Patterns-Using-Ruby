@@ -1,87 +1,86 @@
-abstract class Handler {
-    protected Handler parent;
-    protected String helpText;
+# Abstract class representing a handler
+class Handler
+    attr_accessor :parent, :help_text
+  
+    def initialize(parent)
+        @parent = parent
+        @help_text = nil
+    end
+  
+    def show_helper_text
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+  
+    def set_helper_text(text)
+        @help_text = text
+    end
+end
+  
+# Class representing a container
+class Container < Handler
+    def initialize(parent)
+        super(parent)
+    end
+  
+    def show_helper_text
+        if help_text
+            puts "Help :: #{help_text}"
+        elsif parent
+            puts 'Message passed to next in chain by Container'
+            parent.show_helper_text
+        end
+    end
+end
+  
+# Class representing a button
+class Button < Handler
+    attr_accessor :label
+  
+    def initialize(label, parent)
+        super(parent)
+        @label = label
+    end
+  
+    def show_helper_text
+        if help_text
+            puts "Help :: #{help_text}"
+        elsif parent
+            puts "Message passed to next in chain by Button"
+            parent.show_helper_text
+        end
+    end
+end
+  
+# Class representing a panel
+class Panel < Handler
+    def initialize
+        super(nil)
+    end
+  
+    def show_helper_text
+        if help_text
+            puts "Help :: #{help_text}"
+        elsif parent
+            puts "Message passed to next in chain by Panel"
+            parent.show_helper_text
+        end
+    end
+end
+  
+# Client code
+p = Panel.new
+p.set_helper_text('Panel help text.')
 
-    public Handler(Handler parent) {
-        this.parent = parent;
-        this.helpText = null;
-    }
+b1 = Button.new('Ok', p)
+b1.set_helper_text('Ok button help text.')
 
-    public abstract void showHelperText();
+b2 = Button.new('Cancel', p)
 
-    public void setHelperText(String text) {
-        this.helpText = text;
-    }
-}
+b1.show_helper_text
+b2.show_helper_text
 
-class Container extends Handler {
-    public Container(Handler parent) {
-        super(parent);
-    }
-
-    @Override
-    public void showHelperText() {
-        if (helpText != null) {
-            System.out.println("Help :: " + helpText);
-        } else if (parent != null) {
-            System.out.println("Message passed to next in chain by Container");
-            parent.showHelperText();
-        }
-    }
-}
-
-class Button extends Handler {
-    private String label;
-
-    public Button(String label, Handler parent) {
-        super(parent);
-        this.label = label;
-    }
-
-    @Override
-    public void showHelperText() {
-        if (helpText != null) {
-            System.out.println("Help :: " + helpText);
-        } else if (parent != null) {
-            System.out.println("Message passed to next in chain by Button");
-            parent.showHelperText();
-        }
-    }
-}
-
-class Panel extends Handler {
-    public Panel() {
-        super(null);
-    }
-
-    @Override
-    public void showHelperText() {
-        if (helpText != null) {
-            System.out.println("Help :: " + helpText);
-        } else if (parent != null) {
-            System.out.println("Message passed to next in chain by Panel");
-            parent.showHelperText();
-        }
-    }
-}
-
-public class ChainOfResponsibilityGUI {
-    public static void main(String[] args) {
-        Panel p = new Panel();
-        p.setHelperText("Panel help text.");
-
-        Button b1 = new Button("Ok", p);
-        b1.setHelperText("Ok button help text.");
-
-        Button b2 = new Button("Cancel", p);
-
-        b1.showHelperText();
-        b2.showHelperText();
-    }
-}
-
-/*
+=begin 
 Help :: Ok button help text.
 Message passed to next in chain by Button
 Help :: Panel help text.
-*/
+=end

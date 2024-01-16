@@ -1,48 +1,32 @@
-import java.util.ArrayList;
-import java.util.List;
+class HealthCheckSingleton
+  @@instance = nil
+  attr_reader :servers
 
-public class HealthCheckSingleton {
-    private static HealthCheckSingleton instance;
-    private List<String> servers;
+  def self.instance
+    @@instance ||= new
+  end
 
-    private HealthCheckSingleton() {
-        this.servers = new ArrayList<>();
-    }
+  def initialize
+    @servers = []
+  end
 
-    public static HealthCheckSingleton getInstance() {
-        if (instance == null) {
-            instance = new HealthCheckSingleton();
-        }
-        return instance;
-    }
+  def add_server
+    @servers.push('Server 1', 'Server 2')
+  end
 
-    public void addServer() {
-        this.servers.add("Server 1");
-        this.servers.add("Server 2");
-    }
+  def change_server
+    @servers.pop
+    @servers.push('Server 5')
+  end
+end
 
-    public void changeServer() {
-        this.servers.remove(this.servers.size() - 1);
-        this.servers.add("Server 5");
-    }
+# Client code
+hc1 = HealthCheckSingleton.instance
+hc1.add_server
 
-    public List<String> getServers() {
-        return this.servers;
-    }
+hc2 = HealthCheckSingleton.instance
+hc2.add_server
 
-    public static void main(String[] args) {
-        HealthCheckSingleton hc1 = HealthCheckSingleton.getInstance();
-        hc1.addServer();
-
-        HealthCheckSingleton hc2 = HealthCheckSingleton.getInstance();
-        hc2.addServer();
-
-        System.out.println(hc1.getServers());
-        System.out.println(hc2.getServers());
-    }
-}
-
-/*
-[Server 1, Server 2, Server 1, Server 2]
-[Server 1, Server 2, Server 1, Server 2]
- */
+puts hc1.servers
+puts hc2.servers
+  

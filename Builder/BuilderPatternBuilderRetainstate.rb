@@ -1,74 +1,86 @@
-class Product {
-    private String partA;
-    private String partB;
+# Product class
+class Product
+    attr_accessor :partA, :partB
+  
+    def initialize(a, b)
+        @partA = a
+        @partB = b
+    end
+  
+    def to_s
+        "Product : (#{@partA}, #{@partB})"
+    end
+end
+  
+# Builder abstract class
+class Builder
+    def set_part_a(_a)
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+  
+    def set_part_b(_b)
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+  
+    def get_product
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
+  
+# ConcreteBuilder class that extends Builder
+class ConcreteBuilder < Builder
+    attr_accessor :part_a, :part_b
+  
+    def initialize
+        @part_a = 'A default'
+        @part_b = 'B default'
+    end
+  
+    def set_part_a(a)
+        @part_a = a
+        self
+    end
+  
+    def set_part_b(b)
+        @part_b = b
+        self
+    end
+  
+    def get_product
+        Product.new(@part_a, @part_b)
+    end
+end
+  
+# Director class
+class Director
+    attr_accessor :builder
+  
+    def initialize(builder)
+        @builder = builder
+    end
+  
+    def construct
+        @builder.set_part_a('A1').set_part_b('B1').get_product
+    end
+  
+    def construct2
+        @builder.set_part_a('A2')
+        @builder.set_part_b('B2')
+        @builder.get_product
+    end
+end
+  
+# Client code
+builder = ConcreteBuilder.new
+director = Director.new(builder)
 
-    public Product(String A, String B) {
-        this.partA = A;
-        this.partB = B;
-    }
+product = director.construct
+puts product
 
-    @Override
-    public String toString() {
-        return "Product : (" + partA + ", " + partB + ")";
-    }
-}
+product2 = director.construct2
+puts product2
 
-abstract class Builder {
-    public abstract Builder setPartA(String A);
-    public abstract Builder setPartB(String B);
-    public abstract Product getProduct();
-}
-
-class ConcreteBuilder extends Builder {
-    private String partA;
-    private String partB;
-
-    @Override
-    public ConcreteBuilder setPartA(String A) {
-        this.partA = A;
-        return this; // Returning self helps in chaining calls.
-    }
-
-    @Override
-    public ConcreteBuilder setPartB(String B) {
-        this.partB = B;
-        return this;
-    }
-
-    @Override
-    public Product getProduct() {
-        return new Product(partA, partB);
-    }
-}
-
-class Director {
-    private Builder builder;
-
-    public Director(Builder builder) {
-        this.builder = builder;
-    }
-
-    public Product construct() {
-        return builder.setPartA("A1").setPartB("B1").getProduct(); // Chaining calls
-    }
-
-    public Product construct2() {
-        builder.setPartA("A2");
-        builder.setPartB("B2");
-        return builder.getProduct();
-    }
-}
-
-// Client code
-public class BuilderPatternBuilderRetainstate {
-    public static void main(String[] args) {
-        ConcreteBuilder builder = new ConcreteBuilder();
-        Director director = new Director(builder);
-
-        Product product = director.construct();
-        System.out.println(product);
-
-        Product product2 = director.construct2();
-        System.out.println(product2);
-    }
-}
+=begin 
+Product : (A1, B1)
+Product : (A2, B2)
+=end

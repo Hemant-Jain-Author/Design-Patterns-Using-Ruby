@@ -1,50 +1,50 @@
-import java.util.HashSet;
-import java.util.Set;
+# Component
+class Component
+    def operation
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
+  
+# Composite
+class Composite < Component
+    def initialize
+        @children = []
+    end
+  
+    def operation
+        puts 'Composite Operation'
+        @children.each(&:operation)
+    end
+  
+    def add(component)
+        @children << component
+    end
+  
+    def remove(component)
+        @children.delete(component)
+    end
+end
+  
+# Leaf
+class Leaf < Component
+    def operation
+        puts 'Leaf Operation'
+    end
+end
+  
+# Client code
+composite = Composite.new
+composite.add(Leaf.new)
 
-// Component
-abstract class Component {
-    public abstract void operation();
-}
+composite2 = Composite.new
+composite2.add(Leaf.new)
 
-// Composite
-class Composite extends Component {
-    private Set<Component> children = new HashSet<>();
+composite.add(composite2)
+composite.operation
 
-    @Override
-    public void operation() {
-        System.out.println("Composite Operation");
-        for (Component child : children) {
-            child.operation();
-        }
-    }
-
-    public void add(Component component) {
-        children.add(component);
-    }
-
-    public void remove(Component component) {
-        children.remove(component);
-    }
-}
-
-// Leaf
-class Leaf extends Component {
-    @Override
-    public void operation() {
-        System.out.println("Leaf Operation");
-    }
-}
-
-// Client code
-public class CompositePattern {
-    public static void main(String[] args) {
-        Composite composite = new Composite();
-        composite.add(new Leaf());
-
-        Composite composite2 = new Composite();
-        composite2.add(new Leaf());
-
-        composite.add(composite2);
-        composite.operation();
-    }
-}
+=begin 
+Composite Operation
+Leaf Operation
+Composite Operation
+Leaf Operation
+=end

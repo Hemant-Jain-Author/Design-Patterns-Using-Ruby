@@ -1,54 +1,43 @@
-class Database {
-    public Database() {
-        System.out.println("Database created");
-    }
+class Database
+    def initialize
+        puts 'Database created'
+    end
+  
+    def add_data(data)
+        puts data
+    end
+end
 
-    public void addData(String data) {
-        System.out.println(data);
-    }
-}
+class Singleton
+    private_class_method :new
+  
+    @@instance = nil
+    @@lock = Mutex.new
+    @@db = Database.new
+  
+    def self.instance
+        return @@instance if @@instance
 
-//public 
-class Singleton {
-    private static volatile Singleton instance;  // Volatile keyword for double-checked locking
-    private static Database db;
-    private static final Object lock = new Object();  // Add a lock for thread synchronization
+        @@lock.synchronize { @@instance = new }
+    end
+  
+    def add_data(data)
+        @@db.add_data(data)
+    end
+end
 
-    private Singleton() {
-        db = new Database();
-    }
+# Client code
+s1 = Singleton.instance
+s2 = Singleton.instance
 
-    public static Singleton getInstance() {
-        if (instance == null) {
-            synchronized (lock) {  // Acquire the lock
-                if (instance == null) {
-                    instance = new Singleton();
-                }
-            }
-        }
-        return instance;
-    }
+puts s1
+puts s2
 
-    public void addData(String data) {
-        db.addData(data);
-    }
-}
+s2.add_data('Hello, world!')
 
-public class DoubleChecking {
-    public static void main(String[] args) {
-        Singleton s1 = Singleton.getInstance();
-        Singleton s2 = Singleton.getInstance();
-
-        System.out.println(s1);
-        System.out.println(s2);
-
-        s2.addData("Hello, world!");
-    }
-}
-
-/*
+=begin 
 Database created
-Singleton@7344699f
-Singleton@7344699f
+#<Singleton:0x00007f2fb80c1ba8>
+#<Singleton:0x00007f2fb80c1ba8>
 Hello, world!
- */
+=end

@@ -1,70 +1,61 @@
-import java.util.ArrayList;
-import java.util.List;
+# Window (Component)
+class Window
+    def draw
+    end
+end
 
-// Window (Component)
-interface Window {
-    void draw();
-}
+# SimpleWindow (ConcreteComponent)
+class SimpleWindow < Window
+    def draw
+        puts 'SimpleWindow draw.'
+    end
+end
 
-// SimpleWindow (ConcreteComponent)
-class SimpleWindow implements Window {
-    @Override
-    public void draw() {
-        System.out.println("SimpleWindow draw.");
-    }
-}
+# Decorator (Decorator)
+class Decorator < Window
+    attr_reader :component
 
-// Decorator (Decorator)
-abstract class Decorator implements Window {
-    protected Window component;
+    def initialize(component)
+        @component = component
+    end
 
-    public Decorator(Window component) {
-        this.component = component;
-    }
+    def draw
+        component.draw
+    end
+end
 
-    @Override
-    public void draw() {
-        component.draw();
-    }
-}
+# VerticalScrollBarDecorator (ConcreteDecorator)
+class VerticalScrollBarDecorator < Decorator
+    def initialize(component)
+        super(component)
+    end
 
-// VerticalScrollBarDecorator (ConcreteDecorator)
-class VerticalScrollBarDecorator extends Decorator {
-    public VerticalScrollBarDecorator(Window component) {
-        super(component);
-    }
+    def draw
+        super
+        puts 'VerticalScrollBarDecorator draw'
+    end
+end
+  
+# HorizontalScrollBarDecorator (ConcreteDecorator)
+class HorizontalScrollBarDecorator < Decorator
+    def initialize(component)
+        super(component)
+    end
 
-    @Override
-    public void draw() {
-        super.draw();
-        System.out.println("VerticalScrollBarDecorator draw");
-    }
-}
-
-// HorizontalScrollBarDecorator (ConcreteDecorator)
-class HorizontalScrollBarDecorator extends Decorator {
-    public HorizontalScrollBarDecorator(Window component) {
-        super(component);
-    }
-
-    @Override
-    public void draw() {
-        super.draw();
-        System.out.println("HorizontalScrollBarDecorator draw");
-    }
-}
-
-// Client code
-public class DecoratorPatternWindow {
-    public static void main(String[] args) {
-        Window component = new SimpleWindow();
-        Window decorator1 = new VerticalScrollBarDecorator(component);
-        Window decorator2 = new HorizontalScrollBarDecorator(decorator1);
-        decorator2.draw();
-    }
-}
-/*
+    def draw
+        super
+        puts 'HorizontalScrollBarDecorator draw'
+    end
+end
+  
+# Client code
+component = SimpleWindow.new
+decorator1 = VerticalScrollBarDecorator.new(component)
+decorator2 = HorizontalScrollBarDecorator.new(decorator1)
+decorator2.draw
+  
+=begin 
 SimpleWindow draw.
 VerticalScrollBarDecorator draw
-HorizontalScrollBarDecorator draw
- */
+HorizontalScrollBarDecorator draw 
+=end

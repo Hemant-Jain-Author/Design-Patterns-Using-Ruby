@@ -1,120 +1,108 @@
-import java.util.ArrayList;
-import java.util.List;
+# Memento
+class Memento
+    attr_reader :state
 
-// Memento
-class Memento {
-    private String state;
+    def initialize(state)
+        @state = state
+    end
+end
 
-    public Memento(String state) {
-        this.state = state;
-    }
+# CareTaker
+class CareTaker
+    attr_reader :history, :top, :max
 
-    public String getState() {
-        return state;
-    }
-}
+    def initialize
+        @history = []
+        @top = -1
+        @max = -1
+    end
 
-// CareTaker
-class CareTaker {
-    private List<Memento> history;
-    private int top;
-    private int max;
+    def add_memento(memento)
+        @top += 1
+        @max = @top
 
-    public CareTaker() {
-        this.history = new ArrayList<>();
-        this.top = -1;
-        this.max = -1;
-    }
+        if @top <= @history.size - 1
+            @history[@top] = memento
+        else
+            @history << memento
+        end
+    end
 
-    public void addMemento(Memento m) {
-        top += 1;
-        max = top;
-        if (top <= history.size() - 1) {
-            history.set(top, m);
-        } else {
-            history.add(m);
-        }
-    }
+    def get_memento(index)
+        @history[index]
+    end
 
-    public Memento getMemento(int index) {
-        return history.get(index);
-    }
+    def undo
+        puts 'Undoing state.'
+        if @top <= 0
+            @top = 0
+            return get_memento(0)
+        end
 
-    public Memento undo() {
-        System.out.println("Undoing state.");
-        if (top <= 0) {
-            top = 0;
-            return getMemento(0);
-        }
+        @top -= 1
+        get_memento(@top)
+    end
 
-        top -= 1;
-        return getMemento(top);
-    }
+    def redo
+        puts 'Redoing state.'
+        if @top >= (@history.size - 1) || @top >= @max
+            return get_memento(@top)
+        end
 
-    public Memento redo() {
-        System.out.println("Redoing state.");
-        if (top >= (history.size() - 1) || top >= max) {
-            return getMemento(top);
-        }
+        @top += 1
+        get_memento(@top)
+    end
 
-        top += 1;
-        return getMemento(top);
-    }
+    def states_count
+        @history.size
+    end
+end
 
-    public int getStatesCount() {
-        return history.size();
-    }
-}
+# Originator
+class Originator
+    attr_accessor :state
 
-// Originator
-class Originator {
-    private String state;
+    def set_state(state)
+        @state = state
+    end
+    
+    def get_state
+        @state
+    end
 
-    public void setState(String state) {
-        this.state = state;
-    }
+    def create_memento
+        Memento.new(state)
+    end
 
-    public String getState() {
-        return state;
-    }
+    def set_memento(memento)
+        self.state = memento.state
+    end
+end
 
-    public Memento createMemento() {
-        return new Memento(state);
-    }
+# Client code
+originator = Originator.new
+care_taker = CareTaker.new
 
-    public void setMemento(Memento m) {
-        setState(m.getState());
-    }
-}
+originator.set_state('State 1')
+care_taker.add_memento(originator.create_memento)
+puts originator.state
 
-// Client code
-public class MomentoPattern {
-    public static void main(String[] args) {
-        Originator originator = new Originator();
-        CareTaker careTaker = new CareTaker();
+originator.set_state('State 2')
+care_taker.add_memento(originator.create_memento)
+puts originator.state
 
-        originator.setState("State 1");
-        careTaker.addMemento(originator.createMemento());
-        System.out.println(originator.getState());
+originator.set_state('State 3')
+care_taker.add_memento(originator.create_memento)
+puts originator.state
 
-        originator.setState("State 2");
-        careTaker.addMemento(originator.createMemento());
-        System.out.println(originator.getState());
+originator.set_memento(care_taker.undo)
+puts originator.state
 
-        originator.setState("State 3");
-        careTaker.addMemento(originator.createMemento());
-        System.out.println(originator.getState());
+originator.set_memento(care_taker.undo)
+puts originator.state
 
-        originator.setMemento(careTaker.undo());
-        System.out.println(originator.getState());
+originator.set_memento(care_taker.redo)
+puts originator.state
 
-        originator.setMemento(careTaker.undo());
-        System.out.println(originator.getState());
-
-        originator.setMemento(careTaker.redo());
-        System.out.println(originator.getState());
-
-        originator.setMemento(careTaker.redo());
-        System.out.println(originator.getState());
-    }
-}
+originator.set_memento(care_taker.redo)
+puts originator.state

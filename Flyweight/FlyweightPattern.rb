@@ -1,55 +1,48 @@
-import java.util.HashMap;
-import java.util.Map;
+# Flyweight interface
+class Flyweight
+    def operation(extrinsic_state)
+        raise NotImplementedError, 'Subclasses must implement the operation method'
+    end
+end
 
-// Flyweight interface
-interface Flyweight {
-    void operation(Object extrinsicState);
-}
+# Concrete Flyweight class
+class ConcreteFlyweight < Flyweight
+    attr_reader :intrinsic_state
 
-// Concrete Flyweight class
-class ConcreteFlyweight implements Flyweight {
-    private String intrinsicState;
+    def initialize(intrinsic_state)
+        @intrinsic_state = intrinsic_state
+    end
 
-    public ConcreteFlyweight(String intrinsicState) {
-        this.intrinsicState = intrinsicState;
-    }
+    def operation(_extrinsic_state)
+        puts 'Operation inside concrete flyweight'
+    end
+end
 
-    @Override
-    public void operation(Object extrinsicState) {
-        System.out.println("Operation inside concrete flyweight");
-    }
-}
+# FlyweightFactory class
+class FlyweightFactory
+    def initialize
+        @flyweights = {}
+    end
 
-// FlyweightFactory class
-class FlyweightFactory {
-    private Map<String, Flyweight> flyweights = new HashMap<>();
+    def get_flyweight(key)
+        @flyweights[key] ||= ConcreteFlyweight.new(key)
+    end
 
-    public Flyweight getFlyweight(String key) {
-        if (!flyweights.containsKey(key)) {
-            flyweights.put(key, new ConcreteFlyweight(key));
-        }
-        return flyweights.get(key);
-    }
+    def count
+        @flyweights.size
+    end
+end
 
-    public int getCount() {
-        return flyweights.size();
-    }
-}
+# Client code
+factory = FlyweightFactory.new
+flyweight1 = factory.get_flyweight('key')
+flyweight2 = factory.get_flyweight('key')
+flyweight1.operation(nil)
+puts "#{flyweight1} #{flyweight2}"
+puts "Object count: #{factory.count}"
 
-// Client code
-public class FlyweightPattern {
-    public static void main(String[] args) {
-        FlyweightFactory factory = new FlyweightFactory();
-        Flyweight flyweight1 = factory.getFlyweight("key");
-        Flyweight flyweight2 = factory.getFlyweight("key");
-        flyweight1.operation(null);
-        System.out.println(flyweight1 + " " + flyweight2);
-        System.out.println("Object count: " + factory.getCount());
-    }
-}
-
-/* 
+=begin 
 Operation inside concrete flyweight
-ConcreteFlyweight@73d16e93 ConcreteFlyweight@73d16e93
+#<ConcreteFlyweight:0x00007f9cfc5217f0> #<ConcreteFlyweight:0x00007f9cfc5217f0>
 Object count: 1
-*/
+=end

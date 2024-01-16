@@ -1,81 +1,71 @@
-import java.util.List;
-import java.util.ArrayList;
+# ICoffee (Component)
+class ICoffee
+    def get_cost
+    end
+  
+    def get_ingredients
+    end
+end
 
-// ICoffee (Component)
-interface ICoffee {
-    int getCost();
-    String getIngredients();
-}
+# SimpleCoffee (ConcreteComponent)
+class SimpleCoffee < ICoffee
+    def get_cost
+            10
+      end
+    
+      def get_ingredients
+            'Coffee'
+      end
+end
 
-// SimpleCoffee (ConcreteComponent)
-class SimpleCoffee implements ICoffee {
-    @Override
-    public int getCost() {
-        return 10;
-    }
+# CoffeeDecorator (Decorator)
+class CoffeeDecorator < ICoffee
+    attr_reader :component, :name, :cost
+  
+    def initialize(component, name, cost)
+        @component = component
+        @name = name
+        @cost = cost
+    end
+  
+    def get_cost
+        component.get_cost + cost
+    end
+  
+    def get_ingredients
+        "#{component.get_ingredients}, #{name}"
+    end
+end
 
-    @Override
-    public String getIngredients() {
-        return "Coffee";
-    }
-}
+# MilkDecorator (ConcreteDecorator)
+class MilkDecorator < CoffeeDecorator
+    def initialize(component)
+        super(component, 'Milk', 4)
+    end
+end
 
-// CoffeeDecorator (Decorator)
-abstract class CoffeeDecorator implements ICoffee {
-    protected ICoffee component;
-    protected String name;
-    protected int cost;
+# EspressoDecorator (ConcreteDecorator)
+class EspressoDecorator < CoffeeDecorator
+    def initialize(component)
+        super(component, 'Espresso', 5)
+    end
+end
 
-    public CoffeeDecorator(ICoffee component, String name, int cost) {
-        this.component = component;
-        this.name = name;
-        this.cost = cost;
-    }
+# Client code
+component = SimpleCoffee.new
+decorator1 = MilkDecorator.new(component)
+decorator2 = EspressoDecorator.new(decorator1)
 
-    @Override
-    public int getCost() {
-        return component.getCost() + cost;
-    }
+puts "Coffee cost is :: #{decorator2.get_cost}"
+puts "Coffee ingredients are :: #{decorator2.get_ingredients}"
 
-    @Override
-    public String getIngredients() {
-        return component.getIngredients() + ", " + name;
-    }
-}
+latte = MilkDecorator.new(MilkDecorator.new(SimpleCoffee.new))
+puts "Coffee cost is :: #{latte.get_cost}"
+puts "Coffee ingredients are :: #{latte.get_ingredients}"
 
-// MilkDecorator (ConcreteDecorator)
-class MilkDecorator extends CoffeeDecorator {
-    public MilkDecorator(ICoffee component) {
-        super(component, "Milk", 4);
-    }
-}
-
-// EspressoDecorator (ConcreteDecorator)
-class EspressoDecorator extends CoffeeDecorator {
-    public EspressoDecorator(ICoffee component) {
-        super(component, "Espresso", 5);
-    }
-}
-
-// Client code
-public class DecoratorPatternCoffee2 {
-    public static void main(String[] args) {
-        ICoffee component = new SimpleCoffee();
-        ICoffee decorator1 = new MilkDecorator(component);
-        ICoffee decorator2 = new EspressoDecorator(decorator1);
-
-        System.out.println("Coffee cost is :: " + decorator2.getCost());
-        System.out.println("Coffee ingredients are :: " + decorator2.getIngredients());
-
-        ICoffee latte = new MilkDecorator(new MilkDecorator(new SimpleCoffee()));
-        System.out.println("Coffee cost is :: " + latte.getCost());
-        System.out.println("Coffee ingredients are :: " + latte.getIngredients());
-    }
-}
-
-/*
+=begin 
 Coffee cost is :: 19
 Coffee ingredients are :: Coffee, Milk, Espresso
 Coffee cost is :: 18
 Coffee ingredients are :: Coffee, Milk, Milk
-*/
+=end

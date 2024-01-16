@@ -1,81 +1,45 @@
-import java.util.Iterator;
+class LinkedList
+    class Node
+        attr_accessor :value, :next
 
-class LinkedList implements Iterable<Integer> {
-    // Node class representing elements of linked list.
-    class Node {
-        int value;
-        Node next;
+        def initialize(value, next_node)
+            @value = value
+            @next = next_node
+        end
+    end
 
-        public Node(int v, Node n) {
-            value = v;
-            next = n;
-        }
-    }
+    include Enumerable
 
-    Node head;
-    Node tail;
-    int size;
+    attr_accessor :head, :tail, :size
 
-    // Constructor of linked list.
-    public LinkedList() {
-        head = null;
-        tail = null;
-        size = 0;
-    }
+    def initialize
+        @head = nil
+        @tail = nil
+        @size = 0
+    end
 
-    public void addHead(int value) {
-        Node newNode = new Node(value, head);
-        if (head == null) {
-            tail = newNode;
-        }
-        head = newNode;
-        size++;
-    }
+    def add_head(value)
+        new_node = Node.new(value, head)
+        @tail = new_node if head.nil?
+        @head = new_node
+        @size += 1
+    end
 
-    @Override
-    public Iterator<Integer> iterator() {
-        return new LinkedListIterator(this);
-    }
+    def each(&block)
+        current = head
+        while current
+            block.call(current.value)
+            current = current.next
+        end
+    end
+end
+      
+# Client code
+aggregate = LinkedList.new
+(0..4).each { |i| aggregate.add_head(i) }
 
-    public int getSize() {
-        return size;
-    }
-}
+aggregate.each { |val| print "#{val} " }
 
-class LinkedListIterator implements Iterator<Integer> {
-    LinkedList aggregate;
-    LinkedList.Node current;
-
-    public LinkedListIterator(LinkedList aggregate) {
-        this.aggregate = aggregate;
-        this.current = aggregate.head;
-    }
-
-    @Override
-    public boolean hasNext() {
-        return current != null;
-    }
-
-    @Override
-    public Integer next() {
-        if (!hasNext()) {
-            throw new java.util.NoSuchElementException();
-        }
-        int value = current.value;
-        current = current.next;
-        return value;
-    }
-}
-
-class IteratorPatternLinkedList {
-    public static void main(String[] args) {
-        LinkedList aggregate = new LinkedList();
-        for (int i = 0; i < 5; i++) {
-            aggregate.addHead(i);
-        }
-
-        for (int val : aggregate) {
-            System.out.print(val + " ");
-        }
-    }
-}
+=begin 
+4 3 2 1 0 
+=end

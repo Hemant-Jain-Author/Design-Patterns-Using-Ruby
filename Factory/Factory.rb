@@ -1,57 +1,53 @@
-// Product interface
-interface Animal {
-    void speak();
-}
+# Product interface
+class Animal
+    def speak
+        raise NotImplementedError, 'Subclasses must implement the speak method'
+    end
+end
 
-// Concrete Product classes
-class Dog implements Animal {
-    @Override
-    public void speak() {
-        System.out.println("Woof!");
-    }
-}
+# Concrete Product classes
+class Dog < Animal
+    def speak
+        puts 'Woof!'
+    end
+end
 
-class Cat implements Animal {
-    @Override
-    public void speak() {
-        System.out.println("Meow!");
-    }
-}
+class Cat < Animal
+    def speak
+        puts 'Meow!'
+    end
+end
 
-// Creator abstract class
-abstract class AnimalFactory {
-    public abstract Animal createAnimal();
-}
+# Creator abstract class
+class AnimalFactory
+    def create_animal
+        raise NotImplementedError, 'Subclasses must implement the create_animal method'
+    end
+end
 
-// Concrete Creator classes
-class DogFactory extends AnimalFactory {
-    @Override
-    public Animal createAnimal() {
-        return new Dog();
-    }
-}
+# Concrete Creator classes
+class DogFactory < AnimalFactory
+    def create_animal
+        Dog.new
+    end
+end
 
-class CatFactory extends AnimalFactory {
-    @Override
-    public Animal createAnimal() {
-        return new Cat();
-    }
-}
+class CatFactory < AnimalFactory
+    def create_animal
+        Cat.new
+    end
+end
+  
+# Client code
+dog_factory = DogFactory.new
+dog = dog_factory.create_animal
+dog.speak
 
-// Client code
-public class Factory {
-    public static void main(String[] args) {
-        AnimalFactory dogFactory = new DogFactory();
-        Animal dog = dogFactory.createAnimal();
-        dog.speak();
+cat_factory = CatFactory.new
+cat = cat_factory.create_animal
+cat.speak
 
-        AnimalFactory catFactory = new CatFactory();
-        Animal cat = catFactory.createAnimal();
-        cat.speak();
-    }
-}
-
-/*
+=begin 
 Woof!
 Meow!
- */
+=end

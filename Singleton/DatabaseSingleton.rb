@@ -1,73 +1,67 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+require 'sqlite3'
 
-public class DatabaseSingleton {
-    private static DatabaseSingleton instance;
-    private Connection connection;
-    private PreparedStatement preparedStatement;
+class DatabaseSingleton
+  @@instance = nil
 
-    private DatabaseSingleton() {
-        try {
-            System.out.println("Database created");
-            this.connection = DriverManager.getConnection("jdbc:sqlite:db.sqlite3");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+  def self.instance
+    @@instance ||= new
+  end
 
-    public static DatabaseSingleton getInstance() {
-        if (instance == null) {
-            instance = new DatabaseSingleton();
-        }
-        return instance;
-    }
+  def initialize
+    begin
+      puts "Database created"
+      @connection = SQLite3::Database.new('db.sqlite3')
+    rescue SQLite3::Exception => e
+      puts "Exception occurred: #{e}"
+    end
+  end
 
-    public void createTable() {
-        try {
-            this.preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS students (id INTEGER, name TEXT);");
-            this.preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+  def create_table
+    begin
+      @connection.execute("CREATE TABLE IF NOT EXISTS students (id INTEGER, name TEXT);")
+    rescue SQLite3::Exception => e
+      puts "Exception occurred: #{e}"
+    end
+  end
 
-    public void addData(int id, String name) {
-        try {
-            String query = "INSERT INTO students (id, name) VALUES (?, ?);";
-            this.preparedStatement = connection.prepareStatement(query);
-            this.preparedStatement.setInt(1, id);
-            this.preparedStatement.setString(2, name);
-            this.preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+  def add_data(id, name)
+    begin
+      query = "INSERT INTO students (id, name) VALUES (?, ?);"
+      @connection.execute(query, id, name)
+    rescue SQLite3::Exception => e
+      puts "Exception occurred: #{e}"
+    end
+  end
 
-    public void display() {
-        try {
-            this.preparedStatement = connection.prepareStatement("SELECT * FROM students;");
-            ResultSet resultSet = this.preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                System.out.println(resultSet.getInt("id") + " " + resultSet.getString("name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+  def display
+    begin
+      result_set = @connection.execute("SELECT * FROM students;")
+      result_set.each do |row|
+        puts "ID: #{row[0]}, Name: #{row[1]}"
+      end
+    rescue SQLite3::Exception => e
+      puts "Exception occurred: #{e}"
+    end
+  end
+end
 
-    public static void main(String[] args) {
-        DatabaseSingleton db1 = DatabaseSingleton.getInstance();
-        DatabaseSingleton db2 = DatabaseSingleton.getInstance();
-        System.out.println("Database Objects DB1: " + db1);
-        System.out.println("Database Objects DB2: " + db2);
+# Client code
+db1 = DatabaseSingleton.instance
+db2 = DatabaseSingleton.instance
 
-        db1.createTable();
-        db1.addData(1, "john");
-        db2.addData(2, "smith");
+puts "Database Objects DB1: #{db1}"
+puts "Database Objects DB2: #{db2}"
 
-        db1.display();
-    }
-}
+db1.create_table
+db1.add_data(1, 'john')
+db2.add_data(2, 'smith')
+
+db1.display
+
+=begin 
+Database created
+Database Objects DB1: #<DatabaseSingleton:0x00007ff1959146f8>
+Database Objects DB2: #<DatabaseSingleton:0x00007ff1959146f8>
+ID: 1, Name: john
+ID: 2, Name: smith
+=end

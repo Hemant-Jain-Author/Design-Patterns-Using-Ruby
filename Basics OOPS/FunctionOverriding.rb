@@ -1,41 +1,38 @@
-class Person {
-    protected String name;
-    protected String oath;
+class Person
+    attr_reader :name
+    attr_accessor :oath
 
-    public Person(String name) {
-        this.name = name;
-    }
+    def initialize(name)
+        @name = name
+    end
 
-    public String toString() {
-        return "Person: " + name + ":" + oath;
-    }
+    def to_s
+        "Person: #{@name}:#{@oath}"
+    end
 
-    public void setOath() {
-        this.oath = "Always tell truth";
-    }
-}
+    def set_oath
+        @oath = "Always tell the truth"
+    end
+end
 
-class Citizen extends Person {
-    private int id;
+class Citizen < Person
+    attr_reader :id
 
-    public Citizen(String name, int id) {
-        super(name);
-        this.id = id;
-    }
+    def initialize(name, id)
+        super(name)
+        @id = id
+    end
 
-    public void setOath() {
-        this.oath = "Country comes first";
-    }
-}
+    def set_oath
+        @oath = "Country comes first"
+    end
+end
 
-public class FunctionOverriding {
-    public static void main(String[] args) {
-        Person p = new Person("John");
-        p.setOath();
-        System.out.println(p.toString());
+# Client code
+p = Person.new("John")
+p.set_oath
+puts p.to_s
 
-        Citizen c = new Citizen("Smith", 31);
-        c.setOath();
-        System.out.println(c.toString());
-    }
-}
+c = Citizen.new("Smith", 31)
+c.set_oath
+puts c.to_s

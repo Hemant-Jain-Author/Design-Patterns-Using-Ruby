@@ -1,70 +1,61 @@
-// Model class
-class Model {
-    private String data;
+# Model class
+class Model
+    attr_accessor :data
 
-    public Model() {
-        this.data = "Hello, World!";
-    }
+    def initialize
+        @data = 'Hello, World!'
+    end
 
-    public void setData(String data) {
-        System.out.println("Model: Set data : " + data);
-        this.data = data;
-    }
+    def set_data(data)
+        puts "Model: Set data : #{data}"
+        @data = data
+    end
 
-    public String getData() {
-        System.out.println("Model: Get data: " + data);
-        return data;
-    }
-}
+    def get_data
+        puts "Model: Get data: #{@data}"
+        @data
+    end
+end
 
-// View class
-class View {
-    private Model model;
+# View class
+class View
+    def initialize(model)
+        @model = model
+    end
 
-    public View(Model model) {
-        this.model = model;
-    }
+    # In classic MVC, the view interacts with the model to get data.
+    def update
+        data = @model.get_data
+        puts "View: Updating the view with data : #{data}"
+    end
+end
 
-    // In classic MVC, the view interacts with the model to get data.
-    public void update() {
-        String data = model.getData();
-        System.out.println("View: Updating the view with data : " + data);
-    }
-}
+# Controller class
+class Controller
+    def initialize
+        @model = Model.new
+        @view = View.new(@model)
+    end
 
-// Controller class
-class Controller {
-    private Model model;
-    private View view;
+    def set_data(data)
+        puts 'Controller: Receive data from client.'
+        @model.set_data(data)
+    end
 
-    public Controller() {
-        this.model = new Model();
-        this.view = new View(model);
-    }
+    def update_view
+        puts 'Controller: Receive update view from client.'
+        @view.update
+    end
+end
 
-    public void setData(String data) {
-        System.out.println("Controller: Receive data from client.");
-        model.setData(data);
-    }
+# Client code
+controller = Controller.new
+controller.update_view
 
-    public void updateView() {
-        System.out.println("Controller: Receive update view from client.");
-        view.update();
-    }
-}
+controller.set_data('Hello, Students!')
+controller.update_view
 
-// Main class (Client code)
-public class MVCPattern {
-    public static void main(String[] args) {
-        Controller controller = new Controller();
-        controller.updateView();
-
-        controller.setData("Hello, Students!");
-        controller.updateView();
-    }
-}
-
-/*
+=begin 
 Controller: Receive update view from client.
 Model: Get data: Hello, World!
 View: Updating the view with data : Hello, World!
@@ -72,5 +63,5 @@ Controller: Receive data from client.
 Model: Set data : Hello, Students!
 Controller: Receive update view from client.
 Model: Get data: Hello, Students!
-View: Updating the view with data : Hello, Students!
-*/
+View: Updating the view with data : Hello, Students! 
+=end

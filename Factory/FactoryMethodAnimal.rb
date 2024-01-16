@@ -1,76 +1,69 @@
-import java.util.*;
+# Animal interface
+class Animal
+    def voice
+        raise NotImplementedError, 'Subclasses must implement the voice method'
+    end
+end
 
-// Animal interface
-interface Animal {
-    void voice();
-}
+# Concrete Animal classes
+class Dog < Animal
+    def voice
+        puts 'Bhow Bhow!!'
+    end
+end
 
-// Concrete Animal classes
-class Dog implements Animal {
-    @Override
-    public void voice() {
-        System.out.println("Bhow Bhow!!");
-    }
-}
+class Cat < Animal
+    def voice
+        puts 'Meow Meow!!'
+    end
+end
 
-class Cat implements Animal {
-    @Override
-    public void voice() {
-        System.out.println("Meow Meow!!");
-    }
-}
+# AnimalFactory interface
+class AnimalFactory
+    def get_animal
+        raise NotImplementedError, 'Subclasses must implement the get_animal method'
+    end
+end
 
-// AnimalFactory interface
-interface AnimalFactory {
-    Animal getAnimal();
-}
+# Concrete AnimalFactory classes
+class CatFactory < AnimalFactory
+    def get_animal
+        Cat.new
+    end
+end
 
-// Concrete AnimalFactory classes
-class CatFactory implements AnimalFactory {
-    @Override
-    public Animal getAnimal() {
-        return new Cat();
-    }
-}
+class DogFactory < AnimalFactory
+    def get_animal
+        Dog.new
+    end
+end
 
-class DogFactory implements AnimalFactory {
-    @Override
-    public Animal getAnimal() {
-        return new Dog();
-    }
-}
+# Client code
+dog_factory = DogFactory.new
+dog_factory.get_animal.voice
 
-// Client code
-public class FactoryMethodAnimal {
-    public static void main(String[] args) {
-        AnimalFactory dogFactory = new DogFactory();
-        dogFactory.getAnimal().voice();
+cat_factory = CatFactory.new
+cat_factory.get_animal.voice
 
-        AnimalFactory catFactory = new CatFactory();
-        catFactory.getAnimal().voice();
+# Future changes to include cow type of objects.
+class Cow < Animal
+    def voice
+        puts 'Gooaa Gooaa!!'
+    end
+end
 
-        // Future changes to include cow type of objects.
-        class Cow implements Animal {
-            @Override
-            public void voice() {
-                System.out.println("Gooaa Gooaa!!");
-            }
-        }
+class CowFactory < AnimalFactory
+    def get_animal
+        Cow.new
+    end
+end
 
-        class CowFactory implements AnimalFactory {
-            @Override
-            public Animal getAnimal() {
-                return new Cow();
-            }
-        }
+# Client code for Cow
+cow_factory = CowFactory.new
+cow_factory.get_animal.voice
 
-        // Client code for Cow
-        AnimalFactory cowFactory = new CowFactory();
-        cowFactory.getAnimal().voice();
-    }
-}
-/*
+=begin 
 Bhow Bhow!!
 Meow Meow!!
 Gooaa Gooaa!!
-*/
+=end

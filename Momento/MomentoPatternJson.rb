@@ -1,136 +1,118 @@
-import java.util.ArrayList;
-import java.util.List;
+require 'json'
 
-class Memento implements Cloneable {
-    private Object state;
+class Memento
+    attr_reader :state
 
-    public Memento(Object state) {
-        this.state = state;
-    }
+    def initialize(state)
+        @state = state
+    end
 
-    public Object getState() {
-        return state;
-    }
+    def clone
+        Memento.new(JSON.parse(@state.to_json))
+    end
+end
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-}
+class Originator
+    attr_accessor :state
 
-class Originator {
-    private Object state;
+    def set_state(state)
+        @state = state
+    end
 
-    public void setState(Object state) {
-        this.state = state;
-    }
+    def get_state
+        @state
+    end
 
-    public Object getState() {
-        return state;
-    }
+    def create_memento
+        Memento.new(JSON.parse(@state.to_json))
+    end
 
-    public Memento createMemento() {
-        return new Memento(state);
-    }
+    def set_memento(memento)
+        @state = JSON.parse(memento.state.to_json)
+    end
+end
 
-    public void setMemento(Memento m) {
-        this.state = m.getState();
-    }
-}
+class CareTaker
+    attr_reader :history, :top, :max
 
-class CareTaker {
-    private List<Memento> history;
-    private int top;
-    private int max;
+    def initialize
+        @history = []
+        @top = -1
+        @max = -1
+    end
 
-    public CareTaker() {
-        this.history = new ArrayList<>();
-        this.top = -1;
-        this.max = -1;
-    }
+    def add_memento(memento)
+        @top += 1
+        @max = @top
 
-    public void addMemento(Memento m) {
-        top += 1;
-        max = top;
-        if (top <= history.size() - 1) {
-            try {
-                history.set(top, (Memento) m.clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                history.add((Memento) m.clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+        if @top <= @history.size - 1
+            @history[@top] = memento.clone
+        else
+            @history << memento.clone
+        end
+    end
 
-    public Memento getMemento(int index) {
-        return history.get(index);
-    }
+    def get_memento(index)
+        @history[index]
+    end
 
-    public Memento undo() {
-        System.out.println("Undoing state.");
-        if (top <= 0) {
-            top = 0;
-            return history.get(0);
-        }
+    def undo
+        puts 'Undoing state.'
+        if @top <= 0
+            @top = 0
+            return get_memento(0)
+        end
 
-        top -= 1;
-        return history.get(top);
-    }
+        @top -= 1
+        get_memento(@top)
+    end
 
-    public Memento redo() {
-        System.out.println("Redoing state.");
-        if (top >= (history.size() - 1) || top >= max) {
-            return history.get(top);
-        }
+    def redo
+        puts 'Redoing state.'
+        if @top >= (@history.size - 1) || @top >= @max
+            return get_memento(@top)
+        end
 
-        top += 1;
-        return history.get(top);
-    }
+        @top += 1
+        get_memento(@top)
+    end
 
-    public int getStatesCount() {
-        return history.size();
-    }
-}
+    def states_count
+        @history.size
+    end
+end
 
-public class MomentoPatternJson {
-    public static void main(String[] args) {
-        Originator originator = new Originator();
-        CareTaker careTaker = new CareTaker();
+# Client code
+originator = Originator.new
+care_taker = CareTaker.new
 
-        originator.setState("State 1");
-        careTaker.addMemento(originator.createMemento());
-        System.out.println(originator.getState());
+originator.set_state('State 1')
+care_taker.add_memento(originator.create_memento)
+puts originator.get_state
 
-         originator.setState("State 2");
-        careTaker.addMemento(originator.createMemento());
-        System.out.println(originator.getState());
+originator.set_state('State 2')
+care_taker.add_memento(originator.create_memento)
+puts originator.get_state
 
-        originator.setState("State 3");
-        careTaker.addMemento(originator.createMemento());
-        System.out.println(originator.getState());
+originator.set_state('State 3')
+care_taker.add_memento(originator.create_memento)
+puts originator.get_state
 
-        originator.setMemento(careTaker.undo());
-        System.out.println(originator.getState());
+originator.set_memento(care_taker.undo)
+puts originator.get_state
 
-        originator.setMemento(careTaker.undo());
-        System.out.println(originator.getState());
+originator.set_memento(care_taker.undo)
+puts originator.get_state
 
-        originator.setState("State 4");
-        careTaker.addMemento(originator.createMemento());
-        System.out.println(originator.getState());
+originator.set_state('State 4')
+care_taker.add_memento(originator.create_memento)
+puts originator.get_state
 
-        originator.setMemento(careTaker.redo());
-        System.out.println(originator.getState());
+originator.set_memento(care_taker.redo)
+puts originator.get_state
 
-        originator.setMemento(careTaker.redo());
-        System.out.println(originator.getState());
+originator.set_memento(care_taker.redo)
+puts originator.get_state
 
-        originator.setMemento(careTaker.redo());
-        System.out.println(originator.getState());
-    }
-}
+originator.set_memento(care_taker.redo)
+puts originator.get_state

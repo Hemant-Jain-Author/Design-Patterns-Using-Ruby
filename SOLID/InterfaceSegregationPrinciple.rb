@@ -1,65 +1,65 @@
+# Define Printable module
+module Printable
+  def print(document)
+    raise NotImplementedError, 'Subclasses must implement the print method'
+  end
+end
 
-interface Printable {
-    void print(String document);
-}
+# Define Scannable module
+module Scannable
+  def scan
+    raise NotImplementedError, 'Subclasses must implement the scan method'
+  end
+end
 
-interface Scannable {
-    void scan();
-}
+# Define Faxable module
+module Faxable
+  def fax(document)
+    raise NotImplementedError, 'Subclasses must implement the fax method'
+  end
+end
 
-interface Faxable {
-    void fax(String document);
-}
+# Implement BasicInkjetPrinter class including Printable and Scannable modules
+class BasicInkjetPrinter
+  include Printable
+  include Scannable
 
-class BasicInkjetPrinter implements Printable, Scannable {
-    @Override
-    public void print(String document) {
-        System.out.printf("Printing %s using basic inkjet printer%n", document);
-    }
+  def print(document)
+    puts "Printing #{document} using basic inkjet printer"
+  end
 
-    @Override
-    public void scan() {
-        System.out.println("Scanning using basic inkjet printer");
-    }
-}
+  def scan
+    puts "Scanning using basic inkjet printer"
+  end
+end
 
-class HighEndOfficePrinter implements Printable, Scannable, Faxable {
-    @Override
-    public void print(String document) {
-        System.out.printf("Printing %s using high end office printer%n", document);
-    }
+# Implement HighEndOfficePrinter class including Printable, Scannable, and Faxable modules
+class HighEndOfficePrinter
+  include Printable
+  include Scannable
+  include Faxable
 
-    @Override
-    public void scan() {
-        System.out.println("Scanning using high end office printer");
-    }
+  def print(document)
+    puts "Printing #{document} using high end office printer"
+  end
 
-    @Override
-    public void fax(String document) {
-        System.out.printf("Faxing %s using high end office printer%n", document);
-    }
-}
+  def scan
+    puts "Scanning using high end office printer"
+  end
 
-// Client code
-public class InterfaceSegregationPrinciple {
-    public static void main(String[] args) {
-        // BasicInkjetPrinter
-        BasicInkjetPrinter basicPrinter = new BasicInkjetPrinter();
-        basicPrinter.print("Sample Document");
-        basicPrinter.scan();
+  def fax(document)
+    puts "Faxing #{document} using high end office printer"
+  end
+end
 
-        // HighEndOfficePrinter
-        HighEndOfficePrinter officePrinter = new HighEndOfficePrinter();
-        officePrinter.print("Important Report");
-        officePrinter.scan();
-        officePrinter.fax("Confidential Memo");
-    }
-}
+# Client code
+# BasicInkjetPrinter
+basic_printer = BasicInkjetPrinter.new
+basic_printer.print("Sample Document")
+basic_printer.scan
 
-/*
-Printing Sample Document using basic inkjet printer
-Scanning using basic inkjet printer
-Printing Important Report using high end office printer
-Scanning using high end office printer
-Faxing Confidential Memo using high end office printer
-*/
+# HighEndOfficePrinter
+office_printer = HighEndOfficePrinter.new
+office_printer.print("Important Report")
+office_printer.scan
+office_printer.fax("Confidential Memo")

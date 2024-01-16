@@ -1,45 +1,39 @@
+class ThreadLocalVariable
+    THREAD_LOCAL_VAR = :my_thread_local_var
 
-public class ThreadLocalValue {
-    // ThreadLocal variable
-    private static final ThreadLocal<String> tlsVar = new ThreadLocal<>();
+    def self.set_thread_local_value(value)
+        Thread.current[THREAD_LOCAL_VAR] = value
+    end
 
-    // Function to set thread-local value
-    private static void setTLSValue(String value) {
-        tlsVar.set(value);
-    }
+    def self.get_thread_local_value
+        Thread.current[THREAD_LOCAL_VAR]
+    end
+end
+  
+# Client code
+# Create and start three threads
+threads = []
 
-    // Function to get thread-local value
-    private static String getTLSValue() {
-        return tlsVar.get();
-    }
+threads << Thread.new do
+    ThreadLocalVariable.set_thread_local_value("Thread 1 Value")
+    puts "Thread 1: #{ThreadLocalVariable.get_thread_local_value}"
+end
 
-    // Worker thread function
-    private static void workerThread() {
-        setTLSValue("Thread-specific any value");
-        System.out.println(getTLSValue());
-    }
+threads << Thread.new do
+    ThreadLocalVariable.set_thread_local_value("Thread 2 Value")
+    puts "Thread 2: #{ThreadLocalVariable.get_thread_local_value}"
+end
 
-    public static void main(String[] args) {
-        // Create and start multiple worker threads
-        Thread[] threads = new Thread[3];
-        for (int i = 0; i < 3; i++) {
-            threads[i] = new Thread(ThreadLocalValue::workerThread);
-            threads[i].start();
-        }
+threads << Thread.new do
+    ThreadLocalVariable.set_thread_local_value("Thread 3 Value")
+    puts "Thread 3: #{ThreadLocalVariable.get_thread_local_value}"
+end
 
-        // Wait for all threads to complete
-        try {
-            for (Thread t : threads) {
-                t.join();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-}
+# Wait for all threads to complete
+threads.each(&:join)
 
-/*
-Thread-specific any value
-Thread-specific any value
-Thread-specific any value
- */
+=begin 
+Thread 1: Thread 1 Value
+Thread 2: Thread 2 Value
+Thread 3: Thread 3 Value
+=end

@@ -1,44 +1,49 @@
-interface Strategy {
-    void execute(int data);
-}
+# Define Strategy interface
+module Strategy
+  def execute(data)
+    raise NotImplementedError, 'Subclasses must implement the execute method'
+  end
+end
 
-class ConcreteStrategy1 implements Strategy {
-    @Override
-    public void execute(int data) {
-        System.out.println("ConcreteStrategy1 execute");
-    }
-}
+# Define ConcreteStrategy1 class implementing Strategy
+class ConcreteStrategy1
+  include Strategy
 
-class ConcreteStrategy2 implements Strategy {
-    @Override
-    public void execute(int data) {
-        System.out.println("ConcreteStrategy2 execute");
-    }
-}
+  def execute(data)
+    puts 'ConcreteStrategy1 execute'
+  end
+end
 
-class Context {
-    private Strategy strategy;
+# Define ConcreteStrategy2 class implementing Strategy
+class ConcreteStrategy2
+  include Strategy
 
-    Context(Strategy strategy) {
-        this.strategy = strategy;
-    }
+  def execute(data)
+    puts 'ConcreteStrategy2 execute'
+  end
+end
 
-    void setStrategy(Strategy strategy) {
-        this.strategy = strategy;
-    }
+# Define Context class
+class Context
+  attr_accessor :strategy
 
-    void execute() {
-        int data = 1;
-        this.strategy.execute(data);
-    }
-}
+  def initialize(strategy)
+    @strategy = strategy
+  end
 
-public class StrategyPattern {
-    public static void main(String[] args) {
-        Context context = new Context(new ConcreteStrategy1());
-        context.execute();
+  def set_strategy(strategy)
+    @strategy = strategy
+  end
 
-        context.setStrategy(new ConcreteStrategy2());
-        context.execute();
-    }
-}
+  def execute
+    data = 1
+    @strategy.execute(data)
+  end
+end
+
+# Client code
+context = Context.new(ConcreteStrategy1.new)
+context.execute
+
+context.set_strategy(ConcreteStrategy2.new)
+context.execute

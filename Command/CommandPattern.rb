@@ -1,73 +1,65 @@
-import java.util.ArrayList;
-import java.util.List;
+# Invoker
+class Invoker
+    def initialize
+        @commands = []
+    end
+  
+    def set_command(command)
+        @commands << command
+    end
+  
+    def execute_commands
+        @commands.each(&:execute)
+    end
+  
+    def unexecute_commands
+        @commands.each(&:unexecute)
+    end
+end
+  
+# Command
+class Command
+    def execute
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+  
+    def unexecute
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+  end
+  
+# ConcreteCommand
+class ConcreteCommand < Command
+    def initialize(receiver)
+        @receiver = receiver
+    end
+  
+    def execute
+        @receiver.action('Action 1')
+    end
+  
+    def unexecute
+        @receiver.action('Action 2')
+    end
+end
+  
+# Receiver
+class Receiver
+    def action(action)
+        puts action
+    end
+end
+  
+# Client Code
+receiver = Receiver.new
+concrete_command = ConcreteCommand.new(receiver)
+invoker = Invoker.new
 
-// Invoker
-class Invoker {
-    private List<Command> commands = new ArrayList<>();
+invoker.set_command(concrete_command)
+invoker.execute_commands
+invoker.unexecute_commands
 
-    public void setCommand(Command command) {
-        commands.add(command);
-    }
-
-    public void executeCommands() {
-        for (Command command : commands) {
-            command.execute();
-        }
-    }
-
-    public void unexecuteCommands() {
-        for (Command command : commands) {
-            command.unexecute();
-        }
-    }
-}
-
-// Command
-abstract class Command {
-    public abstract void execute();
-    public abstract void unexecute();
-}
-
-// ConcreteCommand
-class ConcreteCommand extends Command {
-    private Receiver receiver;
-
-    public ConcreteCommand(Receiver receiver) {
-        this.receiver = receiver;
-    }
-
-    @Override
-    public void execute() {
-        receiver.action("Action 1");
-    }
-
-    @Override
-    public void unexecute() {
-        receiver.action("Action 2");
-    }
-}
-
-// Receiver
-class Receiver {
-    public void action(String action) {
-        System.out.println(action);
-    }
-}
-
-// Client Code
-public class CommandPattern {
-    public static void main(String[] args) {
-        Receiver receiver = new Receiver();
-        ConcreteCommand concreteCommand = new ConcreteCommand(receiver);
-        Invoker invoker = new Invoker();
-
-        invoker.setCommand(concreteCommand);
-        invoker.executeCommands();
-        invoker.unexecuteCommands();
-    }
-}
-
-/*
+=begin 
 Action 1
 Action 2
- */
+=end

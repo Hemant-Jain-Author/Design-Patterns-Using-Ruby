@@ -1,39 +1,43 @@
-interface BookParser {
-    int numPages();
-}
+# BookParser interface
+module BookParser
+    def num_pages
+        raise NotImplementedError, "Subclasses must implement the 'num_pages' method"
+    end
+end
 
-class ConcreteBookParser implements BookParser {
-    private int numPages;
+# ConcreteBookParser class
+class ConcreteBookParser
+    include BookParser
 
-    public ConcreteBookParser() {
-        System.out.println("Concrete Book Parser Created");
-        // Number of pages calculation heavy operation.
-        // Suppose this calculation results in 1000 pages.
-        this.numPages = 1000;
-    }
+    def initialize
+        puts 'Concrete Book Parser Created'
+        # Number of pages calculation heavy operation.
+        # Suppose this calculation results in 1000 pages.
+        @num_pages = 1000
+    end
 
-    @Override
-    public int numPages() {
-        System.out.println("Concrete Book Parser Request Method");
-        return this.numPages;
-    }
-}
+    def num_pages
+        puts 'Concrete Book Parser Request Method'
+        @num_pages
+    end
+end
 
-class LazyBookParserProxy implements BookParser {
-    private ConcreteBookParser subject;
+# LazyBookParserProxy class
+class LazyBookParserProxy
+    include BookParser
 
-    @Override
-    public int numPages() {
-        if (subject == null) {
-            subject = new ConcreteBookParser();
-        }
-        return subject.numPages();
-    }
-}
+    def num_pages
+        @subject ||= ConcreteBookParser.new
+        @subject.num_pages
+    end
+end
 
-public class ProxyPatternLazy {
-    public static void main(String[] args) {
-        LazyBookParserProxy proxy = new LazyBookParserProxy();
-        System.out.println(proxy.numPages());
-    }
-}
+# Client code
+proxy = LazyBookParserProxy.new
+puts proxy.num_pages
+
+=begin 
+Concrete Book Parser Created
+Concrete Book Parser Request Method
+1000
+=end

@@ -1,89 +1,86 @@
-import java.util.ArrayList;
-import java.util.List;
+# Observer module
+module Observer
+    def update
+        raise NotImplementedError, 'Subclasses must implement the update method'
+    end
+end
 
-abstract class Subject {
-    private List<Observer> observers = new ArrayList<>();
+# Subject class
+class Subject
+    attr_reader :observers
 
-    public void attach(Observer observer) {
-        observer.setSubject(this);
-        observers.add(observer);
-    }
+    def initialize
+        @observers = []
+    end
 
-    public void detach(Observer observer) {
-        observer.setSubject(null);
-        observers.remove(observer);
-    }
+    def attach(observer)
+        observer.subject = self
+        @observers << observer
+    end
 
-    public void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update();
-        }
-    }
-}
+    def detach(observer)
+        observer.subject = nil
+        @observers.delete(observer)
+    end
 
-class ConcreteSubject extends Subject {
-    private String state;
+    def notify_observers
+        @observers.each(&:update)
+    end
+end
 
-    public String getState() {
-        return state;
-    }
+# ConcreteSubject class
+class ConcreteSubject < Subject
+    attr_accessor :state
 
-    public void setState(String state) {
-        this.state = state;
-        notifyObservers();
-    }
-}
+    def state=(state)
+        @state = state
+        notify_observers
+    end
+end
 
-abstract class Observer {
-    protected Subject subject;
+# ConcreteObserver1 class
+class ConcreteObserver1
+    include Observer
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
-    }
+    attr_accessor :subject
 
-    public abstract void update();
-}
+    def initialize(subject)
+        @subject = subject
+        subject.attach(self)
+    end
 
-class ConcreteObserver1 extends Observer {
-    public ConcreteObserver1(Subject subject) {
-        setSubject(subject);
-        subject.attach(this);
-    }
+    def update
+        puts "#{subject.is_a?(ConcreteSubject) ? subject.state + ' notified to Observer1' : ''}"
+    end
+end
 
-    @Override
-    public void update() {
-        System.out.println(subject instanceof ConcreteSubject ?
-                ((ConcreteSubject) subject).getState() + " notified to Observer1" : "");
-    }
-}
+# ConcreteObserver2 class
+class ConcreteObserver2
+    include Observer
 
-class ConcreteObserver2 extends Observer {
-    public ConcreteObserver2(Subject subject) {
-        setSubject(subject);
-        subject.attach(this);
-    }
+    attr_accessor :subject
 
-    @Override
-    public void update() {
-        System.out.println(subject instanceof ConcreteSubject ?
-                ((ConcreteSubject) subject).getState() + " notified to Observer2" : "");
-    }
-}
+    def initialize(subject)
+        @subject = subject
+        subject.attach(self)
+    end
 
-public class ObserverPattern {
-    public static void main(String[] args) {
-        ConcreteSubject subject = new ConcreteSubject();
-        ConcreteObserver1 observer1 = new ConcreteObserver1(subject);
-        ConcreteObserver2 observer2 = new ConcreteObserver2(subject);
+    def update
+        puts "#{subject.is_a?(ConcreteSubject) ? subject.state + ' notified to Observer2' : ''}"
+    end
+end
 
-        subject.setState("First state");
-        subject.setState("Second state");
-    }
-}
+# Client code
+subject = ConcreteSubject.new
+observer1 = ConcreteObserver1.new(subject)
+observer2 = ConcreteObserver2.new(subject)
 
-/*
+subject.state = 'First state'
+subject.state = 'Second state'
+
+=begin 
 First state notified to Observer1
 First state notified to Observer2
 Second state notified to Observer1
 Second state notified to Observer2
-*/
+=end

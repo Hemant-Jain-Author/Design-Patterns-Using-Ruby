@@ -1,59 +1,64 @@
-interface BulbState {
-    void flip(BulbControl bc);
-    String toString();
-}
+# Define BulbState interface
+module BulbState
+  def flip(bc)
+    raise NotImplementedError, 'Subclasses must implement the flip method'
+  end
 
-class BulbControl {
-    private BulbState current;
+  def to_s
+    raise NotImplementedError, 'Subclasses must implement the to_s method'
+  end
+end
 
-    BulbControl() {
-        this.current = new Off();
-    }
+# Define BulbControl class
+class BulbControl
+  attr_accessor :current
 
-    void setState(BulbState state) {
-        this.current = state;
-    }
+  def initialize
+    @current = Off.new
+  end
 
-    void flip() {
-        this.current.flip(this);
-    }
+  def set_state(state)
+    @current = state
+  end
 
-    String toStringState() {
-        return this.current.toString();
-    }
-}
+  def flip
+    @current.flip(self)
+  end
 
-class On implements BulbState {
-    @Override
-    public void flip(BulbControl bc) {
-        bc.setState(new Off());
-    }
+  def to_s_state
+    @current.to_s
+  end
+end
 
-    @Override
-    public String toString() {
-        return "On";
-    }
-}
+# Define On class implementing BulbState
+class On
+  include BulbState
 
-class Off implements BulbState {
-    @Override
-    public void flip(BulbControl bc) {
-        bc.setState(new On());
-    }
+  def flip(bc)
+    bc.set_state(Off.new)
+  end
 
-    @Override
-    public String toString() {
-        return "Off";
-    }
-}
+  def to_s
+    'On'
+  end
+end
 
-// Client code.
-public class StatePattern {
-    public static void main(String[] args) {
-        BulbControl c = new BulbControl();
-        c.flip();
-        System.out.println(c.toStringState());
-        c.flip();
-        System.out.println(c.toStringState());
-    }
-}
+# Define Off class implementing BulbState
+class Off
+  include BulbState
+
+  def flip(bc)
+    bc.set_state(On.new)
+  end
+
+  def to_s
+    'Off'
+  end
+end
+
+# Client code
+c = BulbControl.new
+c.flip
+puts c.to_s_state
+c.flip
+puts c.to_s_state

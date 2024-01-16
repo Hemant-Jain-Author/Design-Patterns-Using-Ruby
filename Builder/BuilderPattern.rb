@@ -1,103 +1,82 @@
-// Define the Product class with two parts
-class Product {
-    private String partA;
-    private String partB;
+# Define the Product class with two parts
+class Product
+    attr_accessor :partA, :partB
+  
+    def initialize(a, b)
+        @partA = a
+        @partB = b
+    end
+  
+    def to_s
+        "Product: (#{@partA}, #{@partB})"
+    end
+end
+  
+# Define an abstract class called Builder
+class Builder
+    attr_accessor :product
+  
+    def initialize
+        @product = Product.new('A default', 'B default')
+    end
+  
+    def set_part_a(a)
+        @product.partA = a
+        self
+    end
+  
+    def set_part_b(b)
+        @product.partB = b
+        self
+    end
+  
+    def get_product
+        temp = @product
+        @product = Product.new('A default', 'B default')
+        temp
+    end
+end
+  
+# Define a ConcreteBuilder class that extends Builder
+class ConcreteBuilder < Builder
+end
+  
+# Define a Director class that takes a builder object as a parameter
+class Director
+    attr_accessor :builder
+  
+    def initialize(builder)
+        @builder = builder
+    end
+  
+    def construct
+        @builder.set_part_a('A1').set_part_b('B1').get_product
+    end
+  
+    def construct2
+        @builder.set_part_a('A2').set_part_b('B2').get_product
+    end
+  
+    def construct3
+        @builder.set_part_a('A3').get_product
+    end
+end
+  
+# Client code
+builder = ConcreteBuilder.new
+director = Director.new(builder)
 
-    public Product(String A, String B) {
-        this.partA = A;
-        this.partB = B;
-    }
+product = director.construct
+puts product
 
-    public void setPartA(String A){
-        this.partA = A;
-    }
+product2 = director.construct2
+puts product2
 
-    public void setPartB(String B){
-        this.partB = B;
-    }
+product3 = director.construct3
+puts product3
 
-    @Override
-    public String toString() {
-        return String.format("Product : (%s, %s)", partA, partB);
-    }
-}
-
-// Define an abstract class called Builder
-abstract class Builder {
-    protected Product product;
-
-    public Builder() {
-        this.product = new Product("A default", "B default");
-    }
-
-    public abstract Builder setPartA(String A);
-
-    public abstract Builder setPartB(String B);
-
-    public Product getProduct() {
-        Product temp = this.product;
-        this.product = new Product("A default", "B default"); // assign new product.
-        return temp;
-    }
-}
-
-// Define a ConcreteBuilder class that extends Builder
-class ConcreteBuilder extends Builder {
-    @Override
-    public Builder setPartA(String A) {
-        this.product.setPartA(A);
-        return this;
-    }
-
-    @Override
-    public Builder setPartB(String B) {
-        this.product.setPartB(B);
-        return this;
-    }
-}
-
-// Define a Director class that takes a builder object as a parameter
-class Director {
-    private Builder builder;
-
-    public Director(Builder builder) {
-        this.builder = builder;
-    }
-
-    public Product construct() {
-        return this.builder.setPartA("A1").setPartB("B1").getProduct();
-    }
-
-    public Product construct2() {
-        this.builder.setPartA("A2");
-        this.builder.setPartB("B2");
-        return this.builder.getProduct();
-    }
-
-    public Product construct3() {
-        return this.builder.setPartA("A3").getProduct();
-    }
-}
-
-// Client code
-public class BuilderPattern {
-    public static void main(String[] args) {
-        Builder builder = new ConcreteBuilder();
-        Director director = new Director(builder);
-
-        Product product = director.construct();
-        System.out.println(product);
-
-        Product product2 = director.construct2();
-        System.out.println(product2);
-
-        Product product3 = director.construct3();
-        System.out.println(product3);
-    }
-}
-
-/*
-Product : (A1, B1)
-Product : (A2, B2)
-Product : (A3, B default)
- */
+=begin 
+Product: (A1, B1)
+Product: (A2, B2)
+Product: (A3, B default)
+=end

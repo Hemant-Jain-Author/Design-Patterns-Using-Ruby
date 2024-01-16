@@ -1,52 +1,39 @@
-abstract class ATMHandlerAbstract {
-    protected ATMHandlerAbstract successor;
-    protected int denomination;
+# Abstract class representing an ATM handler
+class ATMHandlerAbstract
+    attr_accessor :successor, :denomination
+  
+    def initialize(successor, denomination)
+        @successor = successor
+        @denomination = denomination
+    end
+  
+    def handle_request(amount)
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
+  
+# Class representing an ATM handler
+class ATMHandler < ATMHandlerAbstract
+    def initialize(successor, denomination)
+        super(successor, denomination)
+    end
+  
+    def handle_request(amount)
+        q, r = amount.divmod(denomination)
+    
+        puts "#{q} notes of #{denomination}" if q != 0
+    
+        successor&.handle_request(r) if r != 0
+    end
+end
+  
+# Client code
+handler = ATMHandler.new( ATMHandler.new( ATMHandler.new( ATMHandler.new(nil, 10), 50 ), 100 ), 1000 )
+handler.handle_request(5560)
 
-    public ATMHandlerAbstract(ATMHandlerAbstract successor, int denomination) {
-        this.successor = successor;
-        this.denomination = denomination;
-    }
-
-    public abstract void handleRequest(int amount);
-}
-
-class ATMHandler extends ATMHandlerAbstract {
-    public ATMHandler(ATMHandlerAbstract successor, int denomination) {
-        super(successor, denomination);
-    }
-
-    @Override
-    public void handleRequest(int amount) {
-        int q = amount / denomination;
-        int r = amount % denomination;
-
-        if (q != 0) {
-            System.out.println(q + " notes of " + denomination);
-        }
-
-        if (r != 0 && successor != null) {
-            successor.handleRequest(r);
-        }
-    }
-}
-
-public class ChainOfResATM {
-    public static void main(String[] args) {
-        ATMHandlerAbstract handler = new ATMHandler(
-                new ATMHandler(
-                        new ATMHandler(
-                                new ATMHandler(null, 10), 50
-                        ), 100
-                ), 1000
-        );
-
-        handler.handleRequest(5560);
-    }
-}
-
-/*
+=begin 
 5 notes of 1000
 5 notes of 100
 1 notes of 50
 1 notes of 10
- */
+=end

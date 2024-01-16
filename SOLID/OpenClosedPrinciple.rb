@@ -1,104 +1,85 @@
-class Animal {
-    String name;
+class Animal
+  attr_reader :name
 
-    public Animal(String name) {
-        this.name = name;
-    }
-}
+  def initialize(name)
+    @name = name
+  end
+end
 
-class Bird extends Animal {
-    public Bird(String name) {
-        super(name);
-    }
+class Bird < Animal
+  def fly
+    # Abstract method, to be overridden by subclasses
+  end
+end
 
-    void fly() {
-        // Abstract method, to be overridden by subclasses
-    }
-}
+class Dodo < Bird
+  def initialize
+    super("Dodo")
+  end
 
-class Dodo extends Bird {
-    public Dodo() {
-        super("Dodo");
-    }
+  def fly
+    puts "The dodo is extinct and cannot fly."
+  end
+end
 
-    @Override
-    void fly() {
-        System.out.println("The dodo is extinct and cannot fly.");
-    }
-}
+class Penguin < Bird
+  def initialize
+    super("Penguin")
+  end
 
-class Penguin extends Bird {
-    public Penguin() {
-        super("Penguin");
-    }
+  def fly
+    puts "The penguin cannot fly."
+  end
 
-    @Override
-    void fly() {
-        System.out.println("The penguin cannot fly.");
-    }
+  def slide
+    puts "The penguin is sliding on its belly!"
+  end
 
-    void slide() {
-        System.out.println("The penguin is sliding on its belly!");
-    }
+  def swim
+    puts "The penguin is swimming in the water!"
+  end
+end
 
-    void swim() {
-        System.out.println("The penguin is swimming in the water!");
-    }
-}
+class Eagle < Bird
+  def initialize
+    super("Eagle")
+  end
 
-class Eagle extends Bird {
-    public Eagle() {
-        super("Eagle");
-    }
+  def fly
+    puts "The eagle is soaring through the sky!"
+  end
+end
 
-    @Override
-    void fly() {
-        System.out.println("The eagle is soaring through the sky!");
-    }
-}
+class Sparrow < Bird
+  def initialize
+    super("Sparrow")
+  end
 
-class Sparrow extends Bird {
-    public Sparrow() {
-        super("Sparrow");
-    }
+  def fly
+    puts "The sparrow is fluttering its wings!"
+  end
+end
 
-    @Override
-    void fly() {
-        System.out.println("The sparrow is fluttering its wings!");
-    }
-}
+class Pigeon < Bird
+  def initialize
+    super("Pigeon")
+  end
 
-// Client code
-public class OpenClosedPrinciple {
-    public static void main(String[] args) {
-        Bird bird1 = new Eagle();
-        bird1.fly();
+  def make_cooing_sound
+    puts "The pigeon is making a cooing sound."
+  end
 
-        Bird bird2 = new Dodo();
-        bird2.fly();
+  def fly
+    puts "The pigeon is fluttering its wings!"
+  end
+end
 
-        Bird bird3 = new Pigeon();
-        bird3.fly();
-    }
-}
+# Client code
+bird1 = Eagle.new
+bird1.fly
 
-/*
-The eagle is soaring through the sky!
-The dodo is extinct and cannot fly.
-The pigeon is fluttering its wings!
-*/
+bird2 = Dodo.new
+bird2.fly
 
-class Pigeon extends Bird {
-    public Pigeon() {
-        super("Pigeon");
-    }
-
-    void makeCooingSound() {
-        System.out.println("The pigeon is making a cooing sound.");
-    }
-
-    @Override
-    void fly() {
-        System.out.println("The pigeon is fluttering its wings!");
-    }
-}
+bird3 = Pigeon.new
+bird3.fly

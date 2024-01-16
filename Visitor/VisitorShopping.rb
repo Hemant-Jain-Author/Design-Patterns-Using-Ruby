@@ -1,113 +1,107 @@
-import java.util.ArrayList;
-import java.util.List;
+class Element
+def accept(visitor)
+    raise NotImplementedError, 'Subclasses must implement the accept method'
+end
 
-abstract class Element {
-    abstract double accept(Visitor visitor);
-    abstract double price();
-}
+def price
+    raise NotImplementedError, 'Subclasses must implement the price method'
+end
+end
 
-class Book extends Element {
-    private double price;
-    private int isbn;
+class Book < Element
+attr_reader :price, :isbn
 
-    public Book(double price, int isbn) {
-        this.price = price;
-        this.isbn = isbn;
-    }
+def initialize(price, isbn)
+    @price = price
+    @isbn = isbn
+end
 
-    @Override
-    double price(){
-        return price;
-    }
+def price
+    @price
+end
 
-    @Override
-    double accept(Visitor visitor) {
-        return visitor.visitBook(this);
-    }
-}
+def accept(visitor)
+    visitor.visit_book(self)
+end
+end
 
-class Fruit extends Element {
-    private double price;
-    private int quantity;
-    private String type;
+class Fruit < Element
+attr_reader :price, :quantity, :type
 
-    public Fruit(double price, int quantity, String type) {
-        this.price = price;
-        this.quantity = quantity;
-        this.type = type;
-    }
+def initialize(price, quantity, type)
+    @price = price
+    @quantity = quantity
+    @type = type
+end
 
-    @Override
-    double price(){
-        return price;
-    }
+def price
+    @price
+end
 
-    @Override
-    double accept(Visitor visitor) {
-        return visitor.visitFruit(this) * quantity;
-    }
-}
+def accept(visitor)
+    visitor.visit_fruit(self) * quantity
+end
+end
 
-abstract class Visitor {
-    abstract double visitBook(Book book);
-    abstract double visitFruit(Fruit fruit);
-}
+class Visitor
+def visit_book(book)
+    raise NotImplementedError, 'Subclasses must implement the visit_book method'
+end
 
-class SundayDiscount extends Visitor {
-    @Override
-    double visitBook(Book book) {
-        return book.price() - 50;
-    }
+def visit_fruit(fruit)
+    raise NotImplementedError, 'Subclasses must implement the visit_fruit method'
+end
+end
 
-    @Override
-    double visitFruit(Fruit fruit) {
-        return fruit.price() - 5;
-    }
-}
+class SundayDiscount < Visitor
+def visit_book(book)
+    book.price - 50
+end
 
-class SaleDiscount extends Visitor {
-    @Override
-    double visitBook(Book book) {
-        return book.price() / 2;
-    }
+def visit_fruit(fruit)
+    fruit.price - 5
+end
+end
 
-    @Override
-    double visitFruit(Fruit fruit) {
-        return fruit.price() / 2;
-    }
-}
+class SaleDiscount < Visitor
+def visit_book(book)
+    book.price / 2
+end
 
-class ShoppingCart {
-    private List<Element> list = new ArrayList<>();
-    private Visitor visitor;
+def visit_fruit(fruit)
+    fruit.price / 2
+end
+end
 
-    public void add(Element element) {
-        list.add(element);
-    }
+class ShoppingCart
+attr_accessor :list, :visitor
 
-    public void setDiscountVisitor(Visitor discount) {
-        this.visitor = discount;
-    }
+def initialize
+    @list = []
+    @visitor = nil
+end
 
-    public void accept() {
-        double cost = 0;
-        for (Element element : list) {
-            cost += element.accept(visitor);
-        }
-        System.out.println("Total cost: " + cost);
-    }
-}
+def add(element)
+    list << element
+end
 
-public class VisitorShopping {
-    public static void main(String[] args) {
-        ShoppingCart cart = new ShoppingCart();
-        cart.add(new Fruit(100, 10, "Apple"));
-        cart.add(new Book(100, 12345));
+def set_discount_visitor(discount)
+    self.visitor = discount
+end
 
-        cart.setDiscountVisitor(new SundayDiscount());
-        cart.accept();
+def accept
+    cost = list.sum { |element| element.accept(visitor) }
+    puts "Total cost: #{cost}"
+end
+end
 
-        cart.setDiscountVisitor(new SaleDiscount());
-        cart.accept();
-    }
-}
+# Client code
+cart = ShoppingCart.new
+cart.add(Fruit.new(100, 10, 'Apple'))
+cart.add(Book.new(100, 12345))
+
+cart.set_discount_visitor(SundayDiscount.new)
+cart.accept
+
+cart.set_discount_visitor(SaleDiscount.new)
+cart.accept

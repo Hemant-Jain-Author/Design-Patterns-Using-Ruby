@@ -1,28 +1,25 @@
-class A {
-    public A() {
-        System.out.println("A created");
-    }
+class A
+    def initialize
+        puts "A created"
+    end
+  
+    def fun1
+      puts "fun1"
+    end
+end
 
-    public void fun1() {
-        System.out.println("fun1");
-    }
-}
-
-class B {
-    public B() {
-        System.out.println("B created");
-    }
-
-    public void fun2() {
-        System.out.println("fun2 start");
-        new A().fun1();
-        System.out.println("fun2 end");
-    }
-}
-
-public class UsingRelationship {
-    public static void main(String[] args) {
-        B b = new B();
-        b.fun2();
-    }
-}
+class B
+    def initialize
+        puts "B created"
+    end
+  
+    def fun2
+        puts "fun2 start"
+        A.new.fun1
+        puts "fun2 end"
+    end
+end
+  
+# Client code
+b = B.new
+b.fun2

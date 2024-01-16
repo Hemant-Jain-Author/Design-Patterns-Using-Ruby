@@ -1,73 +1,73 @@
-abstract class AbstractWorker {
-    final void dailyRoutine() {
-        wakeUp();
-        eatBreakfast();
-        goToWork();
-        work();
-        comeBackHome();
-        eatDinner();
-        sleep();
-    }
+# Define AbstractWorker
+class AbstractWorker
+  def daily_routine
+    wake_up
+    eat_breakfast
+    go_to_work
+    work
+    come_back_home
+    eat_dinner
+    sleep
+  end
 
-    void wakeUp() {
-        System.out.println("Wake Up");
-    }
+  def wake_up
+    puts 'Wake Up'
+  end
 
-    void eatBreakfast() {
-        System.out.println("Eat Breakfast");
-    }
+  def eat_breakfast
+    puts 'Eat Breakfast'
+  end
 
-    void goToWork() {
-        System.out.println("Go to work");
-    }
+  def go_to_work
+    puts 'Go to work'
+  end
 
-    abstract void work();
+  def work
+    raise NotImplementedError, 'Subclasses must implement the work method'
+  end
 
-    void comeBackHome() {
-        System.out.println("Come back Home");
-    }
+  def come_back_home
+    puts 'Come back Home'
+  end
 
-    void eatDinner() {
-        System.out.println("Eat dinner");
-    }
+  def eat_dinner
+    puts 'Eat dinner'
+  end
 
-    void sleep() {
-        System.out.println("Sleep");
-    }
-}
+  def sleep
+    puts 'Sleep'
+  end
+end
 
-class Doctor extends AbstractWorker {
-    @Override
-    void work() {
-        System.out.println("...Treat Patients...");
-    }
-}
+# Define Doctor extending AbstractWorker
+class Doctor < AbstractWorker
+  def work
+    puts '...Treat Patients...'
+  end
+end
 
-class FireFighter extends AbstractWorker {
-    @Override
-    void work() {
-        System.out.println("...Fight Fire...");
-    }
-}
+# Define FireFighter extending AbstractWorker
+class FireFighter < AbstractWorker
+  def work
+    puts '...Fight Fire...'
+  end
+end
 
-class SuperHero extends AbstractWorker {
-    @Override
-    void work() {
-        System.out.println("...Save the world!...");
-    }
-}
+# Define SuperHero extending AbstractWorker
+class SuperHero < AbstractWorker
+  def work
+    puts '...Save the world!...'
+  end
+end
 
-public class TemplatePatternPerson {
-    public static void main(String[] args) {
-        Doctor doctor = new Doctor();
-        doctor.dailyRoutine();
-        System.out.println();
+# Client code
+doctor = Doctor.new
+doctor.daily_routine
+puts
 
-        FireFighter fireFighter = new FireFighter();
-        fireFighter.dailyRoutine();
-        System.out.println();
+fire_fighter = FireFighter.new
+fire_fighter.daily_routine
+puts
 
-        SuperHero superHero = new SuperHero();
-        superHero.dailyRoutine();
-    }
-}
+super_hero = SuperHero.new
+super_hero.daily_routine

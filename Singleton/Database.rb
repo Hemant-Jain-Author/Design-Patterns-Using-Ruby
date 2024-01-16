@@ -1,78 +1,82 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+require 'sqlite3'
 
-public class Database {
-    private static Database _instance = null; // Keep instance reference
-    private Connection connection;
-    
-    private Database() {
-        try {
-            System.out.println("Database created");
-            connection = DriverManager.getConnection("jdbc:sqlite:db.sqlite3");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+class Database
+    @@instance = nil
 
-    public static Database getInstance() {
-        if (_instance == null) {
-            _instance = new Database();
-        }
-        return _instance;
-    }
+    def initialize
+        begin
+            puts 'Database created'
+            @connection = SQLite3::Database.new('db.sqlite3')
+            rescue SQLite3::Exception => e
+              puts "Exception occurred: #{e}"
+        end
+    end
 
-    public void createTable() {
-        try {
-            PreparedStatement statement = connection.prepareStatement(
-                "CREATE TABLE IF NOT EXISTS students (id INTEGER, name TEXT);"
-            );
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    def self.instance
+        @@instance ||= new
+    end
 
-    public void addData(int id, String name) {
-        try {
-            PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO students (id, name) VALUES (?, ?);"
-            );
-            statement.setInt(1, id);
-            statement.setString(2, name);
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    def create_table
+        begin
+            statement = @connection.prepare('CREATE TABLE IF NOT EXISTS students (id INTEGER, name TEXT);')
+            statement.execute
+          rescue SQLite3::Exception => e
+            puts "Exception occurred: #{e}"
+        end
+    end
 
-    public void display() {
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM students;");
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                System.out.println("ID: " + id + ", Name: " + name);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    def add_data(id, name)
+        begin
+            statement = @connection.prepare('INSERT INTO students (id, name) VALUES (?, ?);')
+            statement.bind_params(id, name)
+            statement.execute
+            rescue SQLite3::Exception => e
+            puts "Exception occurred: #{e}"
+        end
+    end
 
-    public static void main(String[] args) {
-        Database db1 = Database.getInstance();
-        Database db2 = Database.getInstance();
+    def drop_table
+        begin
+            statement = @connection.prepare('DROP TABLE IF EXISTS students;')
+            statement.execute
+            puts 'Table students dropped successfully.'
+          rescue SQLite3::Exception => e
+            puts "Exception occurred: #{e}"
+        end
+    end
 
-        System.out.println("Database Objects DB1: " + db1);
-        System.out.println("Database Objects DB2: " + db2);
+    def display
+        begin
+            statement = @connection.prepare('SELECT * FROM students;')
+            result_set = statement.execute
+            result_set.each do |row|
+              puts "ID: #{row[0]}, Name: #{row[1]}"
+            end
+          rescue SQLite3::Exception => e
+            puts "Exception occurred: #{e}"
+        end
+    end
+end
 
-        db1.createTable();
-        db1.addData(1, "john");
-        db2.addData(2, "smith");
+# Client code
+db1 = Database.instance
+db2 = Database.instance
 
-        db1.display();
-    }
-}
+puts "Database Objects DB1: #{db1}"
+puts "Database Objects DB2: #{db2}"
+
+db1.create_table
+db1.add_data(1, 'john')
+db2.add_data(2, 'smith')
+
+db1.display
+db1.drop_table
+
+=begin 
+Database created
+Database Objects DB1: #<Database:0x00007f857aac1870>
+Database Objects DB2: #<Database:0x00007f857aac1870>
+ID: 1, Name: john
+ID: 2, Name: smith
+Table students dropped successfully.
+=end

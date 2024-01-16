@@ -1,29 +1,33 @@
-interface Subject {
-    void request();
-}
+# Subject interface
+module Subject
+    def request
+        raise NotImplementedError, "Subclasses must implement the 'request' method"
+    end
+end
 
-class RealSubject implements Subject {
-    @Override
-    public void request() {
-        System.out.println("Concrete Subject Request Method");
-    }
-}
+# RealSubject class
+class RealSubject
+    include Subject
 
-class Proxy implements Subject {
-    private RealSubject realSubject;
+    def request
+        puts 'Concrete Subject Request Method'
+    end
+end
 
-    @Override
-    public void request() {
-        if (realSubject == null) {
-            realSubject = new RealSubject(); // Lazy Initialization
-        }
-        realSubject.request();
-    }
-}
+# Proxy class
+class Proxy
+    include Subject
 
-public class ProxyLazy {
-    public static void main(String[] args) {
-        Proxy proxy = new Proxy();
-        proxy.request();
-    }
-}
+    def request
+        @real_subject ||= RealSubject.new # Lazy Initialization
+        @real_subject.request
+    end
+end
+
+# Client code
+proxy = Proxy.new
+proxy.request
+
+=begin 
+Concrete Subject Request Method
+=end

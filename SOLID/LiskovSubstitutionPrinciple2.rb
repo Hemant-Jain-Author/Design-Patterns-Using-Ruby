@@ -1,94 +1,68 @@
-abstract class Animal {
-    String name;
+class Animal
+  attr_accessor :name
 
-    Animal(String name) {
-        this.name = name;
-    }
-}
+  def initialize(name)
+    @name = name
+  end
+end
 
-class Bird extends Animal {
-    int flightHeight;
+class Bird < Animal
+  attr_accessor :flight_height
 
-    Bird(String name) {
-        super(name);
-        this.flightHeight = 0;
-    }
+  def initialize(name)
+    super(name)
+    @flight_height = 0
+  end
 
-    void fly() {
-        // To be implemented in subclasses
-    }
-}
+  def fly
+    # To be implemented in subclasses
+  end
+end
 
-class Sparrow extends Bird {
-    Sparrow(String name) {
-        super(name);
-    }
+class Sparrow < Bird
+  def fly
+    puts "The sparrow is fluttering its wings."
+    @flight_height = 100
+  end
+end
 
-    void fly() {
-        System.out.println("The sparrow is fluttering its wings.");
-        flightHeight = 100;
-    }
-}
+class Penguin < Bird
+  def fly
+    puts "The penguin cannot fly."
+  end
 
-class Penguin extends Bird {
-    Penguin(String name) {
-        super(name);
-    }
+  def slide
+    puts "The penguin is sliding on its belly!"
+  end
 
-    void fly() {
-        System.out.println("The penguin cannot fly.");
-    }
+  def swim
+    puts "The penguin is swimming in the water!"
+  end
+end
 
-    void slide() {
-        System.out.println("The penguin is sliding on its belly!");
-    }
+class Dodo < Bird
+  def fly
+    puts "The dodo is extinct and cannot fly."
+  end
+end
 
-    void swim() {
-        System.out.println("The penguin is swimming in the water!");
-    }
-}
+def test(bird)
+  bird.fly
+  if bird.flight_height > 0
+    puts "Bird is flying at a positive height."
+  else
+    puts "Error: fly() method called; flight height is still zero."
+  end
+end
 
-class Dodo extends Bird {
-    Dodo(String name) {
-        super(name);
-    }
+# Client code
+sparrow = Sparrow.new("Sparrow")
+test(sparrow)
 
-    void fly() {
-        System.out.println("The dodo is extinct and cannot fly.");
-    }
-}
+penguin = Penguin.new("Penguin")
+test(penguin)
+penguin.slide
+penguin.swim
 
-public class LiskovSubstitutionPrinciple2 {
-    static void test(Bird bird) {
-        bird.fly();
-        if (bird.flightHeight > 0) {
-            System.out.println("Bird is flying at a positive height.");
-        } else {
-            System.out.println("Error: fly() method called; flight height is still zero.");
-        }
-    }
-
-    public static void main(String[] args) {
-        Sparrow sparrow = new Sparrow("Sparrow");
-        test(sparrow);
-
-        Penguin penguin = new Penguin("Penguin");
-        test(penguin);
-        penguin.slide();
-        penguin.swim();
-
-        Dodo dodo = new Dodo("Dodo");
-        test(dodo);
-    }
-}
-
-/*
-The sparrow is fluttering its wings.
-Bird is flying at a positive height.
-The penguin cannot fly.
-Error: fly() method called; flight height is still zero.
-The penguin is sliding on its belly!
-The penguin is swimming in the water!
-The dodo is extinct and cannot fly.
-Error: fly() method called; flight height is still zero.
-*/
+dodo = Dodo.new("Dodo")
+test(dodo)

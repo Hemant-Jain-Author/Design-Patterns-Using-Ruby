@@ -1,91 +1,58 @@
-import java.util.HashMap;
-import java.util.Map;
+class Shape
+    attr_accessor :color
 
-abstract class Shape implements Cloneable {
-    private String color;
+    def initialize
+        @color = ''
+    end
 
-    public Shape() {
-        this.color = "";
-    }
+    def to_s
+        raise NotImplementedError, "Subclasses must implement the 'to_s' method"
+    end
 
-    @Override
-    public abstract String toString();
+    def clone_shape
+        clone
+    end
+end
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+class Rectangle < Shape
+    def to_s
+        'Rectangle.'
+    end
+end
 
-    public abstract Shape cloneShape();
-}
+class Circle < Shape
+    def to_s
+        'Circle.'
+    end
+end
 
-class Rectangle extends Shape {
-    @Override
-    public String toString() {
-        return "Rectangle.";
-    }
+class ShapeRegistry
+    @@shapes = {}
 
-    @Override
-    public Shape cloneShape() {
-        try {
-            return (Shape) this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-}
+    def self.add_shape(key, value)
+        @@shapes[key] = value
+    end
 
-class Circle extends Shape {
-    @Override
-    public String toString() {
-        return "Circle.";
-    }
+    def self.get_shape(key)
+        return @@shapes[key].clone_shape if @@shapes.key?(key)
 
-    @Override
-    public Shape cloneShape() {
-        try {
-            return (Shape) this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-}
+        nil
+    end
 
-class ShapeRegistry {
-    private static final Map<String, Shape> shapes = new HashMap<>();
+    def self.load
+        add_shape('circle', Circle.new)
+        add_shape('rectangle', Rectangle.new)
+    end
+end
 
-    static {
-        load();
-    }
+# Client code
+ShapeRegistry.load
+c = ShapeRegistry.get_shape('circle')
+r = ShapeRegistry.get_shape('rectangle')
+puts c
+puts r
 
-    static void addShape(String key, Shape value) {
-        shapes.put(key, value);
-    }
-
-    static Shape getShape(String key) {
-        if (shapes.containsKey(key)) {
-            return shapes.get(key).cloneShape();
-        }
-        return null;
-    }
-
-    static void load() {
-        addShape("circle", new Circle());
-        addShape("rectangle", new Rectangle());
-    }
-}
-
-public class PrototypePatternShape {
-    public static void main(String[] args) {
-        ShapeRegistry.load();
-        Shape c = ShapeRegistry.getShape("circle");
-        Shape r = ShapeRegistry.getShape("rectangle");
-        System.out.println(c + " " + r);
-    }
-}
-
-/*
- Circle. Rectangle.
- */
+=begin 
+Circle.
+Rectangle. 
+=end

@@ -1,57 +1,61 @@
-interface Element {
-    void accept(Visitor visitor);
-}
+# Define Element interface
+class Element
+def accept(visitor)
+    raise NotImplementedError, 'Subclasses must implement the accept method'
+end
+end
 
-class ConcreteElementA implements Element {
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visitElementA(this);
-    }
-}
+# Define ConcreteElementA implementing Element
+class ConcreteElementA < Element
+def accept(visitor)
+    visitor.visit_element_a(self)
+end
+end
 
-class ConcreteElementB implements Element {
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visitElementB(this);
-    }
-}
+# Define ConcreteElementB implementing Element
+class ConcreteElementB < Element
+def accept(visitor)
+    visitor.visit_element_b(self)
+end
+end
 
-interface Visitor {
-    void visitElementA(ConcreteElementA elementA);
-    void visitElementB(ConcreteElementB elementB);
-}
+# Define Visitor interface
+class Visitor
+def visit_element_a(element_a)
+    raise NotImplementedError, 'Subclasses must implement the visit_element_a method'
+end
 
-class ConcreteVisitor1 implements Visitor {
-    @Override
-    public void visitElementA(ConcreteElementA elementA) {
-        System.out.println("ConcreteVisitor1 visitElementA() method called.");
-    }
+def visit_element_b(element_b)
+    raise NotImplementedError, 'Subclasses must implement the visit_element_b method'
+end
+end
 
-    @Override
-    public void visitElementB(ConcreteElementB elementB) {
-        System.out.println("ConcreteVisitor1 visitElementB() method called.");
-    }
-}
+# Define ConcreteVisitor1 implementing Visitor
+class ConcreteVisitor1 < Visitor
+def visit_element_a(element_a)
+    puts 'ConcreteVisitor1 visit_element_a() method called.'
+end
 
-class ConcreteVisitor2 implements Visitor {
-    @Override
-    public void visitElementA(ConcreteElementA elementA) {
-        System.out.println("ConcreteVisitor2 visitElementA() method called.");
-    }
+def visit_element_b(element_b)
+    puts 'ConcreteVisitor1 visit_element_b() method called.'
+end
+end
 
-    @Override
-    public void visitElementB(ConcreteElementB elementB) {
-        System.out.println("ConcreteVisitor2 visitElementB() method called.");
-    }
-}
+# Define ConcreteVisitor2 implementing Visitor
+class ConcreteVisitor2 < Visitor
+def visit_element_a(element_a)
+    puts 'ConcreteVisitor2 visit_element_a() method called.'
+end
 
-public class VisitorPattern {
-    public static void main(String[] args) {
-        Visitor visitor1 = new ConcreteVisitor1();
-        Element elementA = new ConcreteElementA();
-        elementA.accept(visitor1);
+def visit_element_b(element_b)
+    puts 'ConcreteVisitor2 visit_element_b() method called.'
+end
+end
 
-        Element elementB = new ConcreteElementB();
-        elementB.accept(visitor1);
-    }
-}
+# Client code
+visitor1 = ConcreteVisitor1.new
+element_a = ConcreteElementA.new
+element_a.accept(visitor1)
+
+element_b = ConcreteElementB.new
+element_b.accept(visitor1)

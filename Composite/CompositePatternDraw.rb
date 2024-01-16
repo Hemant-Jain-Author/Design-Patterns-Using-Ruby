@@ -1,110 +1,105 @@
-import java.util.HashSet;
-import java.util.Set;
+# IShape
+module IShape
+    def move(x, y)
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+  
+    def draw
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
 
-// IShape
-interface IShape {
-    void move(int x, int y);
-    String draw();
-}
+# Rectangle
+class Rectangle
+    include IShape
+  
+    attr_accessor :x, :y, :length, :breadth
+  
+    def initialize(x, y, length, breadth)
+        @x = x
+        @y = y
+        @length = length
+        @breadth = breadth
+    end
+  
+    def move(x, y)
+        @x += x
+        @y += y
+    end
+  
+    def draw
+        puts "Draw a Rectangle at (#{@x}, #{@y})."
+        '<Rectangle>'
+    end
+end
 
-// Rectangle
-class Rectangle implements IShape {
-    private int x, y, length, breadth;
+# Circle
+class Circle
+    include IShape
+  
+    attr_accessor :x, :y, :radius
+  
+    def initialize(x, y, radius)
+        @x = x
+        @y = y
+        @radius = radius
+    end
+  
+    def move(x, y)
+        @x += x
+        @y += y
+    end
+  
+    def draw
+        puts "Draw a Circle of radius #{@radius} at (#{@x}, #{@y})."
+        '<Circle>'
+    end
+end
 
-    public Rectangle(int x, int y, int length, int breadth) {
-        this.x = x;
-        this.y = y;
-        this.length = length;
-        this.breadth = breadth;
-    }
+# CompoundShape
+class CompoundShape
+    include IShape
+  
+    def initialize
+        @children = []
+    end
+  
+    def add(child)
+        @children << child
+    end
+  
+    def remove(child)
+        @children.delete(child)
+    end
+  
+    def move(x, y)
+        @children.each { |child| child.move(x, y) }
+    end
+  
+    def draw
+        st = 'Shapes('
+        @children.each { |child| st += child.draw }
+        st += ')'
+        st
+    end
+end
 
-    @Override
-    public void move(int x, int y) {
-        this.x += x;
-        this.y += y;
-    }
+# Client code
+all = CompoundShape.new
+all.add(Rectangle.new(1, 2, 1, 2))
+all.add(Circle.new(5, 3, 10))
 
-    @Override
-    public String draw() {
-        System.out.println("Draw a Rectangle at (" + x + ", " + y + ").");
-        return "<Rectangle>";
-    }
-}
+group = CompoundShape.new
+group.add(Rectangle.new(5, 7, 1, 2))
+group.add(Circle.new(2, 1, 2))
 
-// Circle
-class Circle implements IShape {
-    private int x, y, radius;
+all.add(group)
+puts all.draw
 
-    public Circle(int x, int y, int radius) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-    }
-
-    @Override
-    public void move(int x, int y) {
-        this.x += x;
-        this.y += y;
-    }
-
-    @Override
-    public String draw() {
-        System.out.println("Draw a Circle of radius " + radius + " at (" + x + ", " + y + ").");
-        return "<Circle>";
-    }
-}
-
-// CompoundShape
-class CompoundShape implements IShape {
-    private Set<IShape> children = new HashSet<>();
-
-    public void add(IShape child) {
-        children.add(child);
-    }
-
-    public void remove(IShape child) {
-        children.remove(child);
-    }
-
-    @Override
-    public void move(int x, int y) {
-        for (IShape child : children) {
-            child.move(x, y);
-        }
-    }
-
-    @Override
-    public String draw() {
-        String st = "Shapes(";
-        for (IShape child : children) {
-            st += child.draw();
-        }
-        st += ")";
-        return st;
-    }
-}
-
-// Client code
-public class CompositePatternDraw {
-    public static void main(String[] args) {
-        CompoundShape all = new CompoundShape();
-        all.add(new Rectangle(1, 2, 1, 2));
-        all.add(new Circle(5, 3, 10));
-
-        CompoundShape group = new CompoundShape();
-        group.add(new Rectangle(5, 7, 1, 2));
-        group.add(new Circle(2, 1, 2));
-
-        all.add(group);
-        System.out.println(all.draw());
-    }
-}
-
-/*
+=begin 
+Draw a Rectangle at (1, 2).
 Draw a Circle of radius 10 at (5, 3).
 Draw a Rectangle at (5, 7).
 Draw a Circle of radius 2 at (2, 1).
-Draw a Rectangle at (1, 2).
-Shapes(<Circle>Shapes(<Rectangle><Circle>)<Rectangle>)
-
- */
+Shapes(<Rectangle><Circle>Shapes(<Rectangle><Circle>))
+=end

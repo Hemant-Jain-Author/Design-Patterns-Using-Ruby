@@ -1,48 +1,38 @@
-import java.util.ArrayList;
-import java.util.List;
+class Student
+    attr_reader :name
 
-class Student {
-    private String name;
+    def initialize(name)
+        @name = name
+    end
 
-    public Student(String name) {
-        this.name = name;
-    }
+    def to_s
+        "Student: #{@name}"
+    end
+end
 
-    @Override
-    public String toString() {
-        return "Student: " + name;
-    }
-}
+class SchoolClass
+    attr_reader :class_name, :students
 
-class SchoolClass {
-    private String className;
-    private List<Student> students;
+    def initialize(class_name)
+        @class_name = class_name
+        @students = []
+    end
 
-    public SchoolClass(String className) {
-        this.className = className;
-        this.students = new ArrayList<>();
-    }
+    def add_student(student)
+        @students << student
+    end
 
-    public void addStudent(Student student) {
-        students.add(student);
-    }
+    def display
+        @students.each { |student| puts student }
+    end
+end
 
-    public void display() {
-        for (Student student : students) {
-            System.out.println(student);
-        }
-    }
-}
+# Client code
+school_class = SchoolClass.new("SS1")
+student1 = Student.new("John Smith")
+student2 = Student.new("Jane Smith")
 
-public class AssociationRelationship {
-    public static void main(String[] args) {
-        SchoolClass schoolClass = new SchoolClass("SS1");
-        Student student1 = new Student("John Smith");
-        Student student2 = new Student("Jane Smith");
+school_class.add_student(student1)
+school_class.add_student(student2)
 
-        schoolClass.addStudent(student1);
-        schoolClass.addStudent(student2);
-
-        schoolClass.display();
-    }
-}
+school_class.display

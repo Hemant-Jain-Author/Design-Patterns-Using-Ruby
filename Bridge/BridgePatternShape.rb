@@ -1,74 +1,60 @@
-// Abstraction interface
-interface Shape {
-    void draw();
-}
+# Abstraction interface
+class Shape
+    def initialize(imp)
+        @imp = imp
+    end
+  
+    def draw
+        puts "Drawing #{self.class} with color #{@imp.fill}"
+    end
+end
 
-// Implementor interface
-interface Color {
-    String fill();
-}
+# Implementor interface
+class Color
+    def fill
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
 
-// Rectangle class
-class Rectangle implements Shape {
-    private Color imp;
+# Rectangle class
+class Rectangle < Shape
+end
 
-    public Rectangle(Color imp) {
-        this.imp = imp;
-    }
+# Circle class
+class Circle < Shape
+end
 
-    @Override
-    public void draw() {
-        System.out.println("Drawing Rectangle with color " + imp.fill());
-    }
-}
+# Red class
+class Red < Color
+    def fill
+        'Red'
+    end
+end
 
-// Circle class
-class Circle implements Shape {
-    private Color imp;
+# Green class
+class Green < Color
+    def fill
+        'Green'
+    end
+end
 
-    public Circle(Color imp) {
-        this.imp = imp;
-    }
+# Blue class
+class Blue < Color
+    def fill
+        'Blue'
+    end
+end
 
-    @Override
-    public void draw() {
-        System.out.println("Drawing Circle with color " + imp.fill());
-    }
-}
+# Client code
+c1 = Red.new
+abstraction = Circle.new(c1)
+abstraction.draw
 
-// Red class
-class Red implements Color {
-    @Override
-    public String fill() {
-        return "Red";
-    }
-}
-
-// Green class
-class Green implements Color {
-    @Override
-    public String fill() {
-        return "Green";
-    }
-}
-
-// Blue class
-class Blue implements Color {
-    @Override
-    public String fill() {
-        return "Blue";
-    }
-}
-
-// Client code
-public class BridgePatternShape {
-    public static void main(String[] args) {
-        Color c1 = new Red();
-        Shape abstraction = new Circle(c1);
-        abstraction.draw();
-
-        Color c2 = new Green();
-        Shape abstraction2 = new Rectangle(c2);
-        abstraction2.draw();
-    }
-}
+c2 = Green.new
+abstraction2 = Rectangle.new(c2)
+abstraction2.draw
+  
+=begin 
+Drawing Circle with color Red
+Drawing Rectangle with color Green 
+=end

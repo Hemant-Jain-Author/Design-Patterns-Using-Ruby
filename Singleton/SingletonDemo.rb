@@ -1,49 +1,38 @@
-class Database {
-    public Database() {
-        System.out.println("Database created");
-    }
+class Database
+  def initialize
+    puts 'Database created'
+  end
 
-    public void addData(String data) {
-        System.out.println(data);
-    }
-}
+  def add_data(data)
+    puts data
+  end
+end
 
-class Singleton {
-    private static Singleton instance = null;
-    private Database db;
+class Singleton
+  @@instance = nil
+  @@db = nil
 
-    private Singleton() {
-        instance = this;
-        db = new Database();
-    }
+  private_class_method :new
 
-    public static Singleton getInstance() {
-        if (instance == null) {
-            new Singleton();
-        }
-        return instance;
-    }
+  def self.get_instance
+    @@instance ||= new
+  end
 
-    public void addData(String data) {
-        db.addData(data);
-    }
-}
+  def initialize
+    @@instance = self
+    @@db = Database.new
+  end
 
-public class SingletonDemo {
-    public static void main(String[] args) {
-        Singleton s1 = Singleton.getInstance();
-        Singleton s2 = Singleton.getInstance();
+  def add_data(data)
+    @@db.add_data(data)
+  end
+end
 
-        System.out.println(s1);
-        System.out.println(s2);
+# Client code
+s1 = Singleton.get_instance
+s2 = Singleton.get_instance
 
-        s2.addData("Hello, world!");
-    }
-}
+puts s1
+puts s2
 
-/*
-Database created
-Singleton@7344699f
-Singleton@7344699f
-Hello, world!
- */
+s2.add_data('Hello, world!')

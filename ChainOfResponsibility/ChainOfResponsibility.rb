@@ -1,49 +1,54 @@
-abstract class Handler {
-    protected Handler successor = null;
+# Abstract class representing a handler
+class Handler
+    attr_accessor :successor
+  
+    def initialize(successor)
+        @successor = successor
+    end
+  
+    def handle_request
+        raise NotImplementedError, 'Subclasses must implement this method'
+    end
+end
+  
+# Class representing a concrete handler 1
+class ConcreteHandler1 < Handler
+    def initialize(successor)
+        super(successor)
+    end
+  
+    def handle_request
+        if true # Can handle request.
+            puts 'Finally handled by ConcreteHandler1'
+        elsif successor
+            puts 'Message passed to next in chain by ConcreteHandler1'
+            successor.handle_request
+        end
+    end
+end
+  
+  # Class representing a concrete handler 2
+  class ConcreteHandler2 < Handler
+    def initialize(successor)
+        super(successor)
+    end
+  
+    def handle_request
+        if false # Can't handle request.
+            puts 'Finally handled by ConcreteHandler2'
+        elsif successor
+            puts 'Message passed to next in chain by ConcreteHandler2'
+            successor.handle_request
+        end
+    end
+end
+  
+# Client code
+ch1 = ConcreteHandler1.new(nil)
+ch2 = ConcreteHandler2.new(ch1)
+ch2.handle_request
 
-    public Handler(Handler successor) {
-        this.successor = successor;
-    }
-
-    public abstract void handleRequest();
-}
-
-class ConcreteHandler1 extends Handler {
-    public ConcreteHandler1(Handler successor) {
-        super(successor);
-    }
-
-    @Override
-    public void handleRequest() {
-        if (true) {  // Can handle request.
-            System.out.println("Finally handled by ConcreteHandler1");
-        } else if (successor != null) {
-            System.out.println("Message passed to next in chain by ConcreteHandler1");
-            successor.handleRequest();
-        }
-    }
-}
-
-class ConcreteHandler2 extends Handler {
-    public ConcreteHandler2(Handler successor) {
-        super(successor);
-    }
-
-    @Override
-    public void handleRequest() {
-        if (false) {  // Can't handle request.
-            System.out.println("Finally handled by ConcreteHandler2");
-        } else if (successor != null) {
-            System.out.println("Message passed to next in chain by ConcreteHandler2");
-            successor.handleRequest();
-        }
-    }
-}
-
-public class ChainOfResponsibility {
-    public static void main(String[] args) {
-        ConcreteHandler1 ch1 = new ConcreteHandler1(null);
-        ConcreteHandler2 ch2 = new ConcreteHandler2(ch1);
-        ch2.handleRequest();
-    }
-}
+=begin 
+Message passed to next in chain by ConcreteHandler2
+Finally handled by ConcreteHandler1 
+=end

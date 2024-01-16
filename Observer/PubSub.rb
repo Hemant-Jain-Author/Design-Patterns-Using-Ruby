@@ -1,73 +1,63 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+class Publisher
+    attr_reader :topic_subscribers
 
-class Publisher {
-    private Map<String, List<Subscriber>> topicSubscribers = new HashMap<>();
+    def initialize
+        @topic_subscribers = Hash.new { |hash, key| hash[key] = [] }
+    end
 
-    public void subscribe(Subscriber subscriber, String topic) {
-        topicSubscribers.computeIfAbsent(topic, k -> new ArrayList<>()).add(subscriber);
-        System.out.println("Subscribing: " + subscriber.getId() + " to topic: " + topic);
-    }
+    def subscribe(subscriber, topic)
+        @topic_subscribers[topic] << subscriber
+        puts "Subscribing: #{subscriber.id} to topic: #{topic}"
+    end
 
-    public void unsubscribe(Subscriber subscriber, String topic) {
-        topicSubscribers.getOrDefault(topic, new ArrayList<>()).remove(subscriber);
-        System.out.println("Unsubscribing: " + subscriber.getId() + " to topic: " + topic);
-    }
+    def unsubscribe(subscriber, topic)
+        @topic_subscribers[topic].delete(subscriber)
+        puts "Unsubscribing: #{subscriber.id} to topic: #{topic}"
+    end
 
-    public void notifySubscribers(String data, String topic) {
-        if (topicSubscribers.containsKey(topic)) {
-            System.out.println("Publishing: " + data + " in topic: " + topic);
-            for (Subscriber subscriber : topicSubscribers.get(topic)) {
-                subscriber.update(data);
-            }
-        }
-    }
-}
+    def notify_subscribers(data, topic)
+        if @topic_subscribers.key?(topic)
+            puts "Publishing: #{data} in topic: #{topic}"
+            @topic_subscribers[topic].each { |subscriber| subscriber.update(data) }
+        end
+    end
+end
 
-class Subscriber {
-    private String id;
+class Subscriber
+    attr_reader :id
 
-    public Subscriber(String id) {
-        this.id = id;
-    }
+    def initialize(id)
+        @id = id
+    end
 
-    public String getId() {
-        return id;
-    }
+    def update(data)
+        puts "Subscriber #{id} got :: #{data}"
+    end
+end
 
-    public void update(String data) {
-        System.out.println("Subscriber " + id + " got :: " + data);
-    }
-}
+# Client code
+pub = Publisher.new
 
-public class PubSub {
-    public static void main(String[] args) {
-        Publisher pub = new Publisher();
+sub1 = Subscriber.new("Subscriber1")
+sub2 = Subscriber.new("Subscriber2")
+sub3 = Subscriber.new("Subscriber3")
 
-        Subscriber sub1 = new Subscriber("Subscriber1");
-        Subscriber sub2 = new Subscriber("Subscriber2");
-        Subscriber sub3 = new Subscriber("Subscriber3");
+puts
+pub.subscribe(sub1, "topic1")
+pub.subscribe(sub2, "topic2")
+pub.subscribe(sub3, "topic2")
 
-        System.out.println();
-        pub.subscribe(sub1, "topic1");
-        pub.subscribe(sub2, "topic2");
-        pub.subscribe(sub3, "topic2");
+puts
+pub.notify_subscribers("Topic 1 data", "topic1")
 
-        System.out.println();
-        pub.notifySubscribers("Topic 1 data", "topic1");
+puts
+pub.notify_subscribers("Topic 2 data", "topic2")
 
-        System.out.println();
-        pub.notifySubscribers("Topic 2 data", "topic2");
+puts
+pub.unsubscribe(sub3, "topic2")
+pub.notify_subscribers("Topic 2 data", "topic2")
 
-        System.out.println();
-        pub.unsubscribe(sub3, "topic2");
-        pub.notifySubscribers("Topic 2 data", "topic2");
-    }
-}
-
-/*
+=begin 
 Subscribing: Subscriber1 to topic: topic1
 Subscribing: Subscriber2 to topic: topic2
 Subscribing: Subscriber3 to topic: topic2
@@ -81,5 +71,5 @@ Subscriber Subscriber3 got :: Topic 2 data
 
 Unsubscribing: Subscriber3 to topic: topic2
 Publishing: Topic 2 data in topic: topic2
-Subscriber Subscriber2 got :: Topic 2 data
-*/
+Subscriber Subscriber2 got :: Topic 2 data 
+=end

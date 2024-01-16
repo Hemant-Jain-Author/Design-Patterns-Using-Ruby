@@ -1,62 +1,48 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+# Concrete Iterator
+class ConcreteIterator
+    def initialize(aggregate)
+        @aggregate = aggregate
+        @index = 0
+    end
 
-class ConcreteAggregate implements Iterable<Integer> {
-    private List<Integer> data;
+    def has_next?
+        @index < @aggregate.data.size
+    end
 
-    public ConcreteAggregate() {
-        this.data = new ArrayList<>();
-    }
+    def next
+    raise IndexError unless has_next?
+        value = @aggregate.data[@index]
+        @index += 1
+        value
+    end
+end
 
-    public void addData(int val) {
-        data.add(val);
-    }
+# Concrete Aggregate
+class ConcreteAggregate
+    include Enumerable
+    attr_reader :data
 
-    @Override
-    public Iterator<Integer> iterator() {
-        return new ConcreteIterator(this);
-    }
+    def initialize
+        @data = []
+    end
 
-    public List<Integer> getData() {
-        return data;
-    }
-}
+    def add_data(val)
+        @data.push(val)
+    end
 
-class ConcreteIterator implements Iterator<Integer> {
-    private ConcreteAggregate aggregate;
-    private int index;
+    def each(&block)
+        iterator = ConcreteIterator.new(self)
+        while iterator.has_next?
+            block.call(iterator.next)
+        end
+    end
+end
 
-    public ConcreteIterator(ConcreteAggregate aggregate) {
-        this.aggregate = aggregate;
-        this.index = 0;
-    }
+# Client code
+aggregate = ConcreteAggregate.new
+(0..9).each { |i| aggregate.add_data(i) }
+aggregate.each { |val| print "#{val} " }
 
-    @Override
-    public boolean hasNext() {
-        return index < aggregate.getData().size();
-    }
-
-    @Override
-    public Integer next() {
-        if (!hasNext()) {
-            throw new IndexOutOfBoundsException();
-        }
-        int value = aggregate.getData().get(index);
-        index++;
-        return value;
-    }
-}
-
-public class IteratorPatternCollection {
-    public static void main(String[] args) {
-        ConcreteAggregate aggregate = new ConcreteAggregate();
-        for (int i = 0; i < 10; i++) {
-            aggregate.addData(i);
-        }
-
-        for (int val : aggregate) {
-            System.out.print(val + " ");
-        }
-    }
-}
+=begin 
+0 1 2 3 4 5 6 7 8 9 
+=end
