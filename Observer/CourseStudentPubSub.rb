@@ -60,11 +60,11 @@ courses.publish('Maths', 'Tomorrow class at 1')
 # Unsubscribe Eric from English
 courses.unsubscribe('English', eric)
 
-courses.publish('English', 'Updated schedule for English')
+courses.publish('English', 'Tomorrow class at 3')
 
 =begin 
 John received message on subject 'English': Tomorrow class at 11
 Eric received message on subject 'English': Tomorrow class at 11
 Eric received message on subject 'Maths': Tomorrow class at 1
-John received message on subject 'English': Updated schedule for English
+John received message on subject 'English': Tomorrow class at 3
 =end
