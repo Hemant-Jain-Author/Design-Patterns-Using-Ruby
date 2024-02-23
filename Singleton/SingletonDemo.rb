@@ -10,7 +10,6 @@ end
 
 class Singleton
   @@instance = nil
-  @@db = nil
 
   private_class_method :new
 
@@ -19,12 +18,11 @@ class Singleton
   end
 
   def initialize
-    @@instance = self
-    @@db = Database.new
+    @db = Database.new
   end
 
   def add_data(data)
-    @@db.add_data(data)
+    @db.add_data(data)
   end
 end
 

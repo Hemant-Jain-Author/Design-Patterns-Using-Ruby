@@ -1,44 +1,44 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+require 'pg'
 
+class Spaghetti
+  def self.process_data(data)
+    # Validate input
+    if data.nil? || data.empty?
+      puts 'Invalid data'
+      return nil
+    end
 
-public class Spaghetti {
-public static ResultSet processData(String data) throws SQLException {
-    // Validate input
-    if (data == null || data.isEmpty()) {
-        System.out.println("Invalid data");
-        return null;
+    # Define connection parameters
+    conn_params = {
+      host: 'localhost',
+      port: 5432,
+      dbname: 'mydb',
+      user: 'user',
+      password: 'password'
     }
 
-    // Define connection parameters
-    String url = "jdbc:postgresql://localhost:5432/mydb";
-    String user = "user";
-    String password = "password";
+    # Connect to the database
+    conn = PG.connect(conn_params)
 
-    // Initialize variables
-    Connection connection = null;
-    PreparedStatement statement = null;
-    ResultSet resultSet = null;
+    # Process data
+    query = 'SELECT * FROM mytable WHERE data = $1'
+    result = conn.exec_params(query, [data])
 
-    // Connect to the database
-    connection = DriverManager.getConnection(url, user, password);
+    result
+  rescue PG::Error => e
+    puts "Error occurred: #{e.message}"
+    nil
+  ensure
+    conn.close if conn
+  end
 
-    // Process data
-    String query = "SELECT * FROM mytable WHERE data = ?";
-    statement = connection.prepareStatement(query);
-    statement.setString(1, data);
-    resultSet = statement.executeQuery();
+  # Example usage
+  def self.main
+    data = 'exampleData'
+    results = process_data(data)
+    # Process the results if needed
+  end
+end
 
-    return resultSet;
-}
-
-    // Example usage
-    public static void main(String[] args) throws SQLException {
-        String data = "exampleData";
-        ResultSet results = processData(data);
-        // Process the results if needed
-    }
-}
+# Call main method
+Spaghetti.main

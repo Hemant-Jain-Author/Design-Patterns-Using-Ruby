@@ -1,108 +1,75 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-// Model
-class Model {
-    private String data;
-    private List<View> observers;
-
-    public Model() {
-        this.observers = new ArrayList<>();
-    }
-
-    public void setData(String data) {
-        System.out.println("Model : Set data.");
-        this.data = data;
-        notifyObservers();
-    }
-
-    public String getData() {
-        System.out.println("Model : Get data.");
-        return this.data;
-    }
-
-    public void addObserver(View observer) {
-        this.observers.add(observer);
-    }
-
-    public void removeObserver(View observer) {
-        this.observers.remove(observer);
-    }
-
-    public void notifyObservers() {
-        System.out.println("Model : Notify observers.");
-        for (View observer : observers) {
-            observer.update();
-        }
-    }
-}
-
-// View
-class View {
-    private Controller controller;
-    private Model model;
-
-    public View(Model model, Controller controller) {
-        this.model = model;
-        this.controller = controller;
-        this.model.addObserver(this);
-    }
-
-    public void update() {
-        System.out.println("View : Update.");
-        String data = model.getData();
-        System.out.println("Data: " + data);
-    }
-
-    public void getUserInput() {
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.print("View : Enter user input: ");
-            //String userInput = "hello, world!";
-            //System.out.println(userInput);
-            String userInput = scanner.nextLine();
-            controller.handleUserInput(userInput);
-        }
-    }
-}
-
-// Controller
-class Controller {
-    private Model model;
-    private View view;
-
-    public Controller(Model m) {
-        this.model = m;
-    }
-
-    public void handleUserInput(String userInput) {
-        System.out.println("Controller : Handle user input.");
-        model.setData(userInput);
-        // Can inform view about action.
-    }
-
-    public void setView(View v) {
-        this.view = v;
-    }
-}
-
-// Main class
-public class MVC {
-    public static void main(String[] args) {
-        Model model = new Model();
-        Controller controller = new Controller(model);  // The Controller sets itself as the observer in this case
-        View view = new View(model, controller);
-        controller.setView(view);
-        view.getUserInput();
-    }
-}
-
-/*
-View : Enter user input: hello, world!
-Controller : Handle user input.
-Model : Set data.
-Model : Notify observers.
-View : Update.
-Model : Get data.
-Data: hello, world!
- */
+# Model
+class Model
+    attr_accessor :data
+  
+    def initialize
+      @data = nil
+      @observers = []
+    end
+  
+    def data=(value)
+      puts 'Model : Set data.'
+      @data = value
+      notify_observers
+    end
+  
+    def add_observer(observer)
+      @observers << observer
+    end
+  
+    def remove_observer(observer)
+      @observers.delete(observer)
+    end
+  
+    def notify_observers
+      puts 'Model : Notify observers.'
+      @observers.each(&:update)
+    end
+  end
+  
+  # View
+  class View
+    def initialize(model, controller)
+      @model = model
+      @controller = controller
+      @model.add_observer(self)
+    end
+  
+    def update
+      puts 'View : Update.'
+      data = @model.data
+      puts "Data: #{data}"
+    end
+  
+    def get_user_input
+      print 'View : Enter user input: '
+      # user_input = gets.chomp
+      user_input = 'Hello, World!'
+      puts user_input
+      @controller.handle_user_input(user_input)
+    end
+  end
+  
+  # Controller
+  class Controller
+    def initialize(model)
+      @model = model
+    end
+  
+    def handle_user_input(user_input)
+      puts 'Controller : Handle user input.'
+      @model.data = user_input
+    end
+  
+    def set_view(view)
+      @view = view
+    end
+  end
+  
+  # Main
+  model = Model.new
+  controller = Controller.new(model)
+  view = View.new(model, controller)
+  controller.set_view(view)
+  view.get_user_input
+  

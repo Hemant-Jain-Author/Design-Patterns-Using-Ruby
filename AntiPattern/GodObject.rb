@@ -1,40 +1,36 @@
-public class GodsObject {
-    private List<Object> data;
-    private User user;
-    private Database db;
-    private Mailer mailer;
-
-    public GodObject() {
-        this.data = new ArrayList<>();
-        this.user = new User();
-        this.db = new Database();
-        this.mailer = new Mailer();
-    }
-
-    public void processData() {
-        // Process data
-        this.db.connect();
-        this.user.authenticate();
-        this.data = this.db.query();
-        this.db.disconnect();
-    }
-
-    public void validateData() {
-        // Validate data
-        this.user.authorize();
-        this.db.connect();
-        this.db.validate();
-        this.db.disconnect();
-    }
-
-    public void sendNotification() {
-        // Send notification
-        this.user.authorize();
-        this.db.connect();
-        List<Object> data = this.db.query();
-        this.mailer.sendEmail(data);
-        this.db.disconnect();
-    }
-
-    // And so on...
-}
+class GodsObject
+    def initialize
+      @data = []
+      @user = User.new
+      @db = Database.new
+      @mailer = Mailer.new
+    end
+  
+    def process_data
+      # Process data
+      @db.connect
+      @user.authenticate
+      @data = @db.query
+      @db.disconnect
+    end
+  
+    def validate_data
+      # Validate data
+      @user.authorize
+      @db.connect
+      @db.validate
+      @db.disconnect
+    end
+  
+    def send_notification
+      # Send notification
+      @user.authorize
+      @db.connect
+      data = @db.query
+      @mailer.send_email(data)
+      @db.disconnect
+    end
+  
+    # And so on...
+  end
+  

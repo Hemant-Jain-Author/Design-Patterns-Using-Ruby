@@ -1,57 +1,53 @@
-public class SwissArmy {
-    
-}
+class SwissArmy
+end
 
-public class DataProcessor {
-    private String data;
+class DataProcessor
+  def initialize(data)
+    @data = data
+  end
 
-    public DataProcessor(String data) {
-        this.data = data;
-    }
+  def process_data
+    validate_data
+    clean_data
+    filter_data
+    sort_data
+    group_data
+    calculate_statistics
+    format_output
+  end
 
-    public void processData() {
-        validateData();
-        cleanData();
-        filterData();
-        sortData();
-        groupData();
-        calculateStatistics();
-        formatOutput();
-    }
+  private
 
-    private void validateData() {
-        // Validation logic
-    }
+  def validate_data
+    # Validation logic
+  end
 
-    private void cleanData() {
-        // Data cleaning logic
-    }
+  def clean_data
+    # Data cleaning logic
+  end
 
-    private void filterData() {
-        // Data filtering logic
-    }
+  def filter_data
+    # Data filtering logic
+  end
 
-    private void sortData() {
-        // Data sorting logic
-    }
+  def sort_data
+    # Data sorting logic
+  end
 
-    private void groupData() {
-        // Data grouping logic
-    }
+  def group_data
+    # Data grouping logic
+  end
 
-    private void calculateStatistics() {
-        // Statistics calculation logic
-    }
+  def calculate_statistics
+    # Statistics calculation logic
+  end
 
-    private void formatOutput() {
-        // Output formatting logic
-    }
+  def format_output
+    # Output formatting logic
+  end
+end
 
-    // Example usage
-    public static void main(String[] args) {
-        String data = "exampleData";
-        DataProcessor processor = new DataProcessor(data);
-        processor.processData();
-    }
-}
-
+# Example usage
+data = 'exampleData'
+processor = DataProcessor.new(data)
+processor.process_data

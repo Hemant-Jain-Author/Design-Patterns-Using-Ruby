@@ -1,72 +1,51 @@
+# Filter Base Class
+class Filter
+    def process(data)
+        raise NotImplementedError, 'Subclasses must implement the process method'
+    end
+end
+  
+# Filters
+class CapitalizeFilter < Filter
+    def process(data)
+        data.upcase
+    end
+end
 
-import java.util.ArrayList;
-import java.util.List;
+class ReplaceSpaceFilter < Filter
+    def process(data)
+        data.gsub(' ', '_')
+    end
+end
 
-// Filter Base Class
-abstract class Filter {
-    abstract String process(String data);
-}
+class RemoveSpecialCharactersFilter < Filter
+    def process(data)
+        data.gsub(/[, @!]/, '')
+    end
+end
+  
+# Data Processing Pipeline
+class DataProcessingPipeline
+    def initialize
+        @filters = []
+    end
 
-// Filters
-class CapitalizeFilter extends Filter {
-    @Override
-    String process(String data) {
-        return data.toUpperCase();
-    }
-}
+    def add_filter(filter)
+        @filters << filter
+    end
 
-class ReplaceSpaceFilter extends Filter {
-    @Override
-    String process(String data) {
-        return data.replace(" ", "_");
-    }
-}
+    def process_data(data)
+        @filters.inject(data) { |processed_data, filter| filter.process(processed_data) }
+    end
+end
+  
+# Main class
+pipeline = DataProcessingPipeline.new
+pipeline.add_filter(CapitalizeFilter.new)
+pipeline.add_filter(ReplaceSpaceFilter.new)
+pipeline.add_filter(RemoveSpecialCharactersFilter.new)
 
-class RemoveSpecialCharactersFilter extends Filter {
-    @Override
-    String process(String data) {
-        String specialCharacters = ",@!";
-        StringBuilder result = new StringBuilder();
-        for (char c : data.toCharArray()) {
-            if (specialCharacters.indexOf(c) == -1) {
-                result.append(c);
-            }
-        }
-        return result.toString();
-    }
-}
-
-// Data Processing Pipeline
-class DataProcessingPipeline {
-    private List<Filter> filters;
-
-    public DataProcessingPipeline() {
-        this.filters = new ArrayList<>();
-    }
-
-    public void addFilter(Filter filter) {
-        this.filters.add(filter);
-    }
-
-    public String processData(String data) {
-        for (Filter filter : this.filters) {
-            data = filter.process(data);
-        }
-        return data;
-    }
-}
-
-// Main class
-public class PipeAndFilter {
-    public static void main(String[] args) {
-        DataProcessingPipeline pipeline = new DataProcessingPipeline();
-        pipeline.addFilter(new CapitalizeFilter());
-        pipeline.addFilter(new ReplaceSpaceFilter());
-        pipeline.addFilter(new RemoveSpecialCharactersFilter());
-
-        String data = "Hello, World!";
-        String result = pipeline.processData(data);
-        System.out.println("Result: " + result);  // Output: "HELLO_WORLD"
-    }
-}
-
+data = 'Hello, World!'
+result = pipeline.process_data(data)
+puts "Result: #{result}" # Output: "HELLO_WORLD"
+  
