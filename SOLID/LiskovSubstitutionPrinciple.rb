@@ -1,3 +1,36 @@
+class Animal
+    attr_reader :name
+  
+    def initialize(name)
+        @name = name
+    end
+  
+    def make_sound
+        puts "Animal sound"
+    end
+end
+  
+class Dog < Animal
+    def initialize(name)
+        super(name)
+    end
+  
+    def make_sound
+        puts "woof woof!"
+    end
+end
+  
+class Cat < Animal
+    def initialize(name)
+        super(name)
+    end
+  
+    def make_sound
+        puts "meow meow!"
+    end
+end
+
+
 class Rectangle
     attr_accessor :height, :width
 
@@ -40,3 +73,9 @@ test_rectangle(rectangle)
 square = Square.new(10)
 square.width = 20
 test_rectangle(square)
+
+
+=begin 
+success
+failure
+=end

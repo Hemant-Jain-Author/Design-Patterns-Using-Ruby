@@ -27,3 +27,8 @@ bird1.fly
 
 bird2 = Bird.new("Dodo")
 bird2.fly
+
+=begin 
+The eagle is soaring through the sky!
+The dodo is extinct and cannot fly.
+=end

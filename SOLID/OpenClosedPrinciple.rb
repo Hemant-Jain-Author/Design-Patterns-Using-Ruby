@@ -83,3 +83,9 @@ bird2.fly
 
 bird3 = Pigeon.new
 bird3.fly
+
+=begin 
+The eagle is soaring through the sky!
+The dodo is extinct and cannot fly.
+The pigeon is fluttering its wings!
+=end

@@ -61,8 +61,15 @@ test(sparrow)
 
 penguin = Penguin.new("Penguin")
 test(penguin)
-penguin.slide
-penguin.swim
 
 dodo = Dodo.new("Dodo")
 test(dodo)
+
+=begin 
+The sparrow is fluttering its wings.
+Bird is flying at a positive height.
+The penguin cannot fly.
+Error: fly() method called; flight height is still zero.
+The dodo is extinct and cannot fly.
+Error: fly() method called; flight height is still zero.
+=end

@@ -52,3 +52,12 @@ animal2.eat
 animal3 = Bird.new("Eagle")
 animal3.lay_eggs
 animal3.fly
+
+=begin 
+Cat is giving birth to live young.
+Cat is making a sound.
+Snake is laying eggs.
+Snake is eating.
+Eagle is laying eggs.
+Eagle is flying.
+=end

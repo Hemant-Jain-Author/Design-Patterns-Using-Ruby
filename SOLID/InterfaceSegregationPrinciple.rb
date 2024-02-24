@@ -1,3 +1,20 @@
+
+class Printer
+    def print(document)
+        raise NotImplementedError, "Method 'print' must be implemented in subclass."
+    end
+  
+    def scan
+        raise NotImplementedError, "Method 'scan' must be implemented in subclass."
+    end
+  
+    def fax(document)
+        raise NotImplementedError, "Method 'fax' must be implemented in subclass."
+    end
+end
+  
+
+
 # Define Printable module
 module Printable
     def print(document)
@@ -19,17 +36,12 @@ module Faxable
     end
 end
 
-# Implement BasicInkjetPrinter class including Printable and Scannable modules
+# Implement BasicInkjetPrinter class including Printable
 class BasicInkjetPrinter
     include Printable
-    include Scannable
 
     def print(document)
         puts "Printing #{document} using basic inkjet printer"
-    end
-
-    def scan
-        puts "Scanning using basic inkjet printer"
     end
 end
 
@@ -56,7 +68,6 @@ end
 # BasicInkjetPrinter
 basic_printer = BasicInkjetPrinter.new
 basic_printer.print("Sample Document")
-basic_printer.scan
 
 # HighEndOfficePrinter
 office_printer = HighEndOfficePrinter.new
