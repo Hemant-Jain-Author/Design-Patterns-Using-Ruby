@@ -86,4 +86,9 @@ productB2 = factory2.create_product_b
 productA2.operation_a
 productB2.operation_b
 
-  
+=begin 
+ProductA1 operationA
+ProductB1 operationB
+ProductA2 operationA
+ProductB2 operationB
+=end

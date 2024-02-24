@@ -12,21 +12,21 @@ end
 # Rectangle
 class Rectangle
     include IShape
-  
+    
     attr_accessor :x, :y, :length, :breadth
-  
+    
     def initialize(x, y, length, breadth)
         @x = x
         @y = y
         @length = length
         @breadth = breadth
     end
-  
+    
     def move(x, y)
         @x += x
         @y += y
     end
-  
+    
     def draw
         puts "Draw a Rectangle at (#{@x}, #{@y})."
         '<Rectangle>'
@@ -36,20 +36,20 @@ end
 # Circle
 class Circle
     include IShape
-  
+    
     attr_accessor :x, :y, :radius
-  
+    
     def initialize(x, y, radius)
         @x = x
         @y = y
         @radius = radius
     end
-  
+    
     def move(x, y)
         @x += x
         @y += y
     end
-  
+    
     def draw
         puts "Draw a Circle of radius #{@radius} at (#{@x}, #{@y})."
         '<Circle>'
@@ -59,23 +59,23 @@ end
 # CompoundShape
 class CompoundShape
     include IShape
-  
+    
     def initialize
         @children = []
     end
-  
+    
     def add(child)
         @children << child
     end
-  
+    
     def remove(child)
         @children.delete(child)
     end
-  
+    
     def move(x, y)
         @children.each { |child| child.move(x, y) }
     end
-  
+    
     def draw
         st = 'Shapes('
         @children.each { |child| st += child.draw }

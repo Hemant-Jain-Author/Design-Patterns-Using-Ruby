@@ -1,77 +1,77 @@
 class Animal
-  attr_reader :name
+    attr_reader :name
 
-  def initialize(name)
-    @name = name
-  end
+    def initialize(name)
+        @name = name
+    end
 end
 
 class Bird < Animal
-  def fly
-    # Abstract method, to be overridden by subclasses
-  end
+    def fly
+        # Abstract method, to be overridden by subclasses
+    end
 end
 
 class Dodo < Bird
-  def initialize
-    super("Dodo")
-  end
+    def initialize
+        super("Dodo")
+    end
 
-  def fly
-    puts "The dodo is extinct and cannot fly."
-  end
+    def fly
+        puts "The dodo is extinct and cannot fly."
+    end
 end
 
 class Penguin < Bird
-  def initialize
-    super("Penguin")
-  end
+    def initialize
+        super("Penguin")
+    end
 
-  def fly
-    puts "The penguin cannot fly."
-  end
+    def fly
+        puts "The penguin cannot fly."
+    end
 
-  def slide
-    puts "The penguin is sliding on its belly!"
-  end
+    def slide
+        puts "The penguin is sliding on its belly!"
+    end
 
-  def swim
-    puts "The penguin is swimming in the water!"
-  end
+    def swim
+        puts "The penguin is swimming in the water!"
+    end
 end
 
 class Eagle < Bird
-  def initialize
-    super("Eagle")
-  end
+    def initialize
+        super("Eagle")
+    end
 
-  def fly
-    puts "The eagle is soaring through the sky!"
-  end
+    def fly
+        puts "The eagle is soaring through the sky!"
+    end
 end
 
 class Sparrow < Bird
-  def initialize
-    super("Sparrow")
-  end
+    def initialize
+        super("Sparrow")
+    end
 
-  def fly
-    puts "The sparrow is fluttering its wings!"
-  end
+    def fly
+        puts "The sparrow is fluttering its wings!"
+    end
 end
 
 class Pigeon < Bird
-  def initialize
-    super("Pigeon")
-  end
+    def initialize
+        super("Pigeon")
+    end
 
-  def make_cooing_sound
-    puts "The pigeon is making a cooing sound."
-  end
+    def make_cooing_sound
+        puts "The pigeon is making a cooing sound."
+    end
 
-  def fly
-    puts "The pigeon is fluttering its wings!"
-  end
+    def fly
+        puts "The pigeon is fluttering its wings!"
+    end
 end
 
 # Client code

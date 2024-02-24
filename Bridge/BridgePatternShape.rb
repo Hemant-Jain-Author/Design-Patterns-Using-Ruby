@@ -3,7 +3,7 @@ class Shape
     def initialize(imp)
         @imp = imp
     end
-  
+    
     def draw
         puts "Drawing #{self.class} with color #{@imp.fill}"
     end
@@ -53,7 +53,7 @@ abstraction.draw
 c2 = Green.new
 abstraction2 = Rectangle.new(c2)
 abstraction2.draw
-  
+
 =begin 
 Drawing Circle with color Red
 Drawing Rectangle with color Green 

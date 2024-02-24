@@ -4,7 +4,7 @@ class Component
         raise NotImplementedError, 'Subclasses must implement this method'
     end
 end
-  
+
 # Composite
 class Composite < Component
     def initialize
@@ -24,14 +24,14 @@ class Composite < Component
         @children.delete(component)
     end
 end
-  
+
 # Leaf
 class Leaf < Component
     def operation
         puts 'Leaf Operation'
     end
 end
-  
+
 # Client code
 composite = Composite.new
 composite.add(Leaf.new)

@@ -4,14 +4,14 @@ class Agent
         command.execute
     end
 end
-  
+
 # Order (Command)
 class Order
     def execute
         raise NotImplementedError, 'Subclasses must implement this method'
     end
 end
-  
+
 # BuyStockOrder (ConcreteCommand)
 class BuyStockOrder < Order
     def initialize(stock)
@@ -22,29 +22,29 @@ class BuyStockOrder < Order
         @stock.buy
     end
 end
-  
+
 # SellStockOrder (ConcreteCommand)
 class SellStockOrder < Order
     def initialize(stock)
         @stock = stock
     end
-  
+    
     def execute
         @stock.sell
     end
 end
-  
+
 # Receiver
 class ReceiverStockTrade
     def buy
         puts 'Buy stocks'
     end
-  
+    
     def sell
         puts 'Sell stocks'
     end
 end
-  
+
 # Client code
 trader = ReceiverStockTrade.new
 buy_stock = BuyStockOrder.new(trader)

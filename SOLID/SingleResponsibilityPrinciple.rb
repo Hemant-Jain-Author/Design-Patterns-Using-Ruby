@@ -1,43 +1,43 @@
 class Animal
-  attr_reader :name
+    attr_reader :name
 
-  def initialize(name)
-    @name = name
-  end
+    def initialize(name)
+        @name = name
+    end
 
-  def eat
-    puts "#{name} is eating."
-  end
+    def eat
+        puts "#{name} is eating."
+    end
 
-  def sleep
-    puts "#{name} is sleeping."
-  end
+    def sleep
+        puts "#{name} is sleeping."
+    end
 
-  def make_sound
-    puts "#{name} is making a sound."
-  end
+    def make_sound
+        puts "#{name} is making a sound."
+    end
 end
 
 class Mammal < Animal
-  def give_birth
-    puts "#{name} is giving birth to live young."
-  end
+    def give_birth
+        puts "#{name} is giving birth to live young."
+    end
 end
 
 class Reptile < Animal
-  def lay_eggs
-    puts "#{name} is laying eggs."
-  end
+    def lay_eggs
+        puts "#{name} is laying eggs."
+    end
 end
 
 class Bird < Animal
-  def fly
-    puts "#{name} is flying."
-  end
+    def fly
+        puts "#{name} is flying."
+    end
 
-  def lay_eggs
-    puts "#{name} is laying eggs."
-  end
+    def lay_eggs
+        puts "#{name} is laying eggs."
+    end
 end
 
 # Client code

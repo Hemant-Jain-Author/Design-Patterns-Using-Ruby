@@ -33,7 +33,6 @@ class Worker
             # Simulating some computation
         end
         puts "Worker #{@id} finished"
-
         @barrier.wait_barrier
     end
 end
@@ -51,3 +50,22 @@ end
 threads.each(&:join)
 
 puts "All workers finished. Proceeding to the next step."
+
+=begin 
+Worker 0 started
+Worker 0 working...
+Worker 0 working...
+Worker 0 working...
+Worker 0 finished
+Worker 1 started
+Worker 1 working...
+Worker 1 working...
+Worker 1 working...
+Worker 1 finished
+Worker 2 started
+Worker 2 working...
+Worker 2 working...
+Worker 2 working...
+Worker 2 finished
+All workers finished. Proceeding to the next step.
+=end

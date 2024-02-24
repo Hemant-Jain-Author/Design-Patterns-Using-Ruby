@@ -11,7 +11,7 @@ class Product
         "Product: (#{@partA}, #{@partB})"
     end
 end
-  
+
 # Define an abstract class called Builder
 class Builder
     attr_accessor :product
@@ -36,11 +36,11 @@ class Builder
         temp
     end
 end
-  
+
 # Define a ConcreteBuilder class that extends Builder
 class ConcreteBuilder < Builder
 end
-  
+
 # Define a Director class that takes a builder object as a parameter
 class Director
     attr_accessor :builder
@@ -61,7 +61,7 @@ class Director
         @builder.set_part_a('A3').get_product
     end
 end
-  
+
 # Client code
 builder = ConcreteBuilder.new
 director = Director.new(builder)

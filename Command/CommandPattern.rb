@@ -16,7 +16,7 @@ class Invoker
         @commands.each(&:unexecute)
     end
 end
-  
+
 # Command
 class Command
     def execute
@@ -26,8 +26,8 @@ class Command
     def unexecute
         raise NotImplementedError, 'Subclasses must implement this method'
     end
-  end
-  
+end
+
 # ConcreteCommand
 class ConcreteCommand < Command
     def initialize(receiver)
@@ -42,14 +42,14 @@ class ConcreteCommand < Command
         @receiver.action('Action 2')
     end
 end
-  
+
 # Receiver
 class Receiver
     def action(action)
         puts action
     end
 end
-  
+
 # Client Code
 receiver = Receiver.new
 concrete_command = ConcreteCommand.new(receiver)

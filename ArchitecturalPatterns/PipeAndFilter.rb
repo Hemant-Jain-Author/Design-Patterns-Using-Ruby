@@ -4,7 +4,7 @@ class Filter
         raise NotImplementedError, 'Subclasses must implement the process method'
     end
 end
-  
+
 # Filters
 class CapitalizeFilter < Filter
     def process(data)
@@ -23,7 +23,7 @@ class RemoveSpecialCharactersFilter < Filter
         data.gsub(/[, @!]/, '')
     end
 end
-  
+
 # Data Processing Pipeline
 class DataProcessingPipeline
     def initialize
@@ -38,7 +38,7 @@ class DataProcessingPipeline
         @filters.inject(data) { |processed_data, filter| filter.process(processed_data) }
     end
 end
-  
+
 # Main class
 pipeline = DataProcessingPipeline.new
 pipeline.add_filter(CapitalizeFilter.new)
@@ -48,4 +48,3 @@ pipeline.add_filter(RemoveSpecialCharactersFilter.new)
 data = 'Hello, World!'
 result = pipeline.process_data(data)
 puts "Result: #{result}" # Output: "HELLO_WORLD"
-  

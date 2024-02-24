@@ -9,7 +9,7 @@ class ThreadLocalVariable
         Thread.current[THREAD_LOCAL_VAR]
     end
 end
-  
+
 # Client code
 # Create and start three threads
 threads = []

@@ -46,3 +46,7 @@ end
 # Client Code
 adapter = RectangleAdapter.new(1, 2, 3, 4)
 adapter.draw
+
+=begin 
+Drawing Rectangle.
+=end

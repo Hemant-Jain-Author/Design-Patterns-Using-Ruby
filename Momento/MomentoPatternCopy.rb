@@ -110,3 +110,17 @@ puts originator.state
 
 originator.redo
 puts originator.state
+
+=begin 
+State 1
+State 2
+State 3
+Undoing state.
+State 2
+Undoing state.
+State 1
+Redoing state.
+State 2
+Redoing state.
+State 3
+=end

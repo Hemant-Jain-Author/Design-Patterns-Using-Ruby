@@ -1,62 +1,62 @@
 # Define Sorting interface
 module Sorting
-  def sort(numbers)
-    raise NotImplementedError, 'Subclasses must implement the sort method'
-  end
+    def sort(numbers)
+        raise NotImplementedError, 'Subclasses must implement the sort method'
+    end
 end
 
 # Define BubbleSort class implementing Sorting
 class BubbleSort
-  include Sorting
+    include Sorting
 
-  def sort(numbers)
-    # Bubble Sort Algorithm
-    puts 'Bubble Sort Algorithm executed.'
-    size = numbers.length
-    (0...size - 1).each do |i|
-      (0...size - i - 1).each do |j|
-        if numbers[j] > numbers[j + 1]
-          # Swapping
-          numbers[j], numbers[j + 1] = numbers[j + 1], numbers[j]
+    def sort(numbers)
+        # Bubble Sort Algorithm
+        puts 'Bubble Sort Algorithm executed.'
+        size = numbers.length
+        (0...size - 1).each do |i|
+            (0...size - i - 1).each do |j|
+                if numbers[j] > numbers[j + 1]
+                    # Swapping
+                    numbers[j], numbers[j + 1] = numbers[j + 1], numbers[j]
+                end
+            end
         end
-      end
     end
-  end
 end
 
 # Define SelectionSort class implementing Sorting
 class SelectionSort
-  include Sorting
+    include Sorting
 
-  def sort(numbers)
-    # Selection Sort Algorithm
-    puts 'Selection Sort Algorithm executed.'
-    size = numbers.length
-    (0...size - 1).each do |i|
-      max_index = 0
-      (1...size - i).each do |j|
-        max_index = j if numbers[j] > numbers[max_index]
-      end
-      numbers[size - 1 - i], numbers[max_index] = numbers[max_index], numbers[size - 1 - i]
+    def sort(numbers)
+        # Selection Sort Algorithm
+        puts 'Selection Sort Algorithm executed.'
+        size = numbers.length
+        (0...size - 1).each do |i|
+            max_index = 0
+            (1...size - i).each do |j|
+                max_index = j if numbers[j] > numbers[max_index]
+            end
+            numbers[size - 1 - i], numbers[max_index] = numbers[max_index], numbers[size - 1 - i]
+        end
     end
-  end
 end
 
 # Define StrategyClass
 class StrategyClass
-  attr_accessor :sorter
+    attr_accessor :sorter
 
-  def initialize(algo)
-    @sorter = algo
-  end
+    def initialize(algo)
+        @sorter = algo
+    end
 
-  def set_sorter(algo)
-    @sorter = algo
-  end
+    def set_sorter(algo)
+        @sorter = algo
+    end
 
-  def sort(a)
-    @sorter.sort(a)
-  end
+    def sort(a)
+        @sorter.sort(a)
+    end
 end
 
 # Client code

@@ -11,7 +11,7 @@ class ATMHandlerAbstract
         raise NotImplementedError, 'Subclasses must implement this method'
     end
 end
-  
+
 # Class representing an ATM handler
 class ATMHandler < ATMHandlerAbstract
     def initialize(successor, denomination)
@@ -26,7 +26,7 @@ class ATMHandler < ATMHandlerAbstract
         successor&.handle_request(r) if r != 0
     end
 end
-  
+
 # Client code
 handler = ATMHandler.new( ATMHandler.new( ATMHandler.new( ATMHandler.new(nil, 10), 50 ), 100 ), 1000 )
 handler.handle_request(5560)

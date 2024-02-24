@@ -2,7 +2,7 @@ class Database
     def initialize
         puts 'Database created'
     end
-  
+    
     def add_data(data)
         puts data
     end
@@ -10,17 +10,16 @@ end
 
 class Singleton
     private_class_method :new
-  
+    
     @@instance = nil
     @@lock = Mutex.new
     @@db = Database.new
-  
+    
     def self.instance
         return @@instance if @@instance
-
         @@lock.synchronize { @@instance = new }
     end
-  
+    
     def add_data(data)
         @@db.add_data(data)
     end

@@ -10,7 +10,7 @@ class ConcreteComponent < Component
         puts 'ConcreteComponent operation.'
     end
 end
-  
+
 # Decorator
 class Decorator < Component
     def initialize(component)
@@ -21,7 +21,7 @@ class Decorator < Component
         @component.operation
     end
 end
-  
+
 # ConcreteDecorator1
 class ConcreteDecorator1 < Decorator
     def operation
@@ -45,7 +45,7 @@ component = ConcreteComponent.new
 decorator1 = ConcreteDecorator1.new(component)
 decorator2 = ConcreteDecorator2.new(decorator1)
 decorator2.operation
-  
+
 =begin 
 ConcreteDecorator2 operation start.
 ConcreteDecorator1 operation start.

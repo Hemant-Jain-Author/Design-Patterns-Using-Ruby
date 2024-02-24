@@ -1,29 +1,29 @@
 class Database
-  def initialize
-    puts 'Database created'
-  end
+    def initialize
+        puts 'Database created'
+    end
 
-  def add_data(data)
-    puts data
-  end
+    def add_data(data)
+        puts data
+    end
 end
 
 class Singleton
-  @@instance = nil
+    @@instance = nil
 
-  private_class_method :new
+    private_class_method :new
 
-  def self.get_instance
-    @@instance ||= new
-  end
+    def self.get_instance
+        @@instance ||= new
+    end
 
-  def initialize
-    @db = Database.new
-  end
+    def initialize
+        @db = Database.new
+    end
 
-  def add_data(data)
-    @db.add_data(data)
-  end
+    def add_data(data)
+        @db.add_data(data)
+    end
 end
 
 # Client code

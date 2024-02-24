@@ -8,13 +8,13 @@ end
 # Concrete Product classes
 class Dog < Animal
     def speak
-        puts 'Woof!'
+        puts 'Woof Woof!'
     end
 end
 
 class Cat < Animal
     def speak
-        puts 'Meow!'
+        puts 'Meow Meow!'
     end
 end
 
@@ -48,6 +48,6 @@ cat = cat_factory.create_animal
 cat.speak
 
 =begin 
-Woof!
-Meow!
+Woof Woof!
+Meow Meow!
 =end

@@ -1,16 +1,16 @@
 # Abstract class representing a handler
 class Handler
     attr_accessor :parent, :help_text
-  
+    
     def initialize(parent)
         @parent = parent
         @help_text = nil
     end
-  
+    
     def show_helper_text
         raise NotImplementedError, 'Subclasses must implement this method'
     end
-  
+    
     def set_helper_text(text)
         @help_text = text
     end
@@ -21,7 +21,7 @@ class Container < Handler
     def initialize(parent)
         super(parent)
     end
-  
+    
     def show_helper_text
         if help_text
             puts "Help :: #{help_text}"
@@ -31,16 +31,16 @@ class Container < Handler
         end
     end
 end
-  
+
 # Class representing a button
 class Button < Handler
     attr_accessor :label
-  
+    
     def initialize(label, parent)
         super(parent)
         @label = label
     end
-  
+    
     def show_helper_text
         if help_text
             puts "Help :: #{help_text}"
@@ -50,13 +50,13 @@ class Button < Handler
         end
     end
 end
-  
+
 # Class representing a panel
 class Panel < Handler
     def initialize
         super(nil)
     end
-  
+    
     def show_helper_text
         if help_text
             puts "Help :: #{help_text}"
@@ -66,7 +66,7 @@ class Panel < Handler
         end
     end
 end
-  
+
 # Client code
 p = Panel.new
 p.set_helper_text('Panel help text.')

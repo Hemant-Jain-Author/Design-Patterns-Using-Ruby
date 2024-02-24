@@ -11,7 +11,7 @@ class Product
         "Product : (#{@partA}, #{@partB})"
     end
 end
-  
+
 # Builder abstract class
 class Builder
     def set_part_a(_a)
@@ -26,7 +26,7 @@ class Builder
         raise NotImplementedError, 'Subclasses must implement this method'
     end
 end
-  
+
 # ConcreteBuilder class that extends Builder
 class ConcreteBuilder < Builder
     attr_accessor :part_a, :part_b
@@ -50,7 +50,7 @@ class ConcreteBuilder < Builder
         Product.new(@part_a, @part_b)
     end
 end
-  
+
 # Director class
 class Director
     attr_accessor :builder
@@ -69,7 +69,7 @@ class Director
         @builder.get_product
     end
 end
-  
+
 # Client code
 builder = ConcreteBuilder.new
 director = Director.new(builder)

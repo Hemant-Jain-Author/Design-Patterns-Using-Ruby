@@ -1,24 +1,24 @@
 class Animal
-  attr_reader :name
+    attr_reader :name
 
-  def initialize(name)
-    @name = name
-  end
+    def initialize(name)
+        @name = name
+    end
 end
 
 class Bird < Animal
-  def fly
-    case name
-    when "Dodo"
-      puts "The dodo is extinct and cannot fly."
-    when "Penguin"
-      puts "The penguin cannot fly."
-    when "Eagle"
-      puts "The eagle is soaring through the sky!"
-    when "Sparrow"
-      puts "The sparrow is fluttering its wings!"
+    def fly
+        case name
+        when "Dodo"
+            puts "The dodo is extinct and cannot fly."
+        when "Penguin"
+            puts "The penguin cannot fly."
+        when "Eagle"
+            puts "The eagle is soaring through the sky!"
+        when "Sparrow"
+            puts "The sparrow is fluttering its wings!"
+        end
     end
-  end
 end
 
 # Client code

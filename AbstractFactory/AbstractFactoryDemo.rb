@@ -81,4 +81,10 @@ mac_factory.get_button.desc
 win_factory = WinFactory.new
 win_factory.get_button.desc
 win_factory.get_menu.desc
-  
+
+=begin 
+Mac Menu!!
+Mac Button!!
+Win Button!!
+Win Menu!! 
+=end

@@ -11,7 +11,7 @@ class House
         "House of #{@wall} and #{@roof}"
     end
 end
-  
+
 # An abstract builder class that specifies the interface for building a house
 class HouseBuilder
     attr_accessor :house
@@ -34,7 +34,7 @@ class HouseBuilder
         temp
     end
 end
-  
+
 # A builder class that builds a wooden house
 class WoodenHouseBuilder < HouseBuilder
     def set_wall
@@ -47,7 +47,7 @@ class WoodenHouseBuilder < HouseBuilder
         self
     end
 end
-  
+
 # A builder class that builds a concrete house
 class ConcreteHouseBuilder < HouseBuilder
     def set_wall
@@ -60,7 +60,7 @@ class ConcreteHouseBuilder < HouseBuilder
         self
     end
 end
-  
+
 # A class that directs the building of a house
 class HouseDirector
     attr_accessor :builder
@@ -73,7 +73,7 @@ class HouseDirector
         @builder.set_wall.set_roof.get_house
     end
 end
-  
+
 # Client code
 builder = ConcreteHouseBuilder.new
 director = HouseDirector.new(builder)

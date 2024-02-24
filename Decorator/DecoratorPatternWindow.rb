@@ -35,7 +35,7 @@ class VerticalScrollBarDecorator < Decorator
         puts 'VerticalScrollBarDecorator draw'
     end
 end
-  
+
 # HorizontalScrollBarDecorator (ConcreteDecorator)
 class HorizontalScrollBarDecorator < Decorator
     def initialize(component)
@@ -47,13 +47,13 @@ class HorizontalScrollBarDecorator < Decorator
         puts 'HorizontalScrollBarDecorator draw'
     end
 end
-  
+
 # Client code
 component = SimpleWindow.new
 decorator1 = VerticalScrollBarDecorator.new(component)
 decorator2 = HorizontalScrollBarDecorator.new(decorator1)
 decorator2.draw
-  
+
 =begin 
 SimpleWindow draw.
 VerticalScrollBarDecorator draw

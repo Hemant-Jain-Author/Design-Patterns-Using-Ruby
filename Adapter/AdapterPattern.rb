@@ -26,3 +26,7 @@ end
 # Client Code
 adapter = Adapter.new
 adapter.operation
+
+=begin 
+Adaptee someOperation() function called.
+=end

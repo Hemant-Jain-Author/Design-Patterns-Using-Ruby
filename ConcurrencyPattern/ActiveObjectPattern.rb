@@ -60,3 +60,8 @@ proxy.invoke_method { puts 'World' }
 # Stop the ActiveObject thread
 active_object.stop_thread
 active_object_thread.join
+
+=begin 
+Hello
+World
+ =end

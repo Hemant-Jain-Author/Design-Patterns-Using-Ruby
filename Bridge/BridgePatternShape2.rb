@@ -10,21 +10,21 @@ class Shape
         raise NotImplementedError, 'Subclasses must implement this method'
     end
 end
-  
-  # Concrete Abstraction
+
+# Concrete Abstraction
 class Square < Shape
     def draw
         implementation.draw_square
     end
 end
-  
+
 class Circle < Shape
     def draw
         implementation.draw_circle
     end
 end
-  
-  # Implementation
+
+# Implementation
 class DrawingAPI
     def draw_square
         raise NotImplementedError, 'Subclasses must implement this method'
@@ -34,7 +34,7 @@ class DrawingAPI
         raise NotImplementedError, 'Subclasses must implement this method'
     end
 end
-  
+
 # Concrete Implementation
 class WindowsAPI < DrawingAPI
     def draw_square
@@ -45,7 +45,7 @@ class WindowsAPI < DrawingAPI
         puts 'Drawing a circle on Windows.'
     end
 end
-  
+
 class MacAPI < DrawingAPI
     def draw_square
         puts 'Drawing a square on Mac.'
@@ -55,7 +55,7 @@ class MacAPI < DrawingAPI
         puts 'Drawing a circle on Mac.'
     end
 end
-  
+
 # Client code
 windows_api = WindowsAPI.new
 mac_api = MacAPI.new

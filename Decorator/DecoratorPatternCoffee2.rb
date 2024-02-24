@@ -2,7 +2,7 @@
 class ICoffee
     def get_cost
     end
-  
+    
     def get_ingredients
     end
 end
