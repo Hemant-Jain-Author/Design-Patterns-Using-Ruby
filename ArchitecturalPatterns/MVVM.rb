@@ -51,7 +51,7 @@ class Model
     def get_user_input
       puts 'View: Enter user input: '
       # user_input = gets.chomp
-      user_input = 'hello, world!'
+      user_input = 'Hello, World!'
       puts user_input
       view_model.data = user_input
     end
@@ -71,3 +71,15 @@ class Model
   # Display updated data
   view.display_data
   
+=begin 
+ViewModel: Get data.
+Model: Get data.
+Display Data: Default.
+View: Enter user input: 
+hello, world!
+ViewModel: Set data.
+Model: Set data.
+ViewModel: Get data.
+Model: Get data.
+Display Data: hello, world!
+=end

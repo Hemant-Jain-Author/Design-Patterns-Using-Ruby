@@ -55,3 +55,12 @@ class Model
   presenter = Presenter.new(model, view)
   presenter.on_button_click
   
+=begin 
+Presenter: onButtonClick.
+View: getUserInput
+View: Enter user input: 
+Hello, World!
+Model: Set data: Hello, World!
+Model: Get data: Hello, World!
+View: Display Result: Hello, World!
+=end

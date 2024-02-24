@@ -73,3 +73,11 @@ class Model
   controller.set_view(view)
   view.get_user_input
   
+=begin 
+View : Enter user input: Hello, World!
+Controller : Handle user input.
+Model : Set data.
+Model : Notify observers.
+View : Update.
+Data: Hello, World! 
+=end
