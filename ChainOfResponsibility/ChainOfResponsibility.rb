@@ -1,54 +1,62 @@
-# Abstract class representing a handler
+# Handler abstract class
 class Handler
     attr_accessor :successor
-    
-    def initialize(successor)
+
+    def initialize(successor = nil)
         @successor = successor
     end
-    
-    def handle_request
-        raise NotImplementedError, 'Subclasses must implement this method'
+
+    def handle_request(request)
+        raise NotImplementedError, 'Subclasses must override this method'
     end
 end
 
-# Class representing a concrete handler 1
+# ConcreteHandler1 class
 class ConcreteHandler1 < Handler
-    def initialize(successor)
-        super(successor)
-    end
-    
-    def handle_request
-        if true # Can handle request.
-            puts 'Finally handled by ConcreteHandler1'
+    def handle_request(request)
+        if request == 'request1'
+        puts 'ConcreteHandler1 handles the request1.'
         elsif successor
-            puts 'Message passed to next in chain by ConcreteHandler1'
-            successor.handle_request
+        successor.handle_request(request)
         end
     end
 end
 
-# Class representing a concrete handler 2
+# ConcreteHandler2 class
 class ConcreteHandler2 < Handler
-    def initialize(successor)
-        super(successor)
-    end
-    
-    def handle_request
-        if false # Can't handle request.
-            puts 'Finally handled by ConcreteHandler2'
+    def handle_request(request)
+        if request == 'request2'
+        puts 'ConcreteHandler2 handles the request2.'
         elsif successor
-            puts 'Message passed to next in chain by ConcreteHandler2'
-            successor.handle_request
+        successor.handle_request(request)
+        end
+    end
+end
+
+# ConcreteHandler3 class
+class ConcreteHandler3 < Handler
+    def handle_request(request)
+        if request == 'request3'
+        puts 'ConcreteHandler3 handles the request3.'
+        elsif successor
+        successor.handle_request(request)
         end
     end
 end
 
 # Client code
-ch1 = ConcreteHandler1.new(nil)
+ch1 = ConcreteHandler1.new
 ch2 = ConcreteHandler2.new(ch1)
-ch2.handle_request
+ch3 = ConcreteHandler3.new(ch2)
+
+ch3.handle_request('request1')
+ch3.handle_request('request2')
+ch3.handle_request('request3')
+ch3.handle_request('request4')
+
 
 =begin 
-Message passed to next in chain by ConcreteHandler2
-Finally handled by ConcreteHandler1 
+ConcreteHandler1 handles the request1.
+ConcreteHandler2 handles the request2.
+ConcreteHandler3 handles the request3. 
 =end

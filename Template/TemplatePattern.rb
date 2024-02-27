@@ -39,3 +39,8 @@ end
 # Client code
 concrete_class = ConcreteClass1.new
 concrete_class.template_method
+
+=begin 
+Concrete Class 1 : Operation 1
+Concrete Class 1 : Operation 2 
+=end

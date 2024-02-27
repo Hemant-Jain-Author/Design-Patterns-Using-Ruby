@@ -105,3 +105,8 @@ cart.accept
 
 cart.set_discount_visitor(SaleDiscount.new)
 cart.accept
+
+=begin 
+Total cost: 1000
+Total cost: 550
+=end

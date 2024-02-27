@@ -38,3 +38,6 @@ email_sender.send_email(
   'mail subject.',
   'This is a test email body.'
 )
+=begin 
+Send mail: subject: mail subject. from: sender@example.com to: recipient@example.com body: This is a test email body.
+=end

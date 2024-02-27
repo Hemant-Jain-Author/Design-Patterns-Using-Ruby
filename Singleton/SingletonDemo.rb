@@ -9,28 +9,32 @@ class Database
 end
 
 class Singleton
-    @@instance = nil
-
     private_class_method :new
 
-    def self.get_instance
+    @@instance = nil
+    @@db = Database.new
+
+    def self.instance
         @@instance ||= new
     end
 
-    def initialize
-        @db = Database.new
-    end
-
     def add_data(data)
-        @db.add_data(data)
+        @@db.add_data(data)
     end
 end
 
 # Client code
-s1 = Singleton.get_instance
-s2 = Singleton.get_instance
+s1 = Singleton.instance
+s2 = Singleton.instance
 
 puts s1
 puts s2
 
 s2.add_data('Hello, world!')
+
+=begin 
+Database created
+#<Singleton:0x000055c5932d2ec8>
+#<Singleton:0x000055c5932d2ec8>
+Hello, world!
+=end

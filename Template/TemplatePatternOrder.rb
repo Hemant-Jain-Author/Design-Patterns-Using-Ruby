@@ -41,3 +41,12 @@ puts
 
 store_order = StoreOrderPacking.new
 store_order.pack_product
+=begin 
+Get the product from the shelf.
+Put the product inside the box.
+Add delivery address slip and ship.
+
+Get the product from the shelf.
+Put the product inside the box.
+Add thanks message to the box and deliver to the customer.
+ =end

@@ -47,3 +47,8 @@ context.execute
 
 context.set_strategy(ConcreteStrategy2.new)
 context.execute
+
+=begin 
+ConcreteStrategy1 execute
+ConcreteStrategy2 execute
+=end

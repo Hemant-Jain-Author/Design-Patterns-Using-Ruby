@@ -62,3 +62,8 @@ c.flip
 puts c.to_s_state
 c.flip
 puts c.to_s_state
+
+=begin 
+On
+Off
+=end

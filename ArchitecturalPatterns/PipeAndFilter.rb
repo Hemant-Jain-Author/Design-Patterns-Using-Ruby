@@ -47,4 +47,8 @@ pipeline.add_filter(RemoveSpecialCharactersFilter.new)
 
 data = 'Hello, World!'
 result = pipeline.process_data(data)
-puts "Result: #{result}" # Output: "HELLO_WORLD"
+puts "Result: #{result}"
+
+=begin 
+Result: HELLO_WORLD
+ =end

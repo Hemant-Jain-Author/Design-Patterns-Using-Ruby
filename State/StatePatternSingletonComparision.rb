@@ -83,3 +83,8 @@ test(state1, 10)
 
 state2 = ConcreteState1.instance
 test(state2, 10)
+
+=begin 
+1.1145e-05
+2.181e-06
+=end

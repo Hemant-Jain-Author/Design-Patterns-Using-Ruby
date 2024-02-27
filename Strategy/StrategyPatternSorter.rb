@@ -69,3 +69,10 @@ b = [4, 5, 3, 2, 6, 7, 1, 8, 9, 10]
 s.set_sorter(SelectionSort.new)
 s.sort(b)
 puts b.to_s
+
+=begin 
+Bubble Sort Algorithm executed.
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Selection Sort Algorithm executed.
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+=end

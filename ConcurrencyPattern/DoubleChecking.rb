@@ -12,8 +12,8 @@ class Singleton
     private_class_method :new
     
     @@instance = nil
-    @@lock = Mutex.new
     @@db = Database.new
+    @@lock = Mutex.new
     
     def self.instance
         return @@instance if @@instance

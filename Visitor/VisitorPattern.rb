@@ -59,3 +59,8 @@ element_a.accept(visitor1)
 
 element_b = ConcreteElementB.new
 element_b.accept(visitor1)
+
+=begin 
+ConcreteVisitor1 visit_element_a() method called.
+ConcreteVisitor1 visit_element_b() method called.
+=end

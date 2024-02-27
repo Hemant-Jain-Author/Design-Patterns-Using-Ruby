@@ -52,3 +52,9 @@ end
 # Client code
 add_data_to_db = AddDataToDB.new
 add_data_to_db.add_data
+
+=begin 
+Open Database.
+Add data to Database.
+Close Database.
+=end

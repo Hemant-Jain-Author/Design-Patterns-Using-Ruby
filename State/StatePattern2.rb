@@ -47,3 +47,8 @@ state1 = ConcreteState1.new
 context = Context.new(state1)
 context.request
 context.request
+
+=begin 
+ConcreteState1 handle
+ConcreteState2 handle
+=end

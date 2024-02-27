@@ -74,3 +74,10 @@ office_printer = HighEndOfficePrinter.new
 office_printer.print("Important Report")
 office_printer.scan
 office_printer.fax("Confidential Memo")
+
+=begin 
+Printing Sample Document using basic inkjet printer
+Printing Important Report using high end office printer
+Scanning using high end office printer
+Faxing Confidential Memo using high end office printer
+=end

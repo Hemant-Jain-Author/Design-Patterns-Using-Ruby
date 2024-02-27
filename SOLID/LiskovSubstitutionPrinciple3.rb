@@ -40,17 +40,6 @@ class Square < Rectangle
 end
 
 # Client code
-def test_rectangle
-    r = Rectangle.new(10, 20)
-    test_rect(r)
-end
-
-def test_square
-    s = Square.new(10)
-    s.set_width(20)
-    test_rect(s)
-end
-
 def test_rect(rect)
     rect.set_height(10)
     rect.set_width(20)
@@ -61,5 +50,10 @@ def test_rect(rect)
     end
 end
 
-test_rectangle
-test_square
+
+r = Rectangle.new(10, 20)
+test_rect(r)
+
+s = Square.new(10)
+s.set_width(20)
+test_rect(s)
