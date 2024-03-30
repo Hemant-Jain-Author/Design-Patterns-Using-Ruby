@@ -12,10 +12,11 @@ class Singleton
     private_class_method :new
 
     @@instance = nil
-    @@db = Database.new
+    @@db = nil
 
     def self.instance
         @@instance ||= new
+        @@db ||= Database.new
     end
 
     def add_data(data)
@@ -26,10 +27,8 @@ end
 # Client code
 s1 = Singleton.instance
 s2 = Singleton.instance
-
 puts s1
 puts s2
-
 s2.add_data('Hello, world!')
 
 =begin 

@@ -1,7 +1,7 @@
 require 'pg'
 
 class Spaghetti
-    def self.process_data(data)
+    def process_data(data)
         # Validate input
         if data.nil? || data.empty?
             puts 'Invalid data'
@@ -25,20 +25,15 @@ class Spaghetti
         result = conn.exec_params(query, [data])
 
         result
-    rescue PG::Error => e
-        puts "Error occurred: #{e.message}"
-        nil
-    ensure
+        rescue PG::Error => e
+            puts "Error occurred: #{e.message}"
+            nil
+        ensure
         conn.close if conn
-    end
-
-    # Example usage
-    def self.main
-        data = 'exampleData'
-        results = process_data(data)
-        # Process the results if needed
     end
 end
 
-# Call main method
-Spaghetti.main
+# Example usage
+data = 'exampleData'
+results = Spaghetti.process_data(data)
+# Process the results if needed

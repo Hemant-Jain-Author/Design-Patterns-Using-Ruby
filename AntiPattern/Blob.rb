@@ -38,5 +38,5 @@ class Blob
     end
   
     # And so on...
-  end
+end
   

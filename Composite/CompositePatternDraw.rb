@@ -1,5 +1,5 @@
-# IShape
-module IShape
+# Shape
+class Shape
     def move(x, y)
         raise NotImplementedError, 'Subclasses must implement this method'
     end
@@ -10,8 +10,7 @@ module IShape
 end
 
 # Rectangle
-class Rectangle
-    include IShape
+class Rectangle < Shape
     
     attr_accessor :x, :y, :length, :breadth
     
@@ -34,8 +33,7 @@ class Rectangle
 end
 
 # Circle
-class Circle
-    include IShape
+class Circle < Shape
     
     attr_accessor :x, :y, :radius
     
@@ -57,8 +55,7 @@ class Circle
 end
 
 # CompoundShape
-class CompoundShape
-    include IShape
+class CompoundShape < Shape
     
     def initialize
         @children = []
